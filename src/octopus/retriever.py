@@ -28,20 +28,12 @@ tool_embeddings = model.encode(
 #     return [TOOLS[index.item()] for index in ranked_indices]
 
 
-def retrieve_tools(query: str, per_intent_k: int = 3) -> list[dict]:
+def retrieve_tools(query: str, per_intent_k: int = 4) -> list[dict]:
     intents = analyze_intents(query)
 
     selected_indices = []
 
     for intent in intents:
-        intent_query = " ".join(
-            part
-            for part in [
-                intent["action"],
-                intent["target"],
-            ]
-            if part
-        )
 
         # query_embedding = model.encode(
         #     intent_query,
@@ -58,13 +50,25 @@ def retrieve_tools(query: str, per_intent_k: int = 3) -> list[dict]:
             convert_to_tensor=True,
         )
 
-        query_embedding = 1.5 * action_embedding + 1.0 * target_embedding
+        context_embedding = model.encode(
+            intent["context"],
+            convert_to_tensor=True,
+        )
+
+        query_embedding = (
+            1.5 * action_embedding + 1.0 * target_embedding + 1.0 * context_embedding
+        )
 
         scores = dot_score(query_embedding, tool_embeddings)[0]
 
         ranked_indices = scores.argsort(descending=True)[:per_intent_k]
 
-        print(f"\nINTENT: action={intent['action']!r}, target={intent['target']!r}")
+        print(
+            f"\nINTENT: "
+            f"action={intent['action']!r}, "
+            f"target={intent['target']!r}, "
+            f"context={intent['context']!r}"
+        )
 
         for index in ranked_indices:
             i = index.item()
