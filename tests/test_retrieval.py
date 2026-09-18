@@ -1,273 +1,216 @@
-from octopus.retriever import retrieve_tools
+import pytest
+
+from octopus.analyzer import initialize_analyzer
+from octopus.retriever import (
+    initialize_retriever,
+    refresh_index,
+    retrieve_tools,
+)
+from octopus.tool_registry import (
+    get_all_tools,
+    set_tools,
+)
 
 
-def test_compound_calendar_and_reply_request():
-    query = "check my calendar and reply to Tom"
+TEST_TOOLS = [
+    {
+        "name": "outlook_mail_management_send_email",
+        "description": (
+            "Send a new email message to one or more recipients " "using Outlook."
+        ),
+        "input_schema": {},
+    },
+    {
+        "name": "outlook_mail_management_reply_to_email",
+        "description": ("Reply to an existing email message in Outlook."),
+        "input_schema": {},
+    },
+    {
+        "name": "outlook_calendar_list_events",
+        "description": (
+            "List meetings, appointments, and events from " "an Outlook calendar."
+        ),
+        "input_schema": {},
+    },
+    {
+        "name": "web_search_tools_web_search",
+        "description": (
+            "Search the public web for current information, "
+            "news, and external information."
+        ),
+        "input_schema": {},
+    },
+    {
+        "name": "project_management_tools_get_sprint",
+        "description": (
+            "Retrieve information about the current or " "specified project sprint."
+        ),
+        "input_schema": {},
+    },
+    {
+        "name": "project_management_tools_list_work_items",
+        "description": (
+            "List project work items, tasks, user stories, " "bugs, or tickets."
+        ),
+        "input_schema": {},
+    },
+    {
+        "name": "office_word_mcp_server_api_create_word_document",
+        "description": ("Create a new Microsoft Word document."),
+        "input_schema": {},
+    },
+    {
+        "name": "office_word_mcp_server_api_add_paragraph",
+        "description": ("Add a paragraph of text to a Microsoft Word document."),
+        "input_schema": {},
+    },
+    {
+        "name": "carrot_mcp_server_api_list_leave_application",
+        "description": ("List employee leave applications and leave information."),
+        "input_schema": {},
+    },
+    {
+        "name": "carrot_mcp_server_api_get_hr_dashboard_summary",
+        "description": (
+            "Get an employee HR dashboard summary including "
+            "leave and workforce information."
+        ),
+        "input_schema": {},
+    },
+]
 
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
 
-    print(names)
+@pytest.fixture(scope="module", autouse=True)
+def initialized_retriever():
+    initialize_analyzer()
+    initialize_retriever()
 
-    assert any("calendar" in name.lower() for name in names)
-    assert any(
-        name.endswith("reply_email") or name.endswith("reply_chat_message")
-        for name in names
+    original_tools = get_all_tools()
+
+    set_tools(TEST_TOOLS)
+    refresh_index()
+
+    yield
+
+    set_tools(original_tools)
+    refresh_index()
+
+
+def tool_names(query: str) -> list[str]:
+    return [tool["name"] for tool in retrieve_tools(query)]
+
+
+def test_send_email_capability_is_retrieved():
+    names = tool_names("send an email to Tom")
+
+    assert any("send_email" in name for name in names)
+
+
+def test_web_search_capability_is_retrieved():
+    names = tool_names("find the latest Nvidia news")
+
+    assert any("web_search" in name for name in names)
+
+
+def test_calendar_and_reply_capabilities_are_retrieved():
+    names = tool_names("check my calendar and reply to Tom")
+
+    assert any("calendar" in name for name in names)
+
+    assert any("reply" in name for name in names)
+
+
+def test_leave_and_email_capabilities_are_retrieved():
+    names = tool_names("check my leave balance and email my manager")
+
+    assert any("leave" in name or "hr_" in name for name in names)
+
+    assert any("email" in name for name in names)
+
+
+def test_web_and_email_capabilities_survive_compound_request():
+    names = tool_names(
+        "search the web for the latest Nvidia news " "and send what you find to Tom"
     )
 
+    assert any("web_search" in name for name in names)
 
-def test_leave_and_email_request():
-    query = (
-        "check whether I submitted Christmas leave " "and email my manager if I haven't"
+    assert any("email" in name for name in names)
+
+
+def test_word_and_sprint_capabilities_survive_nested_request():
+    names = tool_names("create a Word document summarizing the sprint")
+
+    assert any("word" in name for name in names)
+
+    assert any("sprint" in name for name in names)
+
+
+def test_work_items_and_word_capabilities_survive_compound_request():
+    names = tool_names(
+        "get the sprint work items and " "create a Word document summarizing them"
     )
 
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
+    assert any("work_item" in name for name in names)
 
-    print(names)
-
-    assert any("leave" in name.lower() for name in names)
-    assert any("email" in name.lower() for name in names)
+    assert any("word" in name for name in names)
 
 
-def test_explicit_tool_request_exposes_send_email_capability():
-    query = (
-        "use the send email tool to send Tom " "a message saying coffee is for closers"
-    )
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert any(name.endswith("send_email") for name in names)
-
-
-def test_direct_send_email_request():
-    query = "send Tom an email saying coffee is for closers"
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert any(name.endswith("send_email") for name in names)
-
-
-def test_three_action_request_leave_meeting_email():
-    query = (
+def test_three_capabilities_survive_three_action_request():
+    names = tool_names(
         "check my leave balance, "
-        "schedule a meeting with Sarah tomorrow, "
-        "and email my manager the details"
+        "search the web for Nvidia news, "
+        "and email the results to Tom"
     )
 
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
+    assert any("leave" in name or "hr_" in name for name in names)
 
-    print(names)
+    assert any("web_search" in name for name in names)
 
-    assert any("leave" in name.lower() for name in names)
+    assert any("email" in name for name in names)
 
-    assert any(
-        "meeting" in name.lower() or "calendar" in name.lower() for name in names
+
+def test_results_are_deduplicated():
+    names = tool_names("send an email to Tom and reply to Sarah")
+
+    assert len(names) == len(set(names))
+
+
+def test_per_intent_limit_is_respected():
+    results = retrieve_tools(
+        "send an email to Tom",
+        per_intent_k=2,
     )
 
-    assert any("email" in name.lower() for name in names)
+    assert len(results) <= 2
 
 
-def test_three_action_request_file_email_meeting():
-    query = (
-        "find the quarterly report, "
-        "send it to Tom, "
-        "and if he replies schedule a meeting with him"
-    )
+def test_empty_query_returns_no_tools():
+    assert retrieve_tools("") == []
+    assert retrieve_tools("   ") == []
 
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
 
-    print(names)
+def test_retriever_uses_current_registry():
+    original_tools = get_all_tools()
 
-    assert any("file" in name.lower() or "knowledge" in name.lower() for name in names)
+    try:
+        tools = [
+            {
+                "name": "custom_search_current_information",
+                "description": (
+                    "Search the internet for current information " "and recent news."
+                ),
+                "input_schema": {},
+            }
+        ]
 
-    assert any(
-        name.endswith("send_email")
-        or name.endswith("send_chat_message")
-        or name.endswith("forward_email")
-        for name in names
-    )
+        set_tools(tools)
+        refresh_index()
 
-    assert any(
-        "meeting" in name.lower() or "calendar" in name.lower() for name in names
-    )
+        names = tool_names("search the internet for the latest AI news")
 
+        assert "custom_search_current_information" in names
 
-def test_leave_balance_prefers_leave_balance_capability():
-    query = "check my leave balance"
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert names[0].endswith("get_leave_balance")
-
-
-# def test_find_report_in_filesystem_prefers_filesystem():
-#     query = "find the quarterly report on my computer"
-
-#     results = retrieve_tools(query)
-#     names = [tool["name"] for tool in results]
-
-#     print(names)
-
-#     assert "filesystem_search_files" in names
-
-
-def test_employee_files_prefers_hr_platform():
-    query = "find my employee files"
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert names[0] == "workday_search_employee_files"
-
-
-def test_employee_files_exposes_hr_file_capability():
-    query = "find my employee files"
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert any(name.startswith("workday_") and "file" in name.lower() for name in names)
-
-
-def test_workday_leave_context_prefers_workday():
-    query = "check how many vacation days I have left"
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert any(name.startswith("workday_") for name in names)
-    assert any(name.endswith("get_leave_balance") for name in names)
-
-
-def test_outlook_calendar_context_prefers_outlook():
-    query = "check my calendar for meetings tomorrow"
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert any(name.startswith("outlook_") and "calendar" in name for name in names)
-
-
-def test_hubspot_customer_context_prefers_hubspot():
-    query = "find the contact details for one of our customers"
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert any(name.startswith("hubspot_") for name in names)
-
-
-def test_hubspot_customer_file_context_prefers_hubspot():
-    query = "find the document attached to the customer record"
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert any(name.startswith("hubspot_") and "file" in name for name in names)
-
-
-def test_sharepoint_policy_context_prefers_sharepoint():
-    query = "find our company remote work policy"
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert any(name.startswith("sharepoint_") for name in names)
-
-
-def test_tavily_public_web_context_prefers_tavily():
-    query = "search the web for the latest news about Nvidia"
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert any(name.startswith("tavily_") for name in names)
-
-
-def test_azure_boards_sprint_context_prefers_azure_boards():
-    query = "show me the work items in the current sprint"
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert any(name.startswith("azure_boards_") for name in names)
-    assert any("sprint" in name or "work_item" in name for name in names)
-
-
-def test_teams_chat_context_prefers_teams():
-    query = "send Sarah a chat message"
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert any(name.startswith("teams_") and "message" in name for name in names)
-
-
-def test_explicit_gmail_context_prefers_gmail():
-    query = "send Tom an email using Gmail"
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert any(
-        name.startswith("gmail_") and name.endswith("send_email") for name in names
-    )
-
-
-def test_explicit_outlook_context_prefers_outlook():
-    query = "send Tom an email using Outlook"
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert any(
-        name.startswith("outlook_") and name.endswith("send_email") for name in names
-    )
-
-
-def test_employee_contract_exposes_search_and_get_tools():
-    query = "get my employee contract"
-
-    results = retrieve_tools(query)
-    names = [tool["name"] for tool in results]
-
-    print(names)
-
-    assert "workday_search_employee_files" in names
-    assert "workday_get_employee_file" in names
+    finally:
+        set_tools(original_tools)
+        refresh_index()

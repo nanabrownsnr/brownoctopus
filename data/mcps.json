@@ -1,0 +1,1175 @@
+{
+  "items": [
+    {
+      "thumbnail_image_id": null,
+      "thumbnail_image_url": null,
+      "price": 0,
+      "currency": "chf",
+      "creator_id": "67b8ad6cab374c33cb9a39da",
+      "user_id": null,
+      "source_id": null,
+      "marketplace_reference_id": null,
+      "status": "PUBLISHED",
+      "release_tag": null,
+      "archived_at": null,
+      "hidden": true,
+      "source_approved": true,
+      "name": "Test",
+      "version": 1,
+      "mcp_transport": "STREAMABLE_HTTP",
+      "headers": null,
+      "mis_reference_id": null,
+      "collection_id": null,
+      "description": "t",
+      "quick_commands": null,
+      "id": "06a8308f-92f8-73e6-8000-04d5c456e667",
+      "url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+      "assigned_to": null,
+      "mcp_server_tools": [
+        {
+          "name": "database_list_types",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "deployment_list",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "deployment_trigger",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "deployment_logs",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "deployment_status",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "domain_list",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "domain_create",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "domain_check",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "domain_update",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "domain_delete",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "project_list",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "project_info",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "project_create",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "project_delete",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "project_environments",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "service_list",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "service_info",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "service_create_from_repo",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "service_create_from_image",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "service_update",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "service_delete",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "service_restart",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "tcp_proxy_list",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "tcp_proxy_create",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "tcp_proxy_delete",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "list_service_variables",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "variable_set",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "variable_delete",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "variable_bulk_set",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "variable_copy",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "configure_api_token",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "volume_list",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "volume_create",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "volume_update",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "volume_delete",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "template_list",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "template_deploy",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "template_get_workflow_status",
+          "requires_manager_approval": false
+        }
+      ],
+      "created_at": "2026-08-17T13:13:29.185651Z",
+      "updated_at": "2026-08-17T13:13:29.185653Z",
+      "mcp_server_connections": [],
+      "collection": null
+    },
+    {
+      "thumbnail_image_id": "6a75bcb08e5194be58ee5c45",
+      "thumbnail_image_url": "https://twynity-dev.api.4th-ir.com/file-management/api/v1/files/6a75bcb08e5194be58ee5c45/download",
+      "price": 0,
+      "currency": "chf",
+      "creator_id": null,
+      "user_id": null,
+      "source_id": null,
+      "marketplace_reference_id": null,
+      "status": "PUBLISHED",
+      "release_tag": "1.0.10",
+      "archived_at": null,
+      "hidden": false,
+      "source_approved": true,
+      "name": "Maps",
+      "version": 1,
+      "mcp_transport": "STREAMABLE_HTTP",
+      "headers": null,
+      "mis_reference_id": "",
+      "collection_id": "06a63e27-ad04-75f6-8000-55262d8809aa",
+      "description": "Filter, query, and discover geographic locations by specific points or custom spatial polygons. Visualize your spatial datasets instantly by rendering interactive point pins or thematic choropleth data maps directly within your workflows.",
+      "quick_commands": [
+        {
+          "name": "Show where I live",
+          "prompt": "I want to show where I live on the map. Ask me for my exact address or neighborhood as specifically as possible so you can pinpoint and display it on the map."
+        }
+      ],
+      "id": "06a74558-c324-7ec6-8000-a7d660efb8d9",
+      "url": "https://twynity-dev.mcp.4th-ir.com/maps/mcp",
+      "assigned_to": null,
+      "mcp_server_tools": [
+        {
+          "name": "get_location_coordinates",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "render_points_map",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_location_polygon",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "render_choropleth_map",
+          "requires_manager_approval": false
+        }
+      ],
+      "created_at": "2026-08-06T09:36:12.196536Z",
+      "updated_at": "2026-08-06T09:39:29.650387Z",
+      "mcp_server_connections": [],
+      "collection": {
+        "name": "Administration",
+        "id": "06a63e27-ad04-75f6-8000-55262d8809aa",
+        "release_tag": "1.0.0",
+        "created_at": "2026-07-24T22:08:58.813598Z",
+        "updated_at": "2026-07-24T22:56:51.063218Z"
+      }
+    },
+    {
+      "thumbnail_image_id": "6a6b6c6fee66af2a54649f97",
+      "thumbnail_image_url": "https://twynity-dev.api.4th-ir.com/file-management/api/v1/files/6a6b6c6fee66af2a54649f97/download",
+      "price": 0,
+      "currency": "chf",
+      "creator_id": null,
+      "user_id": null,
+      "source_id": null,
+      "marketplace_reference_id": null,
+      "status": "PUBLISHED",
+      "release_tag": "1.0.8",
+      "archived_at": null,
+      "hidden": false,
+      "source_approved": true,
+      "name": "Carrot",
+      "version": 1,
+      "mcp_transport": "STREAMABLE_HTTP",
+      "headers": null,
+      "mis_reference_id": "",
+      "collection_id": "06a63e2a-7728-7c57-8000-d30f51c18c79",
+      "description": "Log work hours, manage project timesheets, and track daily productivity effortlessly. Keep teams accountable and gain real-time visibility into your time allocation.",
+      "quick_commands": [
+        {
+          "name": "Log Daily Hours",
+          "prompt": "Log my hours for today in Carrot. Ask me what tasks I worked on and how long I spent on each."
+        }
+      ],
+      "id": "06a6af8e-01b8-7809-8000-33c6b602b07e",
+      "url": "https://twynity-dev.mcp.4th-ir.com/carrot/mcp",
+      "assigned_to": null,
+      "mcp_server_tools": [
+        {
+          "name": "create_employee",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "list_employees",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_employee",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "update_employee",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "log_hours_entry",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "work_hours_summary",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "create_leave_application",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "list_leave_application",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "update_leave_application",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "submit_leave_application",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "hr_dashboard_summary",
+          "requires_manager_approval": false
+        }
+      ],
+      "created_at": "2026-07-30T07:10:24.107565Z",
+      "updated_at": "2026-07-30T07:12:47.430602Z",
+      "mcp_server_connections": [],
+      "collection": {
+        "name": "HR",
+        "id": "06a63e2a-7728-7c57-8000-d30f51c18c79",
+        "release_tag": "1.0.0",
+        "created_at": "2026-07-24T22:09:43.447483Z",
+        "updated_at": "2026-07-24T22:56:51.063218Z"
+      }
+    },
+    {
+      "thumbnail_image_id": "6a75bcac8e5194be58ee5c44",
+      "thumbnail_image_url": "https://twynity-dev.api.4th-ir.com/file-management/api/v1/files/6a75bcac8e5194be58ee5c44/download",
+      "price": 0,
+      "currency": "chf",
+      "creator_id": null,
+      "user_id": null,
+      "source_id": null,
+      "marketplace_reference_id": null,
+      "status": "PUBLISHED",
+      "release_tag": "1.1.1",
+      "archived_at": null,
+      "hidden": false,
+      "source_approved": true,
+      "name": "Microsoft Outlook",
+      "version": 1,
+      "mcp_transport": "STREAMABLE_HTTP",
+      "headers": null,
+      "mis_reference_id": "",
+      "collection_id": "06a63e27-ad04-75f6-8000-55262d8809aa",
+      "description": "Connect your Outlook account seamlessly. Search, read, draft, and manage your email communications directly within your workflows.",
+      "quick_commands": [
+        {
+          "name": "Summarize Recent Emails",
+          "prompt": "Find all unopened emails received in the past 24 hours and summarize them for me."
+        }
+      ],
+      "id": "06a6a5b0-7271-787f-8000-ef5a58fb25f1",
+      "url": "https://twynity-staging.mcp.4th-ir.com/email-tools/mcp",
+      "assigned_to": null,
+      "mcp_server_tools": [
+        {
+          "name": "send_email",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_email_messages",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "compose_email",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "reply_to_email",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "forward_email",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "search_outlook_mail",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "delete_email_message",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "find_email_address",
+          "requires_manager_approval": false
+        }
+      ],
+      "created_at": "2026-07-29T19:56:55.152748Z",
+      "updated_at": "2026-08-07T11:07:10.002974Z",
+      "mcp_server_connections": [],
+      "collection": {
+        "name": "Administration",
+        "id": "06a63e27-ad04-75f6-8000-55262d8809aa",
+        "release_tag": "1.0.0",
+        "created_at": "2026-07-24T22:08:58.813598Z",
+        "updated_at": "2026-07-24T22:56:51.063218Z"
+      }
+    },
+    {
+      "thumbnail_image_id": "6a6897675584008075fa39c0",
+      "thumbnail_image_url": "https://twynity-dev.api.4th-ir.com/file-management/api/v1/files/6a6897675584008075fa39c0/download",
+      "price": 0,
+      "currency": "chf",
+      "creator_id": null,
+      "user_id": null,
+      "source_id": null,
+      "marketplace_reference_id": null,
+      "status": "PUBLISHED",
+      "release_tag": "1.0.6",
+      "archived_at": null,
+      "hidden": false,
+      "source_approved": true,
+      "name": "GitHub",
+      "version": 2,
+      "mcp_transport": "STREAMABLE_HTTP",
+      "headers": null,
+      "mis_reference_id": "",
+      "collection_id": "06a63e29-0310-7ce3-8000-834990288087",
+      "description": "Interact with code repositories, manage issues, review pull requests, and track commit histories. Stay on top of codebases, automate repository tasks, and collaborate effectively with development teams.",
+      "quick_commands": [
+        {
+          "name": "View Active Repositories",
+          "prompt": "List the active GitHub repositories and organizations I have access to. Then ask me if I want to review assigned issues, inspect open pull requests, or check recent commit activity."
+        }
+      ],
+      "id": "06a63eaa-e291-70f6-8000-2bca6ae580c8",
+      "url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+      "assigned_to": null,
+      "mcp_server_tools": [
+        {
+          "name": "create_branch",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "create_or_update_file",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "create_pull_request",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "create_repository",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "delete_file",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_commit",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_file_contents",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_me",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "list_branches",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "list_commits",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "list_pull_requests",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "merge_pull_request",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "pull_request_read",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "push_files",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "search_repositories",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "update_pull_request",
+          "requires_manager_approval": false
+        }
+      ],
+      "created_at": "2026-07-24T22:43:58.160433Z",
+      "updated_at": "2026-07-28T09:14:15.612627Z",
+      "mcp_server_connections": [],
+      "collection": {
+        "name": "Software",
+        "id": "06a63e29-0310-7ce3-8000-834990288087",
+        "release_tag": "1.0.0",
+        "created_at": "2026-07-24T22:09:20.191641Z",
+        "updated_at": "2026-07-24T22:56:51.063218Z"
+      }
+    },
+    {
+      "thumbnail_image_id": "6a6b6c69ee66af2a54649f95",
+      "thumbnail_image_url": "https://twynity-dev.api.4th-ir.com/file-management/api/v1/files/6a6b6c69ee66af2a54649f95/download",
+      "price": 0,
+      "currency": "chf",
+      "creator_id": null,
+      "user_id": null,
+      "source_id": null,
+      "marketplace_reference_id": null,
+      "status": "PUBLISHED",
+      "release_tag": "1.0.8",
+      "archived_at": null,
+      "hidden": false,
+      "source_approved": true,
+      "name": "Azure Devops",
+      "version": 3,
+      "mcp_transport": "STREAMABLE_HTTP",
+      "headers": null,
+      "mis_reference_id": "",
+      "collection_id": "06a63e29-0310-7ce3-8000-834990288087",
+      "description": "Manage user stories, track work items, inspect pull requests, and monitor pipeline statuses across your projects. Keep sprint backlogs organized and get real-time updates on software delivery.",
+      "quick_commands": [
+        {
+          "name": "View Active Work Items",
+          "prompt": "List the active Azure DevOps projects and repositories I have access to. Then ask me if I want to review assigned work items, check open pull requests, or inspect recent pipeline runs."
+        }
+      ],
+      "id": "06a63ea0-0eec-7d78-8000-6beeb4da3570",
+      "url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+      "assigned_to": null,
+      "mcp_server_tools": [
+        {
+          "name": "view_board",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "list_projects",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "create_project",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_project",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "update_project",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "delete_project",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "list_sprints",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "create_sprint",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_sprint",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "delete_sprint",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "export_sprint_to_sharepoint",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_user_capacity",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "update_user_capacity",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "list_teams",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "create_team",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "list_team_members",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_team",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "delete_team",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "list_users",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "create_work_item",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "list_work_items",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_work_item",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "update_work_item",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "delete_work_item",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "update_task_status",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "assign_work_item",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_work_item_comments",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "add_work_item_comment",
+          "requires_manager_approval": false
+        }
+      ],
+      "created_at": "2026-07-24T22:41:04.932846Z",
+      "updated_at": "2026-07-30T07:12:47.430602Z",
+      "mcp_server_connections": [],
+      "collection": {
+        "name": "Software",
+        "id": "06a63e29-0310-7ce3-8000-834990288087",
+        "release_tag": "1.0.0",
+        "created_at": "2026-07-24T22:09:20.191641Z",
+        "updated_at": "2026-07-24T22:56:51.063218Z"
+      }
+    },
+    {
+      "thumbnail_image_id": "6a68976d5584008075fa39c2",
+      "thumbnail_image_url": "https://twynity-dev.api.4th-ir.com/file-management/api/v1/files/6a68976d5584008075fa39c2/download",
+      "price": 0,
+      "currency": "chf",
+      "creator_id": null,
+      "user_id": null,
+      "source_id": null,
+      "marketplace_reference_id": null,
+      "status": "PUBLISHED",
+      "release_tag": "1.0.6",
+      "archived_at": null,
+      "hidden": false,
+      "source_approved": true,
+      "name": "Microsoft SharePoint",
+      "version": 2,
+      "mcp_transport": "STREAMABLE_HTTP",
+      "headers": null,
+      "mis_reference_id": "",
+      "collection_id": "06a63e2a-13fd-7904-8000-29eb0818038c",
+      "description": "Access, search, and manage document libraries, team sites, and organizational content. Retrieve files, explore site structures, and share assets across your team seamlessly.",
+      "quick_commands": [
+        {
+          "name": "Search SharePoint Sites",
+          "prompt": "List all the SharePoint sites I have access to first. Once displayed, ask me which site or document library I'd like to search or pull files from."
+        }
+      ],
+      "id": "06a63e98-4dd6-7ccf-8000-847fdbc3a1fc",
+      "url": "https://twynity-dev.mcp.4th-ir.com/sharepoint/mcp",
+      "assigned_to": null,
+      "mcp_server_tools": [
+        {
+          "name": "get_sharepoint_documents",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_sharepoint_sites",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "create_txt_file_in_sharepoint",
+          "requires_manager_approval": false
+        }
+      ],
+      "created_at": "2026-07-24T22:39:00.864963Z",
+      "updated_at": "2026-07-28T09:14:15.612627Z",
+      "mcp_server_connections": [],
+      "collection": {
+        "name": "Data",
+        "id": "06a63e2a-13fd-7904-8000-29eb0818038c",
+        "release_tag": "1.0.0",
+        "created_at": "2026-07-24T22:09:37.249432Z",
+        "updated_at": "2026-07-24T22:56:51.063218Z"
+      }
+    },
+    {
+      "thumbnail_image_id": "6a6897645584008075fa39bf",
+      "thumbnail_image_url": "https://twynity-dev.api.4th-ir.com/file-management/api/v1/files/6a6897645584008075fa39bf/download",
+      "price": 0,
+      "currency": "chf",
+      "creator_id": null,
+      "user_id": null,
+      "source_id": null,
+      "marketplace_reference_id": null,
+      "status": "PUBLISHED",
+      "release_tag": "1.0.6",
+      "archived_at": null,
+      "hidden": false,
+      "source_approved": true,
+      "name": "Google Mail",
+      "version": 2,
+      "mcp_transport": "STREAMABLE_HTTP",
+      "headers": null,
+      "mis_reference_id": "",
+      "collection_id": "06a63e27-ad04-75f6-8000-55262d8809aa",
+      "description": "Search, read, draft, and manage Gmail messages and threads. Summarize unread emails, compose contextual replies, manage labels, and organize your inbox directly through natural language workflows.",
+      "quick_commands": [
+        {
+          "name": "Summarize Unread Emails",
+          "prompt": "Search my Gmail inbox for unread messages received today, summarize the key action items, and ask me if I want to draft replies"
+        }
+      ],
+      "id": "06a63e8e-8a8d-7b6b-8000-332231966dca",
+      "url": "https://twynity-dev.mcp.4th-ir.com/gmail/mcp",
+      "assigned_to": null,
+      "mcp_server_tools": [
+        {
+          "name": "send_google_email",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_google_emails",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "reply_google_email",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "forward_google_email",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "delete_google_email",
+          "requires_manager_approval": false
+        }
+      ],
+      "created_at": "2026-07-24T22:36:24.659617Z",
+      "updated_at": "2026-07-28T09:14:15.612627Z",
+      "mcp_server_connections": [],
+      "collection": {
+        "name": "Administration",
+        "id": "06a63e27-ad04-75f6-8000-55262d8809aa",
+        "release_tag": "1.0.0",
+        "created_at": "2026-07-24T22:08:58.813598Z",
+        "updated_at": "2026-07-24T22:56:51.063218Z"
+      }
+    },
+    {
+      "thumbnail_image_id": "6a6897705584008075fa39c3",
+      "thumbnail_image_url": "https://twynity-dev.api.4th-ir.com/file-management/api/v1/files/6a6897705584008075fa39c3/download",
+      "price": 0,
+      "currency": "chf",
+      "creator_id": null,
+      "user_id": null,
+      "source_id": null,
+      "marketplace_reference_id": null,
+      "status": "PUBLISHED",
+      "release_tag": "1.0.6",
+      "archived_at": null,
+      "hidden": false,
+      "source_approved": true,
+      "name": "Microsoft Word",
+      "version": 2,
+      "mcp_transport": "STREAMABLE_HTTP",
+      "headers": null,
+      "mis_reference_id": "",
+      "collection_id": "06a63e27-ad04-75f6-8000-55262d8809aa",
+      "description": "Create, edit, and format Microsoft Word documents programmatically. Generate structured reports, update existing templates, and export polished docs directly within your workflows.",
+      "quick_commands": [
+        {
+          "name": "Create Document",
+          "prompt": "I want to create a new Word document. Ask me for the title, outline, and key details you need to build it."
+        }
+      ],
+      "id": "06a63e70-e521-779d-8000-f20bab790411",
+      "url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+      "assigned_to": null,
+      "mcp_server_tools": [
+        {
+          "name": "list_files",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "create_word_document",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "copy_document",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_document_info",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_document_text",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_document_outline",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_document_xml",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "merge_doucments",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "delete_document",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "add_paragraph",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "add_heading",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "add_picture",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "add_table",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "add_page_break",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "delete_paragraph",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "search_replace",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_paragraph_text_from_document",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "find_text_in_document",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "convert_to_pdf",
+          "requires_manager_approval": false
+        }
+      ],
+      "created_at": "2026-07-24T22:28:30.320698Z",
+      "updated_at": "2026-07-28T09:14:15.612627Z",
+      "mcp_server_connections": [],
+      "collection": {
+        "name": "Administration",
+        "id": "06a63e27-ad04-75f6-8000-55262d8809aa",
+        "release_tag": "1.0.0",
+        "created_at": "2026-07-24T22:08:58.813598Z",
+        "updated_at": "2026-07-24T22:56:51.063218Z"
+      }
+    },
+    {
+      "thumbnail_image_id": "6a6897735584008075fa39c4",
+      "thumbnail_image_url": "https://twynity-dev.api.4th-ir.com/file-management/api/v1/files/6a6897735584008075fa39c4/download",
+      "price": 0,
+      "currency": "chf",
+      "creator_id": null,
+      "user_id": null,
+      "source_id": null,
+      "marketplace_reference_id": null,
+      "status": "PUBLISHED",
+      "release_tag": "1.0.6",
+      "archived_at": null,
+      "hidden": false,
+      "source_approved": true,
+      "name": "Web Search",
+      "version": 2,
+      "mcp_transport": "STREAMABLE_HTTP",
+      "headers": null,
+      "mis_reference_id": "",
+      "collection_id": "06a63e27-ad04-75f6-8000-55262d8809aa",
+      "description": "Enable real-time internet access to query search engines, extract live webpage content, and retrieve current information directly into your workflows.",
+      "quick_commands": [
+        {
+          "name": "Quick Search",
+          "prompt": "I want to search the web. Ask me what topic I'm researching and if there are specific sites or domains I should focus on."
+        }
+      ],
+      "id": "06a63e65-9100-7e17-8000-28992d0b5588",
+      "url": "https://twynity-dev.mcp.4th-ir.com/web-search/mcp",
+      "assigned_to": null,
+      "mcp_server_tools": [
+        {
+          "name": "web_search",
+          "requires_manager_approval": false
+        }
+      ],
+      "created_at": "2026-07-24T22:25:29.062739Z",
+      "updated_at": "2026-07-28T09:14:15.612627Z",
+      "mcp_server_connections": [],
+      "collection": {
+        "name": "Administration",
+        "id": "06a63e27-ad04-75f6-8000-55262d8809aa",
+        "release_tag": "1.0.0",
+        "created_at": "2026-07-24T22:08:58.813598Z",
+        "updated_at": "2026-07-24T22:56:51.063218Z"
+      }
+    },
+    {
+      "thumbnail_image_id": "6a6897795584008075fa39c6",
+      "thumbnail_image_url": "https://twynity-dev.api.4th-ir.com/file-management/api/v1/files/6a6897795584008075fa39c6/download",
+      "price": 0,
+      "currency": "chf",
+      "creator_id": null,
+      "user_id": null,
+      "source_id": null,
+      "marketplace_reference_id": null,
+      "status": "PUBLISHED",
+      "release_tag": "1.0.6",
+      "archived_at": null,
+      "hidden": false,
+      "source_approved": true,
+      "name": "Access Knowledge Base",
+      "version": 3,
+      "mcp_transport": "STREAMABLE_HTTP",
+      "headers": null,
+      "mis_reference_id": "",
+      "collection_id": "06a63e27-ad04-75f6-8000-55262d8809aa",
+      "description": "Search your documents and data by meaning rather than exact keywords. Retrieve highly relevant context, answer complex questions, and uncover deep insights across your knowledge base.",
+      "quick_commands": [
+        {
+          "name": "Search Files",
+          "prompt": "List a summary of all the files you currently have access to, then ask me what content I want to search for and if I want to target specific documents."
+        }
+      ],
+      "id": "06a63e4e-5ba3-76a5-8000-febf1aab66df",
+      "url": "https://twynity-dev.api.4th-ir.com/file-management/mcp",
+      "assigned_to": null,
+      "mcp_server_tools": [
+        {
+          "name": "get_files",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_storage_usage",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "query_files",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_file",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "update_file",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "delete_file",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_file_content",
+          "requires_manager_approval": false
+        }
+      ],
+      "created_at": "2026-07-24T22:19:17.727419Z",
+      "updated_at": "2026-07-28T09:14:15.612627Z",
+      "mcp_server_connections": [],
+      "collection": {
+        "name": "Administration",
+        "id": "06a63e27-ad04-75f6-8000-55262d8809aa",
+        "release_tag": "1.0.0",
+        "created_at": "2026-07-24T22:08:58.813598Z",
+        "updated_at": "2026-07-24T22:56:51.063218Z"
+      }
+    },
+    {
+      "thumbnail_image_id": "6a68977c5584008075fa39c7",
+      "thumbnail_image_url": "https://twynity-dev.api.4th-ir.com/file-management/api/v1/files/6a68977c5584008075fa39c7/download",
+      "price": 0,
+      "currency": "chf",
+      "creator_id": null,
+      "user_id": null,
+      "source_id": null,
+      "marketplace_reference_id": null,
+      "status": "PUBLISHED",
+      "release_tag": "1.0.6",
+      "archived_at": null,
+      "hidden": false,
+      "source_approved": true,
+      "name": "Supabase",
+      "version": 2,
+      "mcp_transport": "STREAMABLE_HTTP",
+      "headers": null,
+      "mis_reference_id": "",
+      "collection_id": "06a63e2a-13fd-7904-8000-29eb0818038c",
+      "description": "Connect directly to your Supabase project to query databases, manage authentication, stream real-time data, and interact with storage buckets instantly.",
+      "quick_commands": [
+        {
+          "name": "Query Database",
+          "prompt": "I want to explore my Supabase database. Check what projects I'm connected to and ask me which project,  table and conditions you need to fetch the data"
+        }
+      ],
+      "id": "06a63e3a-4e0b-7a19-8000-a5b7c0767a79",
+      "url": "https://twynity-dev.mcp.4th-ir.com/supabase/mcp",
+      "assigned_to": null,
+      "mcp_server_tools": [
+        {
+          "name": "get_all_supabase_projects",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "check_database_health",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_database_tables",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "select_database_table_data",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "insert_table_data",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "update_database_table_data",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_table_schema",
+          "requires_manager_approval": false
+        }
+      ],
+      "created_at": "2026-07-24T22:13:56.877864Z",
+      "updated_at": "2026-07-28T09:14:15.612627Z",
+      "mcp_server_connections": [],
+      "collection": {
+        "name": "Data",
+        "id": "06a63e2a-13fd-7904-8000-29eb0818038c",
+        "release_tag": "1.0.0",
+        "created_at": "2026-07-24T22:09:37.249432Z",
+        "updated_at": "2026-07-24T22:56:51.063218Z"
+      }
+    },
+    {
+      "thumbnail_image_id": "6a6897765584008075fa39c5",
+      "thumbnail_image_url": "https://twynity-dev.api.4th-ir.com/file-management/api/v1/files/6a6897765584008075fa39c5/download",
+      "price": 0,
+      "currency": "chf",
+      "creator_id": null,
+      "user_id": null,
+      "source_id": null,
+      "marketplace_reference_id": null,
+      "status": "PUBLISHED",
+      "release_tag": "1.0.6",
+      "archived_at": null,
+      "hidden": false,
+      "source_approved": true,
+      "name": "Microsoft Mail",
+      "version": 2,
+      "mcp_transport": "STREAMABLE_HTTP",
+      "headers": null,
+      "mis_reference_id": "",
+      "collection_id": "06a63e27-ad04-75f6-8000-55262d8809aa",
+      "description": "Connect your Outlook account seamlessly. Search, read, draft, and manage your email communications directly within your workflows.",
+      "quick_commands": [
+        {
+          "name": "Summarize Recent Emails",
+          "prompt": "Find all unopened emails received in the past 24 hours and summarize them for me."
+        }
+      ],
+      "id": "06a63e26-7e74-747f-8000-24bda7626199",
+      "url": "https://twynity-dev.mcp.4th-ir.com/email-tools/mcp",
+      "assigned_to": null,
+      "mcp_server_tools": [
+        {
+          "name": "send_email",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "get_email_messages",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "compose_email",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "reply_to_email",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "forward_email",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "search_outlook_mail",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "delete_email_message",
+          "requires_manager_approval": false
+        },
+        {
+          "name": "find_email_address",
+          "requires_manager_approval": false
+        }
+      ],
+      "created_at": "2026-07-24T22:08:39.903407Z",
+      "updated_at": "2026-07-28T09:14:15.612627Z",
+      "mcp_server_connections": [],
+      "collection": {
+        "name": "Administration",
+        "id": "06a63e27-ad04-75f6-8000-55262d8809aa",
+        "release_tag": "1.0.0",
+        "created_at": "2026-07-24T22:08:58.813598Z",
+        "updated_at": "2026-07-24T22:56:51.063218Z"
+      }
+    }
+  ],
+  "item_count": 13,
+  "total_count": null,
+  "next_cursor": null
+}

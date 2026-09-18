@@ -1,85 +1,10 @@
-TEST_CASES = [
-    {
-        "name": "single email action",
-        "query": "reply to Tom saying I'll call tomorrow",
-        "expected_intents": [
-            {
-                "action": "reply",
-                "context": "Tom saying I'll call tomorrow",
-                "expected_tools": [
-                    "reply_to_email",
-                ],
-            }
-        ],
-    },
-    {
-        "name": "single leave action",
-        "query": "book my Christmas leave",
-        "expected_intents": [
-            {
-                "action": "book",
-                "context": "my Christmas leave",
-                "expected_tools": [
-                    "create_leave_application",
-                    "submit_leave_application",
-                ],
-            }
-        ],
-    },
-    {
-        "name": "leave lookup",
-        "query": "check whether I already submitted Christmas leave",
-        "expected_intents": [
-            {
-                "action": "check",
-                "context": "whether I already submitted Christmas leave",
-                "expected_tools": [
-                    "list_leave_application",
-                ],
-            }
-        ],
-    },
-    {
-        "name": "compound leave and email",
-        "query": (
-            "check whether I submitted Christmas leave "
-            "and email my manager if I haven't"
-        ),
-        "expected_intents": [
-            {
-                "action": "check",
-                "context": "whether I submitted Christmas leave",
-                "expected_tools": [
-                    "list_leave_application",
-                ],
-            },
-            {
-                "action": "email",
-                "context": "my manager if I haven't",
-                "expected_tools": [
-                    "send_email",
-                    "compose_email",
-                ],
-            },
-        ],
-    },
-]
+from octopus.analyzer import (
+    analyze_intents,
+    initialize_analyzer,
+)
 
 
-def test_cases_are_defined():
-    assert len(TEST_CASES) == 4
-
-    for case in TEST_CASES:
-        assert case["query"]
-        assert case["expected_intents"]
-
-        for intent in case["expected_intents"]:
-            assert intent["action"]
-            assert intent["context"]
-            assert intent["expected_tools"]
-
-
-from octopus.analyzer import analyze_intents
+initialize_analyzer()
 
 
 def test_single_email_action():
@@ -89,9 +14,8 @@ def test_single_email_action():
 
     assert len(intents) == 1
     assert intents[0]["action"] == "reply"
-
-    assert "Tom" in intents[0]["context"]
-    assert "call tomorrow" in intents[0]["context"]
+    assert "Tom" in intents[0]["text"]
+    assert "call tomorrow" in intents[0]["text"]
 
 
 def test_polite_leave_action():
@@ -145,7 +69,7 @@ def test_leave_action_with_different_phrasing():
 
 
 def test_compound_report_and_meeting():
-    query = "send Tom the quarterly report and schedule a meeting with Sarah"
+    query = "send Tom the quarterly report " "and schedule a meeting with Sarah"
 
     intents = analyze_intents(query)
 
@@ -197,3 +121,58 @@ def test_action_without_direct_object():
     assert "calendar" in intents[0]["target"]
 
     assert intents[1]["action"] == "reply"
+    assert "Tom" in intents[1]["text"]
+
+
+def test_nested_operational_action():
+    query = "create a Word document summarizing the sprint"
+
+    intents = analyze_intents(query)
+
+    assert len(intents) == 2
+
+    assert intents[0]["action"] == "create"
+    assert "Word document" in intents[0]["target"]
+
+    assert intents[1]["action"] == "summarize"
+    assert "sprint" in intents[1]["target"]
+
+
+def test_nested_action_is_removed_from_parent_local_text():
+    query = "create a Word document summarizing the sprint"
+
+    intents = analyze_intents(query)
+
+    assert intents[0]["text"] == "Create a Word document"
+    assert intents[1]["text"] == "summarizing the sprint"
+
+
+def test_compound_actions_have_independent_local_text():
+    query = "search the web for the latest Nvidia news " "and send what you find to Tom"
+
+    intents = analyze_intents(query)
+
+    assert len(intents) == 2
+
+    assert intents[0]["text"] == ("Search the web for the latest Nvidia news")
+
+    assert intents[1]["text"] == ("send what you find to Tom")
+
+
+def test_nested_action_preserves_pronoun_context():
+    query = "get the sprint work items and " "create a Word document summarizing them"
+
+    intents = analyze_intents(query)
+
+    assert len(intents) == 3
+
+    assert intents[0]["text"] == ("Get the sprint work items")
+
+    assert intents[1]["text"] == ("create a Word document")
+
+    assert intents[2]["text"] == ("summarizing them")
+
+
+def test_empty_query_returns_no_intents():
+    assert analyze_intents("") == []
+    assert analyze_intents("   ") == []
