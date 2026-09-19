@@ -1,0 +1,141 @@
+Brown Octopus V3 Freeze Handoff
+===============================
+
+Status
+------
+Brown Octopus V3 is frozen. No ToolQP, DTDR, agent evaluation, retrieval
+heuristics, parameter tuning, or benchmark-label changes were made.
+
+Git commit
+----------
+72b200937486ca7413e1bfbd0e2abc6c3787a3aa
+Commit message: Freeze Brown Octopus V3 selector
+
+Final V3 architecture
+---------------------
+User query
+  -> spaCy en_core_web_trf operational intent decomposition
+  -> Qwen/Qwen3-Embedding-0.6B per-intent dense ranking
+  -> select_min4_bounded_max_gap per intent
+  -> merge and deduplicate
+  -> active capability memory
+  -> TTL 8 turns and global active cap 30
+  -> final capability context
+
+Frozen selector configuration:
+MIN_TOOLS=4
+MAX_TOOLS=16
+MIN_GAP_PERCENT=2.0
+
+The minimum-four floor is applied before merge/deduplication for each
+operational intent. Fewer than four available ranked tools are returned as-is.
+
+Selector implementation
+-----------------------
+Production selector:
+src/octopus/selection.py :: select_min4_bounded_max_gap
+
+It calls the existing select_bounded_max_gap implementation, then returns:
+
+min(max_tools, max(min_tools, bounded_max_gap_selected_count))
+
+No second Max Gap implementation, score threshold, confidence rule, or
+failure-specific heuristic was added.
+
+Production integration:
+src/octopus/retriever.py
+
+The generic evaluator adapter is named brown_octopus_v3 and returns the
+standard RetrievalResult interface with method/configuration metadata.
+
+Files changed
+-------------
+Production:
+- src/octopus/selection.py
+- src/octopus/retriever.py
+
+Evaluation metadata/interface:
+- evals/methods/octopus.py
+- evals/retrieval/run.py
+- evals/validation/run.py
+
+Tests:
+- tests/test_selection.py
+- tests/test_retrieval.py
+- tests/test_v3_architecture.py
+- tests/test_evals.py
+
+The same commit also contains the previously built evaluation framework,
+frozen datasets, research baselines, reports, and raw artifacts required for
+reproducibility.
+
+Tests added
+-----------
+Selector tests cover Max Gap results K=1, 2, 3, 4, 5, 7, and 16; fewer than
+four tools; empty rankings; and preservation of the existing Max Gap behavior.
+
+Architecture regressions cover:
+- simple single-intent selection
+- compound per-intent floor before merge/deduplication
+- expansion beyond four tools
+- active-memory carry-forward
+- TTL expiration
+- global active-cap eviction
+- independently callable V3 selector
+
+Test results
+------------
+Focused V3/retrieval/selector suite: 30 passed.
+Focused evaluator suite: 14 passed.
+
+Full repository invocation:
+108 passed, 4 failed.
+
+Non-live repository suite:
+107 passed, 5 deselected.
+
+The four full-suite failures are existing live-MCP integration tests. The
+external endpoint https://twynity-dev.mcp.4th-ir.com/web-search/mcp was
+unreachable in this environment. No V3 unit, retrieval, pipeline, evaluator,
+index, or memory regression failed.
+
+Frozen validation regression
+----------------------------
+Dataset: data/evals/octopus_validation_benchmark_v1.json
+Dataset hash: 0f693c072dc0fc20fb8f61190066c2d707dd151eff14d08b3dc3b5cd59a3856c
+Tool universe: 122 tools
+Tool-universe hash: b32fb327544ea91e40a33f2f420dc2204423fca1b5cb935341abb948e9b7baf2
+Regression raw result:
+results/raw/validation_20260919T221534_623573Z.json
+
+Production brown_octopus_v3 result:
+- required recall: 0.9666666667
+- complete-required rate: 0.9583333333
+- supporting recall: 0.7166666667
+- mean exposed tools/turn: 6.1083333333
+- median exposed tools/turn: 4
+- P90 exposed tools/turn: 10
+- P95 exposed tools/turn: 13
+- maximum exposed tools/turn: 17
+- mean schema tokens/turn: 1312.8083333333
+- schema-token reduction: 0.9479374868
+
+Expected frozen hybrid values:
+- required recall: 0.967 approximately
+- complete-required rate: 0.958 approximately
+- supporting recall: 0.717 approximately
+- mean exposed tools/turn: 6.11 approximately
+- mean schema tokens/turn: 1312.81 approximately
+
+Exact comparison:
+production_v3_matches_evaluation_hybrid=True
+
+Implementation discrepancies
+----------------------------
+No implementation discrepancy was found. The real production V3 path exactly
+reproduced the evaluation-layer Min-4 + Bounded Max Gap result on all tracked
+aggregate metrics.
+
+The only test discrepancy is environmental: four pre-existing live-MCP tests
+could not connect to their external endpoint. This is unrelated to V3 and is
+not a production selector failure.
