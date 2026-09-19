@@ -1,0 +1,229 @@
+query_number,query,intent_number,intent_text,threshold,cutoff_rank,cliff_found,cliff_percentage,universe_size,tool_reduction
+1,Send an email to Tom,1,Send an email to Tom,2,1,True,4.395604395604396,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,3,1,True,4.395604395604396,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,4,1,True,4.395604395604396,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,5,11,True,6.043956043956044,122,0.9098360655737705
+1,Send an email to Tom,1,Send an email to Tom,6,11,True,6.043956043956044,122,0.9098360655737705
+1,Send an email to Tom,1,Send an email to Tom,7,122,False,,122,0.0
+1,Send an email to Tom,1,Send an email to Tom,8,122,False,,122,0.0
+1,Send an email to Tom,1,Send an email to Tom,9,122,False,,122,0.0
+1,Send an email to Tom,1,Send an email to Tom,10,122,False,,122,0.0
+1,Send an email to Tom,1,Send an email to Tom,12,122,False,,122,0.0
+1,Send an email to Tom,1,Send an email to Tom,15,122,False,,122,0.0
+1,Send an email to Tom,1,Send an email to Tom,20,122,False,,122,0.0
+2,Reply to Tom's email,1,Reply to Tom 's email,2,1,True,2.7027027027027026,122,0.9918032786885246
+2,Reply to Tom's email,1,Reply to Tom 's email,3,2,True,10.81081081081081,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,4,2,True,10.81081081081081,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,5,2,True,10.81081081081081,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,6,2,True,10.81081081081081,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,7,2,True,10.81081081081081,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,8,2,True,10.81081081081081,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,9,2,True,10.81081081081081,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,10,2,True,10.81081081081081,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,12,122,False,,122,0.0
+2,Reply to Tom's email,1,Reply to Tom 's email,15,122,False,,122,0.0
+2,Reply to Tom's email,1,Reply to Tom 's email,20,122,False,,122,0.0
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,2,1,True,11.258278145695364,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,3,1,True,11.258278145695364,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,4,1,True,11.258278145695364,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,5,1,True,11.258278145695364,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,6,1,True,11.258278145695364,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,7,1,True,11.258278145695364,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,8,1,True,11.258278145695364,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,9,1,True,11.258278145695364,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,10,1,True,11.258278145695364,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,12,122,False,,122,0.0
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,15,122,False,,122,0.0
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,20,122,False,,122,0.0
+4,Create a Word document,1,Create a Word document,2,1,True,3.664921465968586,122,0.9918032786885246
+4,Create a Word document,1,Create a Word document,3,1,True,3.664921465968586,122,0.9918032786885246
+4,Create a Word document,1,Create a Word document,4,19,True,4.450261780104712,122,0.8442622950819672
+4,Create a Word document,1,Create a Word document,5,122,False,,122,0.0
+4,Create a Word document,1,Create a Word document,6,122,False,,122,0.0
+4,Create a Word document,1,Create a Word document,7,122,False,,122,0.0
+4,Create a Word document,1,Create a Word document,8,122,False,,122,0.0
+4,Create a Word document,1,Create a Word document,9,122,False,,122,0.0
+4,Create a Word document,1,Create a Word document,10,122,False,,122,0.0
+4,Create a Word document,1,Create a Word document,12,122,False,,122,0.0
+4,Create a Word document,1,Create a Word document,15,122,False,,122,0.0
+4,Create a Word document,1,Create a Word document,20,122,False,,122,0.0
+5,Get the current sprint work items,1,Get the current sprint work items,2,1,True,3.1746031746031744,122,0.9918032786885246
+5,Get the current sprint work items,1,Get the current sprint work items,3,1,True,3.1746031746031744,122,0.9918032786885246
+5,Get the current sprint work items,1,Get the current sprint work items,4,121,True,4.365079365079365,122,0.008196721311475419
+5,Get the current sprint work items,1,Get the current sprint work items,5,122,False,,122,0.0
+5,Get the current sprint work items,1,Get the current sprint work items,6,122,False,,122,0.0
+5,Get the current sprint work items,1,Get the current sprint work items,7,122,False,,122,0.0
+5,Get the current sprint work items,1,Get the current sprint work items,8,122,False,,122,0.0
+5,Get the current sprint work items,1,Get the current sprint work items,9,122,False,,122,0.0
+5,Get the current sprint work items,1,Get the current sprint work items,10,122,False,,122,0.0
+5,Get the current sprint work items,1,Get the current sprint work items,12,122,False,,122,0.0
+5,Get the current sprint work items,1,Get the current sprint work items,15,122,False,,122,0.0
+5,Get the current sprint work items,1,Get the current sprint work items,20,122,False,,122,0.0
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,2,2,True,4.861111111111112,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,3,2,True,4.861111111111112,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,4,2,True,4.861111111111112,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,5,121,True,11.631944444444445,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,6,121,True,11.631944444444445,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,7,121,True,11.631944444444445,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,8,121,True,11.631944444444445,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,9,121,True,11.631944444444445,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,10,121,True,11.631944444444445,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,12,122,False,,122,0.0
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,15,122,False,,122,0.0
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,20,122,False,,122,0.0
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,2,1,True,3.910614525139665,122,0.9918032786885246
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,3,1,True,3.910614525139665,122,0.9918032786885246
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,4,11,True,4.4692737430167595,122,0.9098360655737705
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,5,122,False,,122,0.0
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,6,122,False,,122,0.0
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,7,122,False,,122,0.0
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,8,122,False,,122,0.0
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,9,122,False,,122,0.0
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,10,122,False,,122,0.0
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,12,122,False,,122,0.0
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,15,122,False,,122,0.0
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,20,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,2,1,True,3.1746031746031744,122,0.9918032786885246
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,3,1,True,3.1746031746031744,122,0.9918032786885246
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,4,121,True,4.365079365079365,122,0.008196721311475419
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,5,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,6,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,7,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,8,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,9,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,10,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,12,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,15,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,20,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,2,create a Word report,2,4,True,4.571428571428571,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,3,4,True,4.571428571428571,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,4,4,True,4.571428571428571,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,5,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,2,create a Word report,6,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,2,create a Word report,7,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,2,create a Word report,8,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,2,create a Word report,9,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,2,create a Word report,10,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,2,create a Word report,12,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,2,create a Word report,15,122,False,,122,0.0
+7,Get the current sprint work items and create a Word report,2,create a Word report,20,122,False,,122,0.0
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,2,2,True,9.395973154362416,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,3,2,True,9.395973154362416,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,4,2,True,9.395973154362416,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,5,2,True,9.395973154362416,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,6,2,True,9.395973154362416,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,7,2,True,9.395973154362416,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,8,2,True,9.395973154362416,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,9,2,True,9.395973154362416,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,10,121,True,10.234899328859061,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,12,122,False,,122,0.0
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,15,122,False,,122,0.0
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,20,122,False,,122,0.0
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,2,121,True,11.785714285714285,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,3,121,True,11.785714285714285,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,4,121,True,11.785714285714285,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,5,121,True,11.785714285714285,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,6,121,True,11.785714285714285,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,7,121,True,11.785714285714285,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,8,121,True,11.785714285714285,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,9,121,True,11.785714285714285,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,10,121,True,11.785714285714285,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,12,122,False,,122,0.0
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,15,122,False,,122,0.0
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,20,122,False,,122,0.0
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,2,2,True,2.197802197802198,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,3,11,True,7.6923076923076925,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,4,11,True,7.6923076923076925,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,5,11,True,7.6923076923076925,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,6,11,True,7.6923076923076925,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,7,11,True,7.6923076923076925,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,8,122,False,,122,0.0
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,9,122,False,,122,0.0
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,10,122,False,,122,0.0
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,12,122,False,,122,0.0
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,15,122,False,,122,0.0
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,20,122,False,,122,0.0
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,2,1,True,2.797202797202797,122,0.9918032786885246
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,3,4,True,3.4965034965034967,122,0.9672131147540983
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,4,120,True,4.195804195804196,122,0.016393442622950838
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,5,122,False,,122,0.0
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,6,122,False,,122,0.0
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,7,122,False,,122,0.0
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,8,122,False,,122,0.0
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,9,122,False,,122,0.0
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,10,122,False,,122,0.0
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,12,122,False,,122,0.0
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,15,122,False,,122,0.0
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,20,122,False,,122,0.0
+10,Get my leave applications,1,Get my leave applications,2,1,True,7.391304347826087,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,3,1,True,7.391304347826087,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,4,1,True,7.391304347826087,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,5,1,True,7.391304347826087,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,6,1,True,7.391304347826087,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,7,1,True,7.391304347826087,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,8,4,True,17.82608695652174,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,9,4,True,17.82608695652174,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,10,4,True,17.82608695652174,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,12,4,True,17.82608695652174,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,15,4,True,17.82608695652174,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,20,122,False,,122,0.0
+11,Submit a leave application,1,Submit a leave application,2,1,True,2.1834061135371177,122,0.9918032786885246
+11,Submit a leave application,1,Submit a leave application,3,2,True,3.4934497816593884,122,0.9836065573770492
+11,Submit a leave application,1,Submit a leave application,4,3,True,8.73362445414847,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,5,3,True,8.73362445414847,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,6,3,True,8.73362445414847,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,7,3,True,8.73362445414847,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,8,3,True,8.73362445414847,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,9,4,True,22.707423580786028,122,0.9672131147540983
+11,Submit a leave application,1,Submit a leave application,10,4,True,22.707423580786028,122,0.9672131147540983
+11,Submit a leave application,1,Submit a leave application,12,4,True,22.707423580786028,122,0.9672131147540983
+11,Submit a leave application,1,Submit a leave application,15,4,True,22.707423580786028,122,0.9672131147540983
+11,Submit a leave application,1,Submit a leave application,20,4,True,22.707423580786028,122,0.9672131147540983
+12,Find a GitHub repository,1,Find a GitHub repository,2,1,True,4.739336492890995,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,3,1,True,4.739336492890995,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,4,1,True,4.739336492890995,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,5,16,True,8.530805687203792,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,6,16,True,8.530805687203792,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,7,16,True,8.530805687203792,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,8,16,True,8.530805687203792,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,9,122,False,,122,0.0
+12,Find a GitHub repository,1,Find a GitHub repository,10,122,False,,122,0.0
+12,Find a GitHub repository,1,Find a GitHub repository,12,122,False,,122,0.0
+12,Find a GitHub repository,1,Find a GitHub repository,15,122,False,,122,0.0
+12,Find a GitHub repository,1,Find a GitHub repository,20,122,False,,122,0.0
+13,Get a file from SharePoint,1,Get a file from SharePoint,2,1,True,4.66321243523316,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,3,1,True,4.66321243523316,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,4,1,True,4.66321243523316,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,5,122,False,,122,0.0
+13,Get a file from SharePoint,1,Get a file from SharePoint,6,122,False,,122,0.0
+13,Get a file from SharePoint,1,Get a file from SharePoint,7,122,False,,122,0.0
+13,Get a file from SharePoint,1,Get a file from SharePoint,8,122,False,,122,0.0
+13,Get a file from SharePoint,1,Get a file from SharePoint,9,122,False,,122,0.0
+13,Get a file from SharePoint,1,Get a file from SharePoint,10,122,False,,122,0.0
+13,Get a file from SharePoint,1,Get a file from SharePoint,12,122,False,,122,0.0
+13,Get a file from SharePoint,1,Get a file from SharePoint,15,122,False,,122,0.0
+13,Get a file from SharePoint,1,Get a file from SharePoint,20,122,False,,122,0.0
+14,Run a query against the database,1,Run a query against the database,2,2,True,6.944444444444445,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,3,2,True,6.944444444444445,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,4,2,True,6.944444444444445,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,5,2,True,6.944444444444445,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,6,2,True,6.944444444444445,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,7,122,False,,122,0.0
+14,Run a query against the database,1,Run a query against the database,8,122,False,,122,0.0
+14,Run a query against the database,1,Run a query against the database,9,122,False,,122,0.0
+14,Run a query against the database,1,Run a query against the database,10,122,False,,122,0.0
+14,Run a query against the database,1,Run a query against the database,12,122,False,,122,0.0
+14,Run a query against the database,1,Run a query against the database,15,122,False,,122,0.0
+14,Run a query against the database,1,Run a query against the database,20,122,False,,122,0.0
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,2,2,True,3.414634146341464,122,0.9836065573770492
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,3,2,True,3.414634146341464,122,0.9836065573770492
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,4,10,True,5.853658536585367,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,5,10,True,5.853658536585367,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,6,122,False,,122,0.0
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,7,122,False,,122,0.0
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,8,122,False,,122,0.0
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,9,122,False,,122,0.0
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,10,122,False,,122,0.0
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,12,122,False,,122,0.0
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,15,122,False,,122,0.0
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,20,122,False,,122,0.0

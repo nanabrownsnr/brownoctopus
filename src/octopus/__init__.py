@@ -1,2 +1,3 @@
-def main() -> None:
-    print("Hello from octopus!")
+from octopus.octopus import Octopus
+
+__all__ = ["Octopus"]

@@ -1,915 +1,963 @@
-# Brown Octopus — Research & Development Notes
+# Brown Octopus: Stateful Dynamic Capability-Context Management for Tool-Using AI Agents
 
-> Living research document. This file records the problem, hypotheses, experiments, architectural changes, findings, and open questions behind Brown Octopus. It is intended to serve as source material for a future research paper.
+**Nana Brown**
+
+_Working research manuscript — September 2026_
 
 ---
 
-# 1. Research Problem
+## Abstract
 
-Modern AI agents can be connected to increasingly large collections of tools through MCP servers, APIs, plugins, and internal capabilities.
+Large language model agents increasingly interact with external tools, APIs, and services through structured function definitions. As the number of available tools grows, exposing the complete tool universe to the language model on every turn becomes increasingly inefficient and may make tool selection more difficult. Existing retrieval-based approaches can reduce this context by selecting tools relevant to a user request, but fixed-size retrieval introduces a different limitation: different operational intents may require capability neighborhoods of substantially different sizes.
 
-A straightforward agent architecture exposes all available tool definitions to the language model:
+This paper introduces **Brown Octopus**, a stateful, harness-agnostic capability-context manager for tool-using AI agents. Brown Octopus decomposes user requests into operational intents, performs semantic capability ranking independently for each intent, estimates a bounded semantic neighborhood using a maximum adjacent-score-gap policy, merges the resulting capabilities, and maintains useful capabilities across conversational turns using time-to-live and global context constraints.
+
+Rather than attempting to identify only the single best tool for a request, Brown Octopus is designed to preserve both primary and plausible supporting capabilities that an autonomous agent may require during task completion. In the current implementation, each intent is allowed a maximum neighborhood of 16 tools, while a score-distribution boundary can reduce that neighborhood when a stronger semantic separation is observed.
+
+A 122-tool development universe demonstrates that the method produces variable capability neighborhoods across tasks: compact neighborhoods for web search and document authoring, and larger neighborhoods for email, repository management, deployment management, and project-management requests. These observations motivate a systematic evaluation against full-tool exposure and external dynamic tool-retrieval approaches. The principal research question is whether dynamic, stateful capability-context management can substantially reduce the tool context presented to an agent while preserving the capabilities required for successful autonomous task completion.
+
+---
+
+# 1. Introduction
+
+Tool-using large language models are increasingly expected to interact with external systems rather than generate text alone.
+
+An enterprise agent may have access to capabilities for:
+
+- email
+- calendars
+- project management
+- databases
+- document generation
+- file systems
+- source control
+- web search
+- infrastructure
+- HR systems
+- internal applications
+
+A straightforward architecture exposes all available tool definitions to the LLM:
 
 ```text
-User Request
+Tool Universe
      ↓
-LLM + Entire Tool Universe
+LLM
      ↓
 Tool Selection
      ↓
-Tool Execution
+Execution
 ```
 
-This becomes increasingly undesirable as the tool universe grows.
+This architecture is simple when the number of tools is small.
 
-A large capability surface can increase:
+As the capability universe grows, however, every additional tool introduces schema and descriptive context that the language model must process even when that capability is irrelevant to the current task.
 
-- context consumption,
-- inference cost,
-- latency,
-- tool-selection complexity,
-- semantic competition between similar tools,
-- and the amount of irrelevant information presented to the model.
+The resulting problem is not merely tool retrieval.
 
-This led to the initial research question:
+It is **capability-context management**.
 
-> **Can an agent dynamically expose only the tools relevant to the current request without removing capabilities that the agent may need?**
+The system must determine:
 
-The problem initially appeared to be a **tool recommendation problem**.
+1. which capabilities are relevant to the current request,
+2. how many capabilities should be exposed,
+3. which supporting capabilities may become necessary during execution,
+4. which capabilities should remain available across conversational turns, and
+5. how the context should change as the conversation evolves.
 
-Our work so far suggests it is more accurately a **dynamic capability-context management problem**.
+Brown Octopus addresses these questions through a stateful retrieval layer positioned before the agent's ordinary tool-selection and execution loop.
 
 ---
 
-# 2. Initial Hypothesis
+# 2. Problem Definition
 
-The original Brown Octopus concept was a deterministic preprocessing layer between the user and the LLM.
+Let the complete capability universe be:
 
-```text
-Large Tool Universe
-        │
-        ▼
-User → Tool Recommender → Small Tool Set → LLM
-```
+$$
+T = \{t_1, t_2, \ldots, t_N\}
+$$
 
-Instead of providing hundreds of tools to the model, a lightweight retrieval system would identify a small subset before inference.
+where each \(t_i\) is a tool definition containing at minimum a name and description and potentially an input schema and execution metadata.
 
-The original design emphasized:
+A conventional tool-enabled agent may receive the complete set \(T\) on every inference step.
 
-- deterministic retrieval,
-- semantic similarity,
-- low latency,
-- independence from the main LLM,
-- and high recall.
+Brown Octopus instead attempts to construct a much smaller active capability context:
 
-The recommender would not execute tools.
+$$
+A_t \subseteq T
+$$
 
-Its only responsibility would be determining which tools should be made available to the agent.
+for conversational turn \(t\).
 
----
+The objective is not simply:
 
-# 3. Early Retrieval Approach
+$$
+\min |A_t|
+$$
 
-The first retrieval experiments treated tool selection similarly to conventional semantic search.
+because an arbitrarily small context may omit capabilities required by the agent.
 
-Each tool was represented using metadata such as:
+Instead, the objective can be expressed conceptually as:
 
-```text
-tool name
-tool description
-input schema
-MCP/server information
-```
+$$
+\min |A_t|
+$$
 
-A query representation was generated and compared against tool embeddings.
+subject to:
 
-Early experiments also explored separately representing:
+$$
+R(A_t, q_t) \approx R(T, q_t)
+$$
 
-```text
-Action
-Target
-Context
-```
+where \(R\) represents the availability of capabilities required to successfully address query \(q_t\).
 
-and combining their similarity scores.
+For multi-turn interaction, the active context also depends on previous capability requirements:
 
-Conceptually:
+$$
+A_t = f(q_t, A_{t-1}, T)
+$$
 
-```text
-Q = wA × Action + wT × Target + wC × Context
-```
-
-This approach produced useful rankings for simple requests but revealed a more fundamental problem when requests contained multiple operational intents.
+This distinguishes Brown Octopus from a purely stateless query-to-tool retrieval function.
 
 ---
 
-# 4. Discovery: Tool Retrieval Is Not Always a Single Search Problem
+# 3. Capability Recall Rather Than Exact Tool Prediction
 
-Consider:
+A central design decision is that Brown Octopus does not attempt to determine exactly which tool the downstream agent will call.
 
-```text
-"Get the sprint work items and create a Word document summarizing them."
-```
+That responsibility remains with the agent.
 
-This request requires multiple capabilities:
+Instead, Brown Octopus attempts to preserve a sufficiently useful **capability neighborhood**.
 
-```text
-Sprint / project management
-Word document creation
-Summarization
-```
+Consider the request:
 
-A single global semantic ranking can allow one semantic neighborhood to dominate the available top-K positions.
+> Send an email to Tom.
 
-For example, project-management tools may occupy most of the ranking while document capabilities disappear below the retrieval boundary.
+The obvious primary capability is an email-sending function.
 
-This changed the retrieval problem from:
+However, successful autonomous completion may first require discovering Tom's email address.
+
+A minimal lexical or semantic mapping may expose:
 
 ```text
-query
- ↓
-rank all tools
- ↓
-global top K
+send_email
 ```
 
-to:
+while a broader capability neighborhood may contain:
 
 ```text
-query
- ↓
-identify operational intents
- ↓
-retrieve independently for each intent
- ↓
-merge
- ↓
-deduplicate
+compose_email
+send_email
+find_email_address
+search_mail
 ```
 
-This became one of the central architectural changes in Brown Octopus.
+Similarly:
+
+> Create a Word report.
+
+may require a workflow involving:
+
+```text
+create_word_document
+add_heading
+add_paragraph
+add_table
+```
+
+The retrieval problem therefore differs from identifying one canonical tool label.
+
+Brown Octopus prioritizes **capability recall**: ensuring that the agent retains access to both obvious and plausible supporting operations.
 
 ---
 
-# 5. Operational Intent Analysis
+# 4. System Architecture
 
-Brown Octopus currently uses spaCy's transformer English pipeline:
+Brown Octopus is positioned between the capability universe and the downstream agent.
 
 ```text
-en_core_web_trf
+Capability Universe
+        ↓
+Persisted Semantic Index
+        ↓
+User Request
+        ↓
+Operational Intent Analysis
+        ↓
+Per-Intent Semantic Ranking
+        ↓
+Bounded Capability Selection
+        ↓
+Merge and Deduplication
+        ↓
+Active Capability Memory
+        ↓
+Agent Tool Context
+        ↓
+LLM
+        ↓
+Normal Tool Execution
 ```
 
-to identify operational actions within a request.
+Brown Octopus does not execute the selected tools.
 
-The analyzer attempts to distinguish between:
+It therefore remains independent of the downstream orchestration framework.
 
-- primary requested actions,
-- coordinated actions,
-- nested operational actions,
-- conditions,
-- descriptive clauses,
-- and supporting linguistic structure.
+The agent may use any compatible execution architecture after receiving the selected capability definitions.
+
+---
+
+# 5. Operational Intent Decomposition
+
+Natural-language requests frequently contain multiple operational actions.
+
+For example:
+
+> Find the latest Nvidia news and email a summary to Tom.
+
+This request contains at least two capability requirements:
+
+$$
+I_1 = \text{find the latest Nvidia news}
+$$
+
+$$
+I_2 = \text{email a summary to Tom}
+$$
+
+Retrieving tools against the complete sentence risks allowing one semantic component to dominate the embedding representation.
+
+Brown Octopus therefore decomposes the request into operational intents:
+
+$$
+Q \rightarrow \{I_1, I_2, \ldots, I_m\}
+$$
+
+and performs capability retrieval independently for each intent.
+
+The current implementation uses the `en_core_web_trf` spaCy pipeline and dependency-based operational-action rules.
+
+The analyzer identifies root operational verbs and selected coordinated or nested operational actions while attempting to exclude verbs that primarily express content or conditions.
 
 For example:
 
 ```text
-"Search the web for the latest Nvidia news and send what you find to Tom."
+Search the web for the latest Nvidia news
+and send what you find to Tom
 ```
 
-is decomposed approximately into:
+is represented approximately as:
 
 ```text
 Search the web for the latest Nvidia news
-Send what you find to Tom
+send what you find to Tom
 ```
 
-Importantly:
-
-```text
-find
-```
-
-is not treated as another independent operational request.
-
-Similarly:
-
-```text
-"Create a Word document summarizing the sprint."
-```
-
-can expose both:
-
-```text
-Create a Word document
-Summarizing the sprint
-```
-
-The guiding rule that emerged was approximately:
-
-> An operational action owns its local linguistic subtree except where another identified operational action begins.
-
-This allows Brown Octopus to construct local natural-language intent spans without relying on crude sentence or conjunction splitting.
+rather than treating every verb in the sentence as an independent capability requirement.
 
 ---
 
-# 6. Local Intent Retrieval
+# 6. Semantic Capability Ranking
 
-Each operational intent is embedded independently.
+Each operational intent is ranked against the complete tool universe.
 
-The current embedding model is:
+The current implementation uses:
 
 ```text
 Qwen/Qwen3-Embedding-0.6B
 ```
 
-Tool embeddings are constructed primarily from:
+Tool representations are constructed from:
 
 ```text
 tool name + tool description
 ```
 
-The current retrieval process is:
+For intent \(I_j\), semantic retrieval produces:
 
-```text
-Raw Query
-    ↓
-Intent Analyzer
-    ↓
-Intent 1 ──→ Top 4 tools
-Intent 2 ──→ Top 4 tools
-Intent 3 ──→ Top 4 tools
-    ↓
-Merge
-    ↓
-Deduplicate
-```
+$$
+S_j =
+[(t_1,s_1),(t_2,s_2),\ldots,(t_N,s_N)]
+$$
 
-There is currently **no global retrieval cap after the per-intent retrieval stage**.
+where:
 
-This is deliberate.
+$$
+s_1 \ge s_2 \ge \ldots \ge s_N
+$$
 
-A global cap could recreate the original problem by removing the tools associated with one of the identified intents.
+The remaining problem is determining where the relevant capability neighborhood ends.
 
 ---
 
-# 7. Shift in Evaluation Philosophy
+# 7. Why Fixed-K Retrieval Was Insufficient
 
-Early experimentation naturally focused on ranking quality:
+An early Brown Octopus prototype used a fixed number of tools per operational intent.
 
-```text
-Was the correct tool ranked #1?
-```
+This provided a simple baseline but revealed a structural problem.
 
-This turned out not to match the actual role Brown Octopus plays.
+Capability neighborhoods have different widths.
 
-The downstream LLM remains responsible for selecting and invoking tools.
-
-Brown Octopus instead controls which capabilities are visible to that LLM.
-
-Therefore the more important question is:
-
-> **Did every capability required by the request survive into the tool context?**
-
-This suggests that **capability recall** is more important than perfect ranking precision.
-
-Conceptually:
+A web-search intent may exhibit:
 
 ```text
-Capability Recall =
-
-required capabilities successfully exposed
-───────────────────────────────────────────
-total required capabilities
+web_search
+----------------
+unrelated tools
 ```
 
-If a task requires:
+while an email intent may exhibit:
 
 ```text
-Web Search
-Email
-Word
+send_email
+compose_email
+reply_email
+forward_email
+find_email_address
+search_mail
+----------------
+unrelated capabilities
 ```
 
-and Brown Octopus exposes all three plus several unnecessary tools, the retrieval may still be successful.
+A fixed \(K\) therefore creates an unavoidable tradeoff.
 
-If it exposes only Web Search and Email, the system has failed because the agent has lost access to a required capability.
+Small \(K\):
 
-This led to the working principle:
+- reduces context,
+- but may remove useful supporting capabilities.
 
-> **Brown Octopus does not need to know exactly which tool the agent will use. It needs to make sure the agent does not lose access to the tools it may need.**
+Large \(K\):
+
+- improves recall,
+- but unnecessarily expands context for narrow intents.
+
+This motivated an adaptive boundary-selection policy.
+
+The fixed-K implementation is no longer part of the production retrieval interface but remains conceptually useful as part of the system's development history.
 
 ---
 
-# 8. Batched Intent Embedding
+# 8. Bounded Maximum-Gap Selection
 
-Compound requests originally caused multiple sequential embedding calls:
+Brown Octopus currently estimates the capability boundary using a bounded maximum adjacent-score gap.
 
-```text
-Intent 1 → encode()
-Intent 2 → encode()
-Intent 3 → encode()
-```
+Let:
 
-The retriever was changed to batch all intent spans:
+$$
+s_1 \ge s_2 \ge \ldots \ge s_N
+$$
 
-```text
-[Intent 1, Intent 2, Intent 3]
-              ↓
-         one encode()
-              ↓
-      multiple embeddings
-```
+be the semantic ranking for one intent.
 
-Each resulting embedding still receives its own independent retrieval neighborhood.
+Define adjacent normalized gaps:
 
-CPU experiments did not demonstrate a universal latency improvement from batching.
+$$
+g_i =
+\frac{s_i - s_{i+1}}{s_1}
+$$
 
-However, production deployment is intended for GPU execution, where batching represents a more appropriate inference architecture.
+The system searches for:
 
-Therefore batching was retained.
+$$
+i^* =
+\arg\max_i g_i
+$$
 
----
+within a bounded candidate neighborhood.
 
-# 9. Dynamic MCP Tool Discovery
+Current parameters are:
 
-The original prototype contained static or synthetic tool definitions.
+$$
+K_{\max}=16
+$$
 
-This was replaced with live MCP discovery.
+and:
 
-Brown Octopus now:
+$$
+g_{\min}=0.02
+$$
 
-1. reads configured MCP URLs,
-2. connects to each MCP,
-3. retrieves server metadata,
-4. calls `list_tools()`,
-5. constructs namespaced tool identities,
-6. deduplicates the resulting universe,
-7. stores the tools in an in-memory registry,
-8. builds the retrieval index.
+The system inspects ranks 1 through 17 so that the boundary after rank 16 can be measured, while never exposing more than 16 tools for one intent.
 
-Conceptually:
+The selection rule is:
 
-```text
-MCP URLs
-   ↓
-MCP Discovery
-   ↓
-Server Metadata + list_tools()
-   ↓
-Namespaced Tools
-   ↓
-Deduplication
-   ↓
-Tool Registry
-   ↓
-Embedding Index
-```
+$$
+K =
+\begin{cases}
+i^*, & g_{i^*} \ge g_{\min} \\
+K_{\max}, & \text{otherwise}
+\end{cases}
+$$
 
-The current experimental universe contains approximately 122 discovered tools across services including email, project management, document creation, source control, file storage, databases, web search, and other capabilities.
+This produces:
 
-Partial MCP failure is tolerated so one unavailable MCP does not prevent Brown Octopus from initializing the rest of the capability universe.
+$$
+C_j = \{t_1,\ldots,t_K\}
+$$
+
+for intent \(I_j\).
 
 ---
 
-# 10. Discovery: Tool Context Must Be Stateful
+# 9. Why the Search Is Bounded
 
-The initial architecture retrieved tools independently on every turn.
+Early experiments considered searching for large score cliffs over the complete ranking.
 
-Conversation exposed another problem.
+This produced pathological boundaries deep in weak-ranking tails.
+
+Observed candidate cutoffs included ranks such as:
+
+```text
+61
+98
+121
+```
+
+These boundaries were mathematical artifacts rather than useful capability neighborhoods.
+
+Brown Octopus therefore separates two concepts:
+
+**Context budget**
+
+$$
+K_{\max}
+$$
+
+and:
+
+**Semantic boundary**
+
+$$
+i^*
+$$
+
+The maximum-gap policy may reduce the number of capabilities below the budget, but it cannot expand the context beyond that budget.
+
+With the current configuration:
+
+$$
+|C_j| \le 16
+$$
+
+for every operational intent.
+
+---
+
+# 10. Multi-Intent Merge
+
+After adaptive retrieval is performed independently for every operational intent, the resulting capability sets are combined:
+
+$$
+C =
+\bigcup_{j=1}^{m} C_j
+$$
+
+Duplicate tools are removed while preserving the first selected occurrence.
+
+This allows capability allocation to vary by intent.
+
+For example, a development observation for:
+
+> Find the latest Nvidia news and email a summary to Tom.
+
+produced approximately:
+
+```text
+News intent:
+2 capabilities
+
+Email intent:
+11 capabilities
+
+Merged context:
+13 capabilities
+```
+
+The system therefore does not impose one global retrieval size on a compound request.
+
+---
+
+# 11. Stateful Capability Memory
+
+Tool requirements do not disappear at sentence boundaries.
 
 Consider:
 
 ```text
 Turn 1:
-"Check my remaining leave balance."
+Find the latest Nvidia news.
 
 Turn 2:
-"Email it to Tom."
+Email it to Tom.
 ```
 
-The second message requires an email capability, but the conversation still depends on the capability introduced during the first turn.
+The second request relies on conversational state.
 
-Brown Octopus therefore evolved from a stateless retriever into a stateful capability-context manager.
+Brown Octopus maintains an active capability set:
+
+$$
+A_t
+$$
+
+Capabilities retrieved on the current turn are merged with capabilities retained from previous turns.
+
+Each active capability records the turn on which it was last retrieved.
+
+The current implementation uses:
 
 ```text
-Current Retrieval
-       +
-Previously Active Capabilities
-       ↓
-Active Tool Context
-       ↓
-Agent
+TTL = 8 turns
 ```
+
+A capability remains active through its TTL boundary and expires afterward unless retrieved again.
+
+Retrieval refreshes its last-retrieved turn.
+
+---
+
+# 12. Global Capability Budget
+
+Persistent capability memory introduces another scaling problem: without eviction, active context can grow indefinitely.
+
+Brown Octopus therefore maintains a global active-context cap:
+
+```text
+30 tools
+```
+
+When the active capability context exceeds the cap, the oldest capabilities are evicted.
+
+Thus the conversational capability state behaves as a bounded rolling context rather than an ever-growing history.
+
+---
+
+# 13. Capability Discovery and Indexing
+
+The current implementation constructs its development capability universe from Model Context Protocol servers.
+
+The discovery process is:
+
+```text
+MCP catalog
+    ↓
+connect to server
+    ↓
+list tools
+    ↓
+normalize metadata
+    ↓
+deduplicate
+    ↓
+embed
+    ↓
+persist index
+```
+
+The current development universe contains:
+
+```text
+122 tools
+```
+
+across capability domains including email, web search, GitHub, project management, Word/document generation, databases, HR operations, SharePoint, infrastructure, and file storage.
+
+MCP is currently the capability source, but Brown Octopus is designed as a harness-agnostic context manager rather than an MCP execution framework.
+
+---
+
+# 14. Persisted Capability Index
+
+Normal application startup should not require live discovery of every capability source.
+
+Brown Octopus therefore persists:
+
+```text
+tools.json
+embeddings.pt
+metadata.json
+```
+
+The index records the normalized capability universe and precomputed semantic embeddings.
+
+Normal initialization loads the persisted index.
+
+Capability rediscovery and index rebuilding occur only through an explicit update operation.
+
+This separates:
+
+```text
+capability-universe maintenance
+```
+
+from:
+
+```text
+runtime capability retrieval
+```
+
+---
+
+# 15. Development Observations
+
+The current 122-tool development universe produces variable capability-neighborhood sizes.
+
+| Query                                | Selected capabilities |
+| ------------------------------------ | --------------------: |
+| Send an email to Tom                 |                    11 |
+| Create a Word report                 |                     4 |
+| Get my leave applications            |                     4 |
+| Submit a leave application           |                     4 |
+| Find a GitHub repository             |                    16 |
+| Check deployment status on Railway   |                    10 |
+| Get current sprint work items        |                    12 |
+| Find Nvidia news and email a summary |                    13 |
+
+These values are not presented as benchmark results.
+
+They demonstrate that the adaptive policy behaves differently from fixed-size retrieval and that different semantic neighborhoods produce different capability allocations.
+
+The email case is particularly illustrative.
+
+The selected neighborhood includes the expected send/compose operations but also includes an address-discovery capability at approximately rank 10.
+
+This provides a concrete example of a supporting capability that may be useful during autonomous task execution even though it is not the highest-scoring semantic match.
+
+---
+
+# 16. Implementation Validation
+
+The current implementation contains tests covering:
+
+- operational intent decomposition
+- semantic ranking
+- bounded maximum-gap selection
+- candidate-boundary behavior
+- per-intent retrieval
+- cross-intent deduplication
+- active capability state
+- TTL behavior
+- global capability eviction
+- MCP discovery
+- persisted indexes
+- pipeline behavior
+- public API behavior
+- multi-turn conversations
+- end-to-end capability flow
+
+At the current implementation freeze:
+
+```text
+89 tests pass
+```
+
+with one dependency deprecation warning unrelated to Brown Octopus behavior.
+
+---
+
+# 17. Research Hypotheses
+
+The primary hypothesis is:
+
+> A stateful capability-context manager can substantially reduce the tool definitions exposed to an AI agent while preserving high recall of the capabilities required to complete user requests.
+
+A second hypothesis concerns supporting capabilities:
+
+> Retrieving a semantic capability neighborhood rather than only the highest-ranked tools improves the availability of intermediate capabilities required for autonomous multi-step completion.
+
+A third hypothesis concerns state:
+
+> Maintaining capability context across conversational turns can reduce repeated retrieval requirements while preserving capabilities relevant to follow-up requests.
+
+These hypotheses require systematic evaluation and are not treated as established results in the present manuscript.
+
+---
+
+# 18. Evaluation Plan
+
+The evaluation will separate retrieval quality from downstream agent behavior.
+
+## 18.1 Experimental Conditions
+
+The principal comparison is intended to include:
+
+### ALL
+
+Expose the complete capability universe to the agent.
+
+This provides a maximum-context reference condition.
+
+### External Dynamic Retrieval Baseline
+
+Compare Brown Octopus against a strong external tool-retrieval or dynamic capability-selection approach.
+
+Candidate approaches will be selected based on reproducibility and compatibility with the evaluation environment.
+
+### BROWN OCTOPUS
+
+Operational intent decomposition followed by per-intent semantic ranking, bounded maximum-gap selection, merge/deduplication, and stateful capability memory.
+
+Historical fixed-K retrieval may be retained as an ablation or development baseline but is not intended to serve as the primary external comparison.
+
+---
+
+## 18.2 Retrieval-Level Evaluation
+
+Retrieval evaluation should measure:
+
+### Required Capability Recall
+
+Did the selected context contain the capabilities required for task completion?
+
+### Supporting Capability Recall
+
+Did the context contain useful intermediate capabilities that may be required during autonomous execution?
+
+### Context Reduction
+
+$$
+Reduction =
+1 -
+\frac{|C|}{|T|}
+$$
+
+### Tool-Schema Token Reduction
+
+Because tools vary substantially in schema size, raw tool count is insufficient.
+
+The token cost of the exposed tool definitions should therefore also be measured.
+
+### Retrieval Latency
+
+The cost of capability management itself must be included.
+
+---
+
+## 18.3 Downstream Agent Evaluation
+
+Retrieval quality alone does not establish agent usefulness.
+
+The same downstream LLM and execution harness should therefore be evaluated under each capability-context condition.
+
+Metrics should include:
+
+- task completion
+- correct tool usage
+- unnecessary tool calls
+- failed tool-selection attempts
+- total tool-schema tokens
+- end-to-end latency
+- total model tokens
+- multi-step task completion
+
+This evaluation tests whether reduced capability context preserves or improves actual agent behavior.
+
+---
+
+## 18.4 Multi-Turn Evaluation
+
+Brown Octopus is explicitly stateful.
+
+Evaluation should therefore include conversations where capability requirements persist or evolve across turns.
 
 Example:
 
 ```text
-Turn 1
-Leave capability
+Turn 1:
+Find the latest Nvidia news.
 
-Turn 2
-Leave + Email
+Turn 2:
+Summarize the most important development.
 
-Turn 3
-Leave + Email
-
-Turn 4
-Leave + Email + Web Search
+Turn 3:
+Email it to Tom.
 ```
 
-Brown Octopus does not attempt to resolve what pronouns such as `"it"` refer to.
+The experiment should measure:
 
-That remains the responsibility of the language model and its conversational context.
+- capability continuity,
+- unnecessary capability retention,
+- TTL behavior,
+- context growth,
+- context rotation,
+- task success.
 
-The responsibility boundary is:
+---
+
+## 18.5 Scaling Evaluation
+
+The capability universe should be expanded beyond the current 122 tools.
+
+Evaluation should measure behavior as:
+
+$$
+N \rightarrow 10^2, 10^3, 10^4, \ldots
+$$
+
+where feasible.
+
+Important measurements include:
+
+- retrieval latency,
+- index memory,
+- context reduction,
+- capability recall,
+- agent task success.
+
+Synthetic distractor capabilities may be useful for controlled scaling experiments, while public benchmarks provide externally defined retrieval corpora.
+
+---
+
+# 19. Related Work
+
+Brown Octopus intersects several areas of tool-using language-model research.
+
+## Tool Retrieval
+
+Tool retrieval treats capability selection as an information-retrieval problem over tool descriptions.
+
+The ToolRet benchmark introduced a heterogeneous benchmark containing thousands of retrieval tasks over tens of thousands of tools and demonstrated that strong general-purpose retrieval models do not necessarily transfer cleanly to tool retrieval.
+
+This motivates evaluating Brown Octopus on standardized retrieval data rather than relying only on its development MCP universe.
+
+## ToolBench and StableToolBench
+
+ToolBench provides large-scale tool-use data containing both single-tool and multi-tool tasks.
+
+StableToolBench addresses instability in large-scale tool evaluation through simulated and cached API behavior.
+
+These benchmarks are relevant to evaluating downstream task completion after capability-context selection.
+
+## Dynamic Tool Retrieval
+
+Recent systems increasingly consider dynamic rather than one-shot tool availability.
+
+Dynamic Tool Dependency Retrieval (DTDR), for example, conditions retrieval on both the original query and an evolving tool-calling plan, explicitly addressing multi-step dependencies between tools.
+
+Brown Octopus approaches the problem from a complementary capability-context perspective: it constructs semantic capability neighborhoods per operational intent and maintains useful capability context across conversational turns.
+
+A rigorous comparison must distinguish these architectural differences experimentally rather than assuming superiority from design alone.
+
+## Dynamic Tool Selection During Reasoning
+
+Other recent work explores changing tool availability during agent reasoning rather than treating the available tool set as fixed.
+
+This reinforces the broader observation that capability selection is becoming part of the agent architecture itself rather than merely a preprocessing optimization.
+
+---
+
+# 20. Distinction from Tool Execution
+
+Brown Octopus is not:
+
+- an agent planner,
+- a tool executor,
+- an MCP client exposed as a tool,
+- an LLM-based router,
+- or a replacement for the agent's function-calling mechanism.
+
+Its responsibility ends after constructing the capability context.
+
+This separation is intentional.
+
+It allows Brown Octopus to be evaluated and integrated independently of the downstream agent harness.
+
+---
+
+# 21. Limitations
+
+The current work has several limitations.
+
+First, the primary development universe contains only 122 tools.
+
+This is sufficient for implementation development but not sufficient to establish large-scale retrieval performance.
+
+Second, the current operational-intent analyzer relies on English dependency parsing and handcrafted structural rules.
+
+Third, the bounded maximum-gap parameters are currently based on development experiments rather than a large held-out benchmark.
+
+Fourth, the current semantic representation primarily embeds tool names and descriptions rather than full input schemas.
+
+Fifth, capability-neighborhood quality has not yet been validated through controlled downstream agent experiments.
+
+Sixth, stateful capability retention introduces its own hyperparameters, including TTL and global context cap, which require ablation.
+
+These limitations define the next evaluation phase.
+
+---
+
+# 22. Reproducibility
+
+The implementation maintains explicit separation between:
 
 ```text
-LLM
-→ understand conversational meaning
+capability discovery
+index construction
+runtime initialization
+intent analysis
+semantic ranking
+capability selection
+state management
+agent execution
+```
 
-Brown Octopus
-→ maintain capability availability
+The current implementation freeze uses:
+
+```text
+Embedding model:
+Qwen/Qwen3-Embedding-0.6B
+
+Intent analyzer:
+spaCy en_core_web_trf
+
+Maximum capability neighborhood:
+16
+
+Minimum normalized adjacent gap:
+2%
+
+Capability TTL:
+8 turns
+
+Global active capability cap:
+30 tools
+
+Development capability universe:
+122 tools
+```
+
+The complete test suite currently reports:
+
+```text
+89 passing tests
 ```
 
 ---
 
-# 11. Capability Expiration
+# 23. Research Question
 
-Persistent capability memory introduces another problem:
+The central research question is:
 
-```text
-Turn 1  → tools accumulate
-Turn 2  → more tools
-Turn 3  → more tools
-...
-Turn N  → potentially the entire universe
-```
+> Can an AI agent operate with a small, dynamically selected and statefully maintained capability context while retaining task performance comparable to an agent given access to the complete tool universe?
 
-This would eventually recreate the original tool-overload problem.
+The capability-neighborhood hypothesis adds a second question:
 
-Brown Octopus therefore introduced a capability TTL.
+> Does preserving semantically related supporting capabilities improve autonomous multi-step task completion compared with narrower tool retrieval?
 
-Current value:
+And the stateful architecture introduces a third:
 
-```text
-ACTIVE_TOOL_TTL = 8 turns
-```
-
-Each active tool stores its most recent retrieval turn.
-
-Retrieving the tool again refreshes that timestamp.
-
-A capability expires when:
-
-```text
-current_turn - last_retrieved_turn > TTL
-```
-
-An interesting experimental observation was that semantic retrieval can occasionally retrieve an unnecessary capability and therefore refresh its lifetime.
-
-For the current high-recall design, this behavior has been accepted rather than introducing confidence thresholds or more complicated refresh policies.
-
-The assumption is that some unnecessary active tools are acceptable provided the active context remains bounded.
+> Does maintaining capability context across turns provide measurable benefits over independent per-turn tool retrieval?
 
 ---
 
-# 12. Hard Context Ceiling
+# 24. Conclusion
 
-TTL alone does not guarantee a bounded context.
+Brown Octopus reframes large-scale tool exposure as a capability-context management problem.
 
-A conversation may continually introduce new capabilities faster than older capabilities expire.
+Rather than presenting every available tool to the language model or retrieving a fixed number of tools for every request, the system decomposes requests into operational intents, identifies bounded semantic capability neighborhoods, merges those neighborhoods, and maintains useful capabilities across conversational turns.
 
-Brown Octopus therefore now also enforces:
+The architecture is designed around a distinction between **choosing a tool** and **maintaining access to capabilities**.
 
-```text
-MAX_ACTIVE_TOOLS = 30
-```
+The downstream agent chooses tools.
 
-After retrieval timestamps are refreshed and TTL expiration occurs:
+Brown Octopus determines the capability context within which that decision is made.
 
-```text
-if active tools > 30:
-    remove least recently retrieved tools
-```
-
-The resulting policy is effectively an LRU-style capability cache.
-
-```text
-                    ACTIVE CONTEXT
-                          │
-             ┌────────────┴────────────┐
-             │                         │
-            TTL                     CAPACITY
-          8 turns                    30 tools
-             │                         │
-     stale capability?       context still too large?
-             │                         │
-           eject                  eject oldest
-```
-
-The two mechanisms solve different problems:
-
-**TTL**
-
-> Has this capability stopped being relevant?
-
-**Capacity ceiling**
-
-> Even if many capabilities are recent, is the context becoming too large?
-
----
-
-# 13. Multi-Turn Context Experiments
-
-The active-context mechanism has now been tested at multiple levels.
-
-### Unit behavior
-
-Tests verify:
-
-- capabilities persist,
-- newly retrieved capabilities are added,
-- duplicate capabilities are not created,
-- TTL boundaries behave correctly,
-- retrieval refreshes timestamps,
-- stale capabilities expire,
-- context cannot exceed 30 tools,
-- multiple old capabilities are evicted when a batch pushes the context beyond the ceiling.
-
-### Pipeline behavior
-
-A pipeline test demonstrated:
-
-```text
-30 active capabilities
-        +
-4 newly retrieved capabilities
-        ↓
-34 candidates
-        ↓
-4 oldest capabilities evicted
-        ↓
-30 active tool definitions
-```
-
-This demonstrated that eviction affects the actual definitions exposed to the agent rather than only internal bookkeeping.
-
-### Conversation behavior
-
-A multi-turn experiment demonstrated:
-
-```text
-Turn 1 → 10 active
-Turn 2 → 20 active
-Turn 3 → 30 active
-Turn 4 → +4 new
-             ↓
-            34
-             ↓
-      remove 4 oldest
-             ↓
-            30
-```
-
-This demonstrated that Brown Octopus behaves as a rolling capability context over successive turns.
-
----
-
-# 14. Current Architecture
-
-The current system can be summarized as:
-
-```text
-                         MCP SERVERS
-                              │
-                              ▼
-                       Tool Discovery
-                              │
-                              ▼
-                    Registry + Embeddings
-                              │
-                              │
-USER MESSAGE ─────────────────┘
-      │
-      ▼
-Operational Intent Analysis
-      │
-      ▼
-Local Intent Spans
-      │
-      ▼
-Batched Qwen Embedding
-      │
-      ▼
-Independent Top-K Retrieval
-      │
-      ▼
-Merge + Deduplicate
-      │
-      ▼
-Active Capability Context
-      │
-      ├── Add
-      ├── Refresh
-      ├── TTL Expiration
-      └── Capacity Eviction
-      │
-      ▼
-Selected Tool Definitions
-      │
-      ▼
-Agent / LLM
-      │
-      ▼
-Normal LLM → Tool → LLM Loop
-```
-
-Brown Octopus intentionally does not execute tools.
-
-It is also intended to remain agent-harness agnostic.
-
-LangGraph, custom orchestration systems, or other agent runtimes should be able to consume the resulting capability context.
-
----
-
-# 15. Current Performance Findings
-
-CPU profiling has revealed two separate performance concerns.
-
-## Runtime Retrieval
-
-Warm retrieval currently ranges approximately from hundreds of milliseconds for simple requests to around two seconds for larger compound requests on the development CPU environment.
-
-This is not considered representative of the intended production environment because GPU deployment is planned.
-
-## Initialization
-
-Startup profiling identified a much larger CPU bottleneck.
-
-Approximate measurements:
-
-```text
-Analyzer initialization       ~5 s
-Embedding model load         ~12 s
-MCP discovery                ~25 s
-Tool indexing               ~829 s
-```
-
-Tool embedding therefore dominated initialization time in the CPU development environment.
-
-A likely future optimization is persistent embedding caching:
-
-```text
-Tool unchanged
-→ load cached embedding
-
-Tool added
-→ embed new tool
-
-Tool description changed
-→ regenerate embedding
-
-Tool removed
-→ remove cached embedding
-```
-
-This has not yet been implemented because production GPU measurements should be collected first.
-
----
-
-# 16. What Has Been Established So Far
-
-The experiments currently support several architectural conclusions.
-
-### 1. Tool selection benefits from operational decomposition
-
-Compound requests should not necessarily compete inside one global semantic ranking.
-
-### 2. High recall is more important than perfect ranking
-
-Brown Octopus controls capability availability rather than making the final tool-selection decision.
-
-### 3. Tool context should be conversationally stateful
-
-Capabilities useful on previous turns can remain necessary even when they are not explicitly mentioned again.
-
-### 4. Stateful capability context must be bounded
-
-TTL and capacity-based eviction prevent the active capability surface from eventually returning to the full tool universe.
-
-### 5. Capability management can remain separate from agent execution
-
-Brown Octopus can operate before the LLM without replacing the normal LLM → tool → LLM execution loop.
-
----
-
-# 17. Current Research Hypothesis
-
-The project can now be expressed more precisely.
-
-> **A stateful capability-context manager can substantially reduce the number of tool definitions exposed to an AI agent while preserving high recall of the capabilities required to complete user requests across multi-turn conversations.**
-
-Brown Octopus is the experimental system being developed to test this hypothesis.
-
-The central trade-off is:
-
-```text
-             SMALLER TOOL CONTEXT
-                     ↑
-                     │
-                     │
-       How far can we reduce it?
-                     │
-                     ↓
-          CAPABILITY PRESERVATION
-```
-
-Reducing the context is only useful if the agent retains the capabilities necessary to perform its task.
-
----
-
-# 18. What We Have Not Yet Proven
-
-The current prototype demonstrates architectural feasibility, but several important questions remain unanswered.
-
-## Retrieval Quality at Scale
-
-We have not yet measured capability recall across a sufficiently large and diverse evaluation dataset.
-
-## Scale
-
-The current real tool universe is approximately 122 tools.
-
-Behavior with hundreds or thousands of tools remains to be measured.
-
-## Production GPU Latency
-
-Current latency measurements are CPU measurements.
-
-Production GPU retrieval and indexing performance remains unknown.
-
-## Agent-Level Impact
-
-We have not yet performed the critical comparison:
-
-```text
-Agent + Entire Tool Universe
-            VS
-Agent + Brown Octopus Context
-```
-
-The effect on:
-
-- task completion,
-- tool-selection accuracy,
-- token usage,
-- inference latency,
-- and overall cost
-
-remains to be experimentally measured.
-
-## Dynamic Universe Updates
-
-The current lifecycle primarily indexes tools during initialization.
-
-Incremental handling of added, removed, or modified MCP tools remains future work.
-
----
-
-# 19. Next Research Phase
-
-The next major phase should focus on **measurement rather than additional architecture**.
-
-A realistic evaluation dataset should be constructed containing categories such as:
-
-```text
-single-intent requests
-compound requests
-nested operational requests
-multi-turn conversations
-ambiguous requests
-requests requiring no tool
-similar/competing tools
-multiple providers exposing similar capabilities
-```
-
-Each test case should identify the capabilities required to complete the task.
-
-Primary metrics should include:
-
-### Capability Recall
-
-```text
-required capabilities exposed
-─────────────────────────────
-total required capabilities
-```
-
-### Context Reduction
-
-```text
-1 - (
-    exposed tools
-    ─────────────
-    available tools
-)
-```
-
-### Retrieval Latency
-
-Time added by Brown Octopus before agent inference.
-
-### Active Context Size
-
-Tool count across multi-turn conversations.
-
-Later experiments should measure downstream agent outcomes including:
-
-- correct tool selection,
-- task completion,
-- input tokens,
-- latency,
-- and inference cost.
-
----
-
-# 20. Planned Experimental Comparison
-
-A future controlled experiment should compare at least:
-
-```text
-A. Full Tool Universe
-   User → LLM + all tools
-
-B. Stateless Retrieval
-   User → semantic top-K → LLM
-
-C. Brown Octopus
-   User
-     → operational decomposition
-     → per-intent retrieval
-     → stateful bounded context
-     → LLM
-```
-
-This comparison should help isolate whether the additional architecture provides measurable benefits beyond ordinary semantic tool retrieval.
-
----
-
-# 21. Longer-Term Questions
-
-Several questions remain intentionally open.
-
-- What is the optimal per-intent K?
-- Is 30 the appropriate active-context ceiling?
-- Is an 8-turn TTL appropriate across different task types?
-- Should TTL be adaptive?
-- Should active context operate at tool level or capability level?
-- Does sparse+dense hybrid retrieval improve capability recall?
-- How should duplicate capabilities from different providers be handled?
-- At what tool-universe size does Brown Octopus begin producing significant benefits?
-- How does tool-context reduction affect LLM tool-selection accuracy?
-- Can the same intent representation eventually route models as well as tools?
-- Can capability routing generalize beyond MCP tools?
-
-These should remain experimental questions rather than being prematurely encoded into the architecture.
-
----
-
-# 22. Current Principle
-
-The project currently rests on one central idea:
-
-> **The goal is not to predict exactly what the agent will do. The goal is to dynamically maintain the capability surface from which the agent can successfully decide what to do.**
-
-Brown Octopus therefore acts as a layer between a large capability universe and an autonomous agent:
-
-```text
-Everything the agent COULD use
-              ↓
-        Brown Octopus
-              ↓
-What the agent MAY NEED now
-              ↓
-             LLM
-              ↓
-What the agent CHOOSES to use
-```
-
-That distinction is the core of the current research direction.
-
----
-
-## Research Status
-
-**Phase:** Architecture validated / evaluation design beginning
-
-**Current real tool universe:** ~122 discovered tools
-
-**Current retrieval:** Qwen3-Embedding-0.6B, top 4 per operational intent
-
-**Context memory:** 8-turn TTL
-
-**Maximum active context:** 30 tools
-
-**Next milestone:** Build a capability-recall evaluation dataset and benchmark Brown Octopus against baseline tool-context strategies.
+The implementation is now sufficiently stable to move from architecture development to systematic evaluation. The next stage will determine whether the observed reductions in capability context preserve retrieval completeness and downstream task performance across standardized tool-retrieval benchmarks, multi-tool agent tasks, and increasing capability-universe sizes.

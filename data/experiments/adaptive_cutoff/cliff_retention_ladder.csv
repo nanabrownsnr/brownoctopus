@@ -1,0 +1,932 @@
+query_number,query,intent_number,intent_text,cliff_threshold,retention_threshold,cutoff_rank,reason,cliff_percentage,score_retention,universe_size,tool_reduction
+1,Send an email to Tom,1,Send an email to Tom,3,50,1,cliff,4.395604395604396,100.0,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,3,60,1,cliff,4.395604395604396,100.0,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,3,70,1,cliff,4.395604395604396,100.0,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,3,75,1,cliff,4.395604395604396,100.0,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,3,80,1,cliff,4.395604395604396,100.0,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,3,85,1,cliff,4.395604395604396,100.0,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,3,90,1,cliff,4.395604395604396,100.0,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,4,50,1,cliff,4.395604395604396,100.0,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,4,60,1,cliff,4.395604395604396,100.0,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,4,70,1,cliff,4.395604395604396,100.0,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,4,75,1,cliff,4.395604395604396,100.0,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,4,80,1,cliff,4.395604395604396,100.0,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,4,85,1,cliff,4.395604395604396,100.0,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,4,90,1,cliff,4.395604395604396,100.0,122,0.9918032786885246
+1,Send an email to Tom,1,Send an email to Tom,5,50,11,cliff,6.043956043956044,79.12087912087912,122,0.9098360655737705
+1,Send an email to Tom,1,Send an email to Tom,5,60,11,cliff,6.043956043956044,79.12087912087912,122,0.9098360655737705
+1,Send an email to Tom,1,Send an email to Tom,5,70,11,cliff,6.043956043956044,79.12087912087912,122,0.9098360655737705
+1,Send an email to Tom,1,Send an email to Tom,5,75,11,cliff,6.043956043956044,79.12087912087912,122,0.9098360655737705
+1,Send an email to Tom,1,Send an email to Tom,5,80,10,retention,,79.12087912087912,122,0.9180327868852459
+1,Send an email to Tom,1,Send an email to Tom,5,85,7,retention,,84.61538461538461,122,0.9426229508196722
+1,Send an email to Tom,1,Send an email to Tom,5,90,5,retention,,87.91208791208791,122,0.9590163934426229
+1,Send an email to Tom,1,Send an email to Tom,6,50,11,cliff,6.043956043956044,79.12087912087912,122,0.9098360655737705
+1,Send an email to Tom,1,Send an email to Tom,6,60,11,cliff,6.043956043956044,79.12087912087912,122,0.9098360655737705
+1,Send an email to Tom,1,Send an email to Tom,6,70,11,cliff,6.043956043956044,79.12087912087912,122,0.9098360655737705
+1,Send an email to Tom,1,Send an email to Tom,6,75,11,cliff,6.043956043956044,79.12087912087912,122,0.9098360655737705
+1,Send an email to Tom,1,Send an email to Tom,6,80,10,retention,,79.12087912087912,122,0.9180327868852459
+1,Send an email to Tom,1,Send an email to Tom,6,85,7,retention,,84.61538461538461,122,0.9426229508196722
+1,Send an email to Tom,1,Send an email to Tom,6,90,5,retention,,87.91208791208791,122,0.9590163934426229
+1,Send an email to Tom,1,Send an email to Tom,7,50,113,retention,,49.72527472527473,122,0.07377049180327866
+1,Send an email to Tom,1,Send an email to Tom,7,60,47,retention,,59.61538461538461,122,0.6147540983606558
+1,Send an email to Tom,1,Send an email to Tom,7,70,15,retention,,69.5054945054945,122,0.8770491803278688
+1,Send an email to Tom,1,Send an email to Tom,7,75,11,retention,,73.07692307692307,122,0.9098360655737705
+1,Send an email to Tom,1,Send an email to Tom,7,80,10,retention,,79.12087912087912,122,0.9180327868852459
+1,Send an email to Tom,1,Send an email to Tom,7,85,7,retention,,84.61538461538461,122,0.9426229508196722
+1,Send an email to Tom,1,Send an email to Tom,7,90,5,retention,,87.91208791208791,122,0.9590163934426229
+1,Send an email to Tom,1,Send an email to Tom,8,50,113,retention,,49.72527472527473,122,0.07377049180327866
+1,Send an email to Tom,1,Send an email to Tom,8,60,47,retention,,59.61538461538461,122,0.6147540983606558
+1,Send an email to Tom,1,Send an email to Tom,8,70,15,retention,,69.5054945054945,122,0.8770491803278688
+1,Send an email to Tom,1,Send an email to Tom,8,75,11,retention,,73.07692307692307,122,0.9098360655737705
+1,Send an email to Tom,1,Send an email to Tom,8,80,10,retention,,79.12087912087912,122,0.9180327868852459
+1,Send an email to Tom,1,Send an email to Tom,8,85,7,retention,,84.61538461538461,122,0.9426229508196722
+1,Send an email to Tom,1,Send an email to Tom,8,90,5,retention,,87.91208791208791,122,0.9590163934426229
+1,Send an email to Tom,1,Send an email to Tom,10,50,113,retention,,49.72527472527473,122,0.07377049180327866
+1,Send an email to Tom,1,Send an email to Tom,10,60,47,retention,,59.61538461538461,122,0.6147540983606558
+1,Send an email to Tom,1,Send an email to Tom,10,70,15,retention,,69.5054945054945,122,0.8770491803278688
+1,Send an email to Tom,1,Send an email to Tom,10,75,11,retention,,73.07692307692307,122,0.9098360655737705
+1,Send an email to Tom,1,Send an email to Tom,10,80,10,retention,,79.12087912087912,122,0.9180327868852459
+1,Send an email to Tom,1,Send an email to Tom,10,85,7,retention,,84.61538461538461,122,0.9426229508196722
+1,Send an email to Tom,1,Send an email to Tom,10,90,5,retention,,87.91208791208791,122,0.9590163934426229
+2,Reply to Tom's email,1,Reply to Tom 's email,3,50,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,3,60,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,3,70,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,3,75,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,3,80,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,3,85,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,3,90,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,4,50,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,4,60,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,4,70,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,4,75,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,4,80,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,4,85,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,4,90,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,5,50,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,5,60,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,5,70,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,5,75,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,5,80,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,5,85,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,5,90,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,6,50,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,6,60,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,6,70,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,6,75,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,6,80,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,6,85,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,6,90,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,7,50,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,7,60,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,7,70,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,7,75,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,7,80,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,7,85,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,7,90,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,8,50,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,8,60,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,8,70,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,8,75,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,8,80,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,8,85,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,8,90,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,10,50,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,10,60,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,10,70,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,10,75,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,10,80,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,10,85,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+2,Reply to Tom's email,1,Reply to Tom 's email,10,90,2,cliff,10.81081081081081,97.2972972972973,122,0.9836065573770492
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,3,50,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,3,60,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,3,70,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,3,75,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,3,80,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,3,85,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,3,90,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,4,50,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,4,60,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,4,70,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,4,75,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,4,80,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,4,85,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,4,90,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,5,50,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,5,60,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,5,70,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,5,75,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,5,80,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,5,85,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,5,90,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,6,50,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,6,60,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,6,70,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,6,75,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,6,80,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,6,85,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,6,90,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,7,50,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,7,60,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,7,70,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,7,75,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,7,80,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,7,85,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,7,90,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,8,50,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,8,60,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,8,70,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,8,75,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,8,80,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,8,85,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,8,90,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,10,50,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,10,60,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,10,70,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,10,75,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,10,80,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,10,85,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,10,90,1,cliff,11.258278145695364,100.0,122,0.9918032786885246
+4,Create a Word document,1,Create a Word document,3,50,1,cliff,3.664921465968586,100.0,122,0.9918032786885246
+4,Create a Word document,1,Create a Word document,3,60,1,cliff,3.664921465968586,100.0,122,0.9918032786885246
+4,Create a Word document,1,Create a Word document,3,70,1,cliff,3.664921465968586,100.0,122,0.9918032786885246
+4,Create a Word document,1,Create a Word document,3,75,1,cliff,3.664921465968586,100.0,122,0.9918032786885246
+4,Create a Word document,1,Create a Word document,3,80,1,cliff,3.664921465968586,100.0,122,0.9918032786885246
+4,Create a Word document,1,Create a Word document,3,85,1,cliff,3.664921465968586,100.0,122,0.9918032786885246
+4,Create a Word document,1,Create a Word document,3,90,1,cliff,3.664921465968586,100.0,122,0.9918032786885246
+4,Create a Word document,1,Create a Word document,4,50,19,cliff,4.450261780104712,71.20418848167539,122,0.8442622950819672
+4,Create a Word document,1,Create a Word document,4,60,19,cliff,4.450261780104712,71.20418848167539,122,0.8442622950819672
+4,Create a Word document,1,Create a Word document,4,70,19,cliff,4.450261780104712,71.20418848167539,122,0.8442622950819672
+4,Create a Word document,1,Create a Word document,4,75,17,retention,,74.86910994764398,122,0.860655737704918
+4,Create a Word document,1,Create a Word document,4,80,15,retention,,76.96335078534031,122,0.8770491803278688
+4,Create a Word document,1,Create a Word document,4,85,12,retention,,83.7696335078534,122,0.9016393442622951
+4,Create a Word document,1,Create a Word document,4,90,6,retention,,89.52879581151832,122,0.9508196721311475
+4,Create a Word document,1,Create a Word document,5,50,62,retention,,49.73821989528796,122,0.4918032786885246
+4,Create a Word document,1,Create a Word document,5,60,26,retention,,59.947643979057595,122,0.7868852459016393
+4,Create a Word document,1,Create a Word document,5,70,19,retention,,66.75392670157068,122,0.8442622950819672
+4,Create a Word document,1,Create a Word document,5,75,17,retention,,74.86910994764398,122,0.860655737704918
+4,Create a Word document,1,Create a Word document,5,80,15,retention,,76.96335078534031,122,0.8770491803278688
+4,Create a Word document,1,Create a Word document,5,85,12,retention,,83.7696335078534,122,0.9016393442622951
+4,Create a Word document,1,Create a Word document,5,90,6,retention,,89.52879581151832,122,0.9508196721311475
+4,Create a Word document,1,Create a Word document,6,50,62,retention,,49.73821989528796,122,0.4918032786885246
+4,Create a Word document,1,Create a Word document,6,60,26,retention,,59.947643979057595,122,0.7868852459016393
+4,Create a Word document,1,Create a Word document,6,70,19,retention,,66.75392670157068,122,0.8442622950819672
+4,Create a Word document,1,Create a Word document,6,75,17,retention,,74.86910994764398,122,0.860655737704918
+4,Create a Word document,1,Create a Word document,6,80,15,retention,,76.96335078534031,122,0.8770491803278688
+4,Create a Word document,1,Create a Word document,6,85,12,retention,,83.7696335078534,122,0.9016393442622951
+4,Create a Word document,1,Create a Word document,6,90,6,retention,,89.52879581151832,122,0.9508196721311475
+4,Create a Word document,1,Create a Word document,7,50,62,retention,,49.73821989528796,122,0.4918032786885246
+4,Create a Word document,1,Create a Word document,7,60,26,retention,,59.947643979057595,122,0.7868852459016393
+4,Create a Word document,1,Create a Word document,7,70,19,retention,,66.75392670157068,122,0.8442622950819672
+4,Create a Word document,1,Create a Word document,7,75,17,retention,,74.86910994764398,122,0.860655737704918
+4,Create a Word document,1,Create a Word document,7,80,15,retention,,76.96335078534031,122,0.8770491803278688
+4,Create a Word document,1,Create a Word document,7,85,12,retention,,83.7696335078534,122,0.9016393442622951
+4,Create a Word document,1,Create a Word document,7,90,6,retention,,89.52879581151832,122,0.9508196721311475
+4,Create a Word document,1,Create a Word document,8,50,62,retention,,49.73821989528796,122,0.4918032786885246
+4,Create a Word document,1,Create a Word document,8,60,26,retention,,59.947643979057595,122,0.7868852459016393
+4,Create a Word document,1,Create a Word document,8,70,19,retention,,66.75392670157068,122,0.8442622950819672
+4,Create a Word document,1,Create a Word document,8,75,17,retention,,74.86910994764398,122,0.860655737704918
+4,Create a Word document,1,Create a Word document,8,80,15,retention,,76.96335078534031,122,0.8770491803278688
+4,Create a Word document,1,Create a Word document,8,85,12,retention,,83.7696335078534,122,0.9016393442622951
+4,Create a Word document,1,Create a Word document,8,90,6,retention,,89.52879581151832,122,0.9508196721311475
+4,Create a Word document,1,Create a Word document,10,50,62,retention,,49.73821989528796,122,0.4918032786885246
+4,Create a Word document,1,Create a Word document,10,60,26,retention,,59.947643979057595,122,0.7868852459016393
+4,Create a Word document,1,Create a Word document,10,70,19,retention,,66.75392670157068,122,0.8442622950819672
+4,Create a Word document,1,Create a Word document,10,75,17,retention,,74.86910994764398,122,0.860655737704918
+4,Create a Word document,1,Create a Word document,10,80,15,retention,,76.96335078534031,122,0.8770491803278688
+4,Create a Word document,1,Create a Word document,10,85,12,retention,,83.7696335078534,122,0.9016393442622951
+4,Create a Word document,1,Create a Word document,10,90,6,retention,,89.52879581151832,122,0.9508196721311475
+5,Get the current sprint work items,1,Get the current sprint work items,3,50,1,cliff,3.1746031746031744,100.0,122,0.9918032786885246
+5,Get the current sprint work items,1,Get the current sprint work items,3,60,1,cliff,3.1746031746031744,100.0,122,0.9918032786885246
+5,Get the current sprint work items,1,Get the current sprint work items,3,70,1,cliff,3.1746031746031744,100.0,122,0.9918032786885246
+5,Get the current sprint work items,1,Get the current sprint work items,3,75,1,cliff,3.1746031746031744,100.0,122,0.9918032786885246
+5,Get the current sprint work items,1,Get the current sprint work items,3,80,1,cliff,3.1746031746031744,100.0,122,0.9918032786885246
+5,Get the current sprint work items,1,Get the current sprint work items,3,85,1,cliff,3.1746031746031744,100.0,122,0.9918032786885246
+5,Get the current sprint work items,1,Get the current sprint work items,3,90,1,cliff,3.1746031746031744,100.0,122,0.9918032786885246
+5,Get the current sprint work items,1,Get the current sprint work items,4,50,100,retention,,49.735449735449734,122,0.180327868852459
+5,Get the current sprint work items,1,Get the current sprint work items,4,60,60,retention,,59.78835978835979,122,0.5081967213114754
+5,Get the current sprint work items,1,Get the current sprint work items,4,70,27,retention,,69.84126984126983,122,0.7786885245901639
+5,Get the current sprint work items,1,Get the current sprint work items,4,75,17,retention,,73.54497354497354,122,0.860655737704918
+5,Get the current sprint work items,1,Get the current sprint work items,4,80,13,retention,,78.83597883597884,122,0.8934426229508197
+5,Get the current sprint work items,1,Get the current sprint work items,4,85,9,retention,,84.65608465608466,122,0.9262295081967213
+5,Get the current sprint work items,1,Get the current sprint work items,4,90,5,retention,,89.94708994708994,122,0.9590163934426229
+5,Get the current sprint work items,1,Get the current sprint work items,5,50,100,retention,,49.735449735449734,122,0.180327868852459
+5,Get the current sprint work items,1,Get the current sprint work items,5,60,60,retention,,59.78835978835979,122,0.5081967213114754
+5,Get the current sprint work items,1,Get the current sprint work items,5,70,27,retention,,69.84126984126983,122,0.7786885245901639
+5,Get the current sprint work items,1,Get the current sprint work items,5,75,17,retention,,73.54497354497354,122,0.860655737704918
+5,Get the current sprint work items,1,Get the current sprint work items,5,80,13,retention,,78.83597883597884,122,0.8934426229508197
+5,Get the current sprint work items,1,Get the current sprint work items,5,85,9,retention,,84.65608465608466,122,0.9262295081967213
+5,Get the current sprint work items,1,Get the current sprint work items,5,90,5,retention,,89.94708994708994,122,0.9590163934426229
+5,Get the current sprint work items,1,Get the current sprint work items,6,50,100,retention,,49.735449735449734,122,0.180327868852459
+5,Get the current sprint work items,1,Get the current sprint work items,6,60,60,retention,,59.78835978835979,122,0.5081967213114754
+5,Get the current sprint work items,1,Get the current sprint work items,6,70,27,retention,,69.84126984126983,122,0.7786885245901639
+5,Get the current sprint work items,1,Get the current sprint work items,6,75,17,retention,,73.54497354497354,122,0.860655737704918
+5,Get the current sprint work items,1,Get the current sprint work items,6,80,13,retention,,78.83597883597884,122,0.8934426229508197
+5,Get the current sprint work items,1,Get the current sprint work items,6,85,9,retention,,84.65608465608466,122,0.9262295081967213
+5,Get the current sprint work items,1,Get the current sprint work items,6,90,5,retention,,89.94708994708994,122,0.9590163934426229
+5,Get the current sprint work items,1,Get the current sprint work items,7,50,100,retention,,49.735449735449734,122,0.180327868852459
+5,Get the current sprint work items,1,Get the current sprint work items,7,60,60,retention,,59.78835978835979,122,0.5081967213114754
+5,Get the current sprint work items,1,Get the current sprint work items,7,70,27,retention,,69.84126984126983,122,0.7786885245901639
+5,Get the current sprint work items,1,Get the current sprint work items,7,75,17,retention,,73.54497354497354,122,0.860655737704918
+5,Get the current sprint work items,1,Get the current sprint work items,7,80,13,retention,,78.83597883597884,122,0.8934426229508197
+5,Get the current sprint work items,1,Get the current sprint work items,7,85,9,retention,,84.65608465608466,122,0.9262295081967213
+5,Get the current sprint work items,1,Get the current sprint work items,7,90,5,retention,,89.94708994708994,122,0.9590163934426229
+5,Get the current sprint work items,1,Get the current sprint work items,8,50,100,retention,,49.735449735449734,122,0.180327868852459
+5,Get the current sprint work items,1,Get the current sprint work items,8,60,60,retention,,59.78835978835979,122,0.5081967213114754
+5,Get the current sprint work items,1,Get the current sprint work items,8,70,27,retention,,69.84126984126983,122,0.7786885245901639
+5,Get the current sprint work items,1,Get the current sprint work items,8,75,17,retention,,73.54497354497354,122,0.860655737704918
+5,Get the current sprint work items,1,Get the current sprint work items,8,80,13,retention,,78.83597883597884,122,0.8934426229508197
+5,Get the current sprint work items,1,Get the current sprint work items,8,85,9,retention,,84.65608465608466,122,0.9262295081967213
+5,Get the current sprint work items,1,Get the current sprint work items,8,90,5,retention,,89.94708994708994,122,0.9590163934426229
+5,Get the current sprint work items,1,Get the current sprint work items,10,50,100,retention,,49.735449735449734,122,0.180327868852459
+5,Get the current sprint work items,1,Get the current sprint work items,10,60,60,retention,,59.78835978835979,122,0.5081967213114754
+5,Get the current sprint work items,1,Get the current sprint work items,10,70,27,retention,,69.84126984126983,122,0.7786885245901639
+5,Get the current sprint work items,1,Get the current sprint work items,10,75,17,retention,,73.54497354497354,122,0.860655737704918
+5,Get the current sprint work items,1,Get the current sprint work items,10,80,13,retention,,78.83597883597884,122,0.8934426229508197
+5,Get the current sprint work items,1,Get the current sprint work items,10,85,9,retention,,84.65608465608466,122,0.9262295081967213
+5,Get the current sprint work items,1,Get the current sprint work items,10,90,5,retention,,89.94708994708994,122,0.9590163934426229
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,3,50,2,cliff,4.861111111111112,99.30555555555556,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,3,60,2,cliff,4.861111111111112,99.30555555555556,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,3,70,2,cliff,4.861111111111112,99.30555555555556,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,3,75,2,cliff,4.861111111111112,99.30555555555556,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,3,80,2,cliff,4.861111111111112,99.30555555555556,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,3,85,2,cliff,4.861111111111112,99.30555555555556,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,3,90,2,cliff,4.861111111111112,99.30555555555556,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,4,50,2,cliff,4.861111111111112,99.30555555555556,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,4,60,2,cliff,4.861111111111112,99.30555555555556,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,4,70,2,cliff,4.861111111111112,99.30555555555556,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,4,75,2,cliff,4.861111111111112,99.30555555555556,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,4,80,2,cliff,4.861111111111112,99.30555555555556,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,4,85,2,cliff,4.861111111111112,99.30555555555556,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,4,90,2,cliff,4.861111111111112,99.30555555555556,122,0.9836065573770492
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,5,50,121,cliff,11.631944444444445,54.861111111111114,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,5,60,112,retention,,59.72222222222222,122,0.08196721311475408
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,5,70,92,retention,,69.79166666666666,122,0.24590163934426235
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,5,75,61,retention,,74.65277777777779,122,0.5
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,5,80,35,retention,,79.51388888888889,122,0.7131147540983607
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,5,85,16,retention,,84.72222222222221,122,0.8688524590163934
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,5,90,5,retention,,88.19444444444444,122,0.9590163934426229
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,6,50,121,cliff,11.631944444444445,54.861111111111114,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,6,60,112,retention,,59.72222222222222,122,0.08196721311475408
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,6,70,92,retention,,69.79166666666666,122,0.24590163934426235
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,6,75,61,retention,,74.65277777777779,122,0.5
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,6,80,35,retention,,79.51388888888889,122,0.7131147540983607
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,6,85,16,retention,,84.72222222222221,122,0.8688524590163934
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,6,90,5,retention,,88.19444444444444,122,0.9590163934426229
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,7,50,121,cliff,11.631944444444445,54.861111111111114,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,7,60,112,retention,,59.72222222222222,122,0.08196721311475408
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,7,70,92,retention,,69.79166666666666,122,0.24590163934426235
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,7,75,61,retention,,74.65277777777779,122,0.5
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,7,80,35,retention,,79.51388888888889,122,0.7131147540983607
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,7,85,16,retention,,84.72222222222221,122,0.8688524590163934
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,7,90,5,retention,,88.19444444444444,122,0.9590163934426229
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,8,50,121,cliff,11.631944444444445,54.861111111111114,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,8,60,112,retention,,59.72222222222222,122,0.08196721311475408
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,8,70,92,retention,,69.79166666666666,122,0.24590163934426235
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,8,75,61,retention,,74.65277777777779,122,0.5
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,8,80,35,retention,,79.51388888888889,122,0.7131147540983607
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,8,85,16,retention,,84.72222222222221,122,0.8688524590163934
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,8,90,5,retention,,88.19444444444444,122,0.9590163934426229
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,10,50,121,cliff,11.631944444444445,54.861111111111114,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,10,60,112,retention,,59.72222222222222,122,0.08196721311475408
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,10,70,92,retention,,69.79166666666666,122,0.24590163934426235
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,10,75,61,retention,,74.65277777777779,122,0.5
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,10,80,35,retention,,79.51388888888889,122,0.7131147540983607
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,10,85,16,retention,,84.72222222222221,122,0.8688524590163934
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,10,90,5,retention,,88.19444444444444,122,0.9590163934426229
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,3,50,1,cliff,3.910614525139665,100.0,122,0.9918032786885246
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,3,60,1,cliff,3.910614525139665,100.0,122,0.9918032786885246
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,3,70,1,cliff,3.910614525139665,100.0,122,0.9918032786885246
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,3,75,1,cliff,3.910614525139665,100.0,122,0.9918032786885246
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,3,80,1,cliff,3.910614525139665,100.0,122,0.9918032786885246
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,3,85,1,cliff,3.910614525139665,100.0,122,0.9918032786885246
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,3,90,1,cliff,3.910614525139665,100.0,122,0.9918032786885246
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,4,50,11,cliff,4.4692737430167595,86.03351955307262,122,0.9098360655737705
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,4,60,11,cliff,4.4692737430167595,86.03351955307262,122,0.9098360655737705
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,4,70,11,cliff,4.4692737430167595,86.03351955307262,122,0.9098360655737705
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,4,75,11,cliff,4.4692737430167595,86.03351955307262,122,0.9098360655737705
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,4,80,11,cliff,4.4692737430167595,86.03351955307262,122,0.9098360655737705
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,4,85,11,cliff,4.4692737430167595,86.03351955307262,122,0.9098360655737705
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,4,90,7,retention,,88.8268156424581,122,0.9426229508196722
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,5,50,121,retention,,48.60335195530726,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,5,60,108,retention,,59.217877094972074,122,0.11475409836065575
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,5,70,47,retention,,69.83240223463687,122,0.6147540983606558
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,5,75,30,retention,,74.86033519553072,122,0.7540983606557377
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,5,80,14,retention,,79.88826815642457,122,0.8852459016393442
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,5,85,11,retention,,81.56424581005587,122,0.9098360655737705
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,5,90,7,retention,,88.8268156424581,122,0.9426229508196722
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,6,50,121,retention,,48.60335195530726,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,6,60,108,retention,,59.217877094972074,122,0.11475409836065575
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,6,70,47,retention,,69.83240223463687,122,0.6147540983606558
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,6,75,30,retention,,74.86033519553072,122,0.7540983606557377
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,6,80,14,retention,,79.88826815642457,122,0.8852459016393442
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,6,85,11,retention,,81.56424581005587,122,0.9098360655737705
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,6,90,7,retention,,88.8268156424581,122,0.9426229508196722
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,7,50,121,retention,,48.60335195530726,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,7,60,108,retention,,59.217877094972074,122,0.11475409836065575
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,7,70,47,retention,,69.83240223463687,122,0.6147540983606558
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,7,75,30,retention,,74.86033519553072,122,0.7540983606557377
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,7,80,14,retention,,79.88826815642457,122,0.8852459016393442
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,7,85,11,retention,,81.56424581005587,122,0.9098360655737705
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,7,90,7,retention,,88.8268156424581,122,0.9426229508196722
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,8,50,121,retention,,48.60335195530726,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,8,60,108,retention,,59.217877094972074,122,0.11475409836065575
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,8,70,47,retention,,69.83240223463687,122,0.6147540983606558
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,8,75,30,retention,,74.86033519553072,122,0.7540983606557377
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,8,80,14,retention,,79.88826815642457,122,0.8852459016393442
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,8,85,11,retention,,81.56424581005587,122,0.9098360655737705
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,8,90,7,retention,,88.8268156424581,122,0.9426229508196722
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,10,50,121,retention,,48.60335195530726,122,0.008196721311475419
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,10,60,108,retention,,59.217877094972074,122,0.11475409836065575
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,10,70,47,retention,,69.83240223463687,122,0.6147540983606558
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,10,75,30,retention,,74.86033519553072,122,0.7540983606557377
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,10,80,14,retention,,79.88826815642457,122,0.8852459016393442
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,10,85,11,retention,,81.56424581005587,122,0.9098360655737705
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,10,90,7,retention,,88.8268156424581,122,0.9426229508196722
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,3,50,1,cliff,3.1746031746031744,100.0,122,0.9918032786885246
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,3,60,1,cliff,3.1746031746031744,100.0,122,0.9918032786885246
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,3,70,1,cliff,3.1746031746031744,100.0,122,0.9918032786885246
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,3,75,1,cliff,3.1746031746031744,100.0,122,0.9918032786885246
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,3,80,1,cliff,3.1746031746031744,100.0,122,0.9918032786885246
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,3,85,1,cliff,3.1746031746031744,100.0,122,0.9918032786885246
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,3,90,1,cliff,3.1746031746031744,100.0,122,0.9918032786885246
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,4,50,100,retention,,49.735449735449734,122,0.180327868852459
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,4,60,60,retention,,59.78835978835979,122,0.5081967213114754
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,4,70,27,retention,,69.84126984126983,122,0.7786885245901639
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,4,75,17,retention,,73.54497354497354,122,0.860655737704918
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,4,80,13,retention,,78.83597883597884,122,0.8934426229508197
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,4,85,9,retention,,84.65608465608466,122,0.9262295081967213
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,4,90,5,retention,,89.94708994708994,122,0.9590163934426229
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,5,50,100,retention,,49.735449735449734,122,0.180327868852459
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,5,60,60,retention,,59.78835978835979,122,0.5081967213114754
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,5,70,27,retention,,69.84126984126983,122,0.7786885245901639
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,5,75,17,retention,,73.54497354497354,122,0.860655737704918
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,5,80,13,retention,,78.83597883597884,122,0.8934426229508197
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,5,85,9,retention,,84.65608465608466,122,0.9262295081967213
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,5,90,5,retention,,89.94708994708994,122,0.9590163934426229
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,6,50,100,retention,,49.735449735449734,122,0.180327868852459
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,6,60,60,retention,,59.78835978835979,122,0.5081967213114754
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,6,70,27,retention,,69.84126984126983,122,0.7786885245901639
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,6,75,17,retention,,73.54497354497354,122,0.860655737704918
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,6,80,13,retention,,78.83597883597884,122,0.8934426229508197
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,6,85,9,retention,,84.65608465608466,122,0.9262295081967213
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,6,90,5,retention,,89.94708994708994,122,0.9590163934426229
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,7,50,100,retention,,49.735449735449734,122,0.180327868852459
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,7,60,60,retention,,59.78835978835979,122,0.5081967213114754
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,7,70,27,retention,,69.84126984126983,122,0.7786885245901639
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,7,75,17,retention,,73.54497354497354,122,0.860655737704918
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,7,80,13,retention,,78.83597883597884,122,0.8934426229508197
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,7,85,9,retention,,84.65608465608466,122,0.9262295081967213
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,7,90,5,retention,,89.94708994708994,122,0.9590163934426229
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,8,50,100,retention,,49.735449735449734,122,0.180327868852459
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,8,60,60,retention,,59.78835978835979,122,0.5081967213114754
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,8,70,27,retention,,69.84126984126983,122,0.7786885245901639
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,8,75,17,retention,,73.54497354497354,122,0.860655737704918
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,8,80,13,retention,,78.83597883597884,122,0.8934426229508197
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,8,85,9,retention,,84.65608465608466,122,0.9262295081967213
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,8,90,5,retention,,89.94708994708994,122,0.9590163934426229
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,10,50,100,retention,,49.735449735449734,122,0.180327868852459
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,10,60,60,retention,,59.78835978835979,122,0.5081967213114754
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,10,70,27,retention,,69.84126984126983,122,0.7786885245901639
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,10,75,17,retention,,73.54497354497354,122,0.860655737704918
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,10,80,13,retention,,78.83597883597884,122,0.8934426229508197
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,10,85,9,retention,,84.65608465608466,122,0.9262295081967213
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,10,90,5,retention,,89.94708994708994,122,0.9590163934426229
+7,Get the current sprint work items and create a Word report,2,create a Word report,3,50,4,cliff,4.571428571428571,98.28571428571429,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,3,60,4,cliff,4.571428571428571,98.28571428571429,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,3,70,4,cliff,4.571428571428571,98.28571428571429,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,3,75,4,cliff,4.571428571428571,98.28571428571429,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,3,80,4,cliff,4.571428571428571,98.28571428571429,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,3,85,4,cliff,4.571428571428571,98.28571428571429,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,3,90,4,cliff,4.571428571428571,98.28571428571429,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,4,50,4,cliff,4.571428571428571,98.28571428571429,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,4,60,4,cliff,4.571428571428571,98.28571428571429,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,4,70,4,cliff,4.571428571428571,98.28571428571429,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,4,75,4,cliff,4.571428571428571,98.28571428571429,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,4,80,4,cliff,4.571428571428571,98.28571428571429,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,4,85,4,cliff,4.571428571428571,98.28571428571429,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,4,90,4,cliff,4.571428571428571,98.28571428571429,122,0.9672131147540983
+7,Get the current sprint work items and create a Word report,2,create a Word report,5,50,108,retention,,49.714285714285715,122,0.11475409836065575
+7,Get the current sprint work items and create a Word report,2,create a Word report,5,60,58,retention,,59.71428571428572,122,0.5245901639344263
+7,Get the current sprint work items and create a Word report,2,create a Word report,5,70,29,retention,,69.42857142857143,122,0.7622950819672132
+7,Get the current sprint work items and create a Word report,2,create a Word report,5,75,19,retention,,74.85714285714286,122,0.8442622950819672
+7,Get the current sprint work items and create a Word report,2,create a Word report,5,80,17,retention,,77.14285714285715,122,0.860655737704918
+7,Get the current sprint work items and create a Word report,2,create a Word report,5,85,13,retention,,81.71428571428572,122,0.8934426229508197
+7,Get the current sprint work items and create a Word report,2,create a Word report,5,90,7,retention,,89.14285714285714,122,0.9426229508196722
+7,Get the current sprint work items and create a Word report,2,create a Word report,6,50,108,retention,,49.714285714285715,122,0.11475409836065575
+7,Get the current sprint work items and create a Word report,2,create a Word report,6,60,58,retention,,59.71428571428572,122,0.5245901639344263
+7,Get the current sprint work items and create a Word report,2,create a Word report,6,70,29,retention,,69.42857142857143,122,0.7622950819672132
+7,Get the current sprint work items and create a Word report,2,create a Word report,6,75,19,retention,,74.85714285714286,122,0.8442622950819672
+7,Get the current sprint work items and create a Word report,2,create a Word report,6,80,17,retention,,77.14285714285715,122,0.860655737704918
+7,Get the current sprint work items and create a Word report,2,create a Word report,6,85,13,retention,,81.71428571428572,122,0.8934426229508197
+7,Get the current sprint work items and create a Word report,2,create a Word report,6,90,7,retention,,89.14285714285714,122,0.9426229508196722
+7,Get the current sprint work items and create a Word report,2,create a Word report,7,50,108,retention,,49.714285714285715,122,0.11475409836065575
+7,Get the current sprint work items and create a Word report,2,create a Word report,7,60,58,retention,,59.71428571428572,122,0.5245901639344263
+7,Get the current sprint work items and create a Word report,2,create a Word report,7,70,29,retention,,69.42857142857143,122,0.7622950819672132
+7,Get the current sprint work items and create a Word report,2,create a Word report,7,75,19,retention,,74.85714285714286,122,0.8442622950819672
+7,Get the current sprint work items and create a Word report,2,create a Word report,7,80,17,retention,,77.14285714285715,122,0.860655737704918
+7,Get the current sprint work items and create a Word report,2,create a Word report,7,85,13,retention,,81.71428571428572,122,0.8934426229508197
+7,Get the current sprint work items and create a Word report,2,create a Word report,7,90,7,retention,,89.14285714285714,122,0.9426229508196722
+7,Get the current sprint work items and create a Word report,2,create a Word report,8,50,108,retention,,49.714285714285715,122,0.11475409836065575
+7,Get the current sprint work items and create a Word report,2,create a Word report,8,60,58,retention,,59.71428571428572,122,0.5245901639344263
+7,Get the current sprint work items and create a Word report,2,create a Word report,8,70,29,retention,,69.42857142857143,122,0.7622950819672132
+7,Get the current sprint work items and create a Word report,2,create a Word report,8,75,19,retention,,74.85714285714286,122,0.8442622950819672
+7,Get the current sprint work items and create a Word report,2,create a Word report,8,80,17,retention,,77.14285714285715,122,0.860655737704918
+7,Get the current sprint work items and create a Word report,2,create a Word report,8,85,13,retention,,81.71428571428572,122,0.8934426229508197
+7,Get the current sprint work items and create a Word report,2,create a Word report,8,90,7,retention,,89.14285714285714,122,0.9426229508196722
+7,Get the current sprint work items and create a Word report,2,create a Word report,10,50,108,retention,,49.714285714285715,122,0.11475409836065575
+7,Get the current sprint work items and create a Word report,2,create a Word report,10,60,58,retention,,59.71428571428572,122,0.5245901639344263
+7,Get the current sprint work items and create a Word report,2,create a Word report,10,70,29,retention,,69.42857142857143,122,0.7622950819672132
+7,Get the current sprint work items and create a Word report,2,create a Word report,10,75,19,retention,,74.85714285714286,122,0.8442622950819672
+7,Get the current sprint work items and create a Word report,2,create a Word report,10,80,17,retention,,77.14285714285715,122,0.860655737704918
+7,Get the current sprint work items and create a Word report,2,create a Word report,10,85,13,retention,,81.71428571428572,122,0.8934426229508197
+7,Get the current sprint work items and create a Word report,2,create a Word report,10,90,7,retention,,89.14285714285714,122,0.9426229508196722
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,3,50,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,3,60,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,3,70,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,3,75,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,3,80,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,3,85,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,3,90,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,4,50,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,4,60,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,4,70,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,4,75,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,4,80,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,4,85,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,4,90,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,5,50,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,5,60,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,5,70,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,5,75,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,5,80,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,5,85,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,5,90,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,6,50,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,6,60,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,6,70,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,6,75,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,6,80,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,6,85,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,6,90,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,7,50,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,7,60,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,7,70,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,7,75,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,7,80,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,7,85,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,7,90,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,8,50,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,8,60,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,8,70,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,8,75,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,8,80,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,8,85,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,8,90,2,cliff,9.395973154362416,98.65771812080537,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,10,50,121,cliff,10.234899328859061,52.348993288590606,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,10,60,104,retention,,59.395973154362416,122,0.14754098360655743
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,10,70,72,retention,,69.79865771812081,122,0.4098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,10,75,38,retention,,74.83221476510067,122,0.6885245901639344
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,10,80,18,retention,,79.53020134228188,122,0.8524590163934427
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,10,85,7,retention,,83.22147651006712,122,0.9426229508196722
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,10,90,2,retention,,89.26174496644296,122,0.9836065573770492
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,3,50,121,cliff,11.785714285714285,58.57142857142858,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,3,60,119,retention,,59.285714285714285,122,0.024590163934426257
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,3,70,90,retention,,69.28571428571428,122,0.2622950819672131
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,3,75,71,retention,,74.64285714285714,122,0.4180327868852459
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,3,80,53,retention,,79.64285714285714,122,0.5655737704918034
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,3,85,29,retention,,84.64285714285714,122,0.7622950819672132
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,3,90,16,retention,,89.64285714285715,122,0.8688524590163934
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,4,50,121,cliff,11.785714285714285,58.57142857142858,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,4,60,119,retention,,59.285714285714285,122,0.024590163934426257
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,4,70,90,retention,,69.28571428571428,122,0.2622950819672131
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,4,75,71,retention,,74.64285714285714,122,0.4180327868852459
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,4,80,53,retention,,79.64285714285714,122,0.5655737704918034
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,4,85,29,retention,,84.64285714285714,122,0.7622950819672132
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,4,90,16,retention,,89.64285714285715,122,0.8688524590163934
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,5,50,121,cliff,11.785714285714285,58.57142857142858,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,5,60,119,retention,,59.285714285714285,122,0.024590163934426257
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,5,70,90,retention,,69.28571428571428,122,0.2622950819672131
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,5,75,71,retention,,74.64285714285714,122,0.4180327868852459
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,5,80,53,retention,,79.64285714285714,122,0.5655737704918034
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,5,85,29,retention,,84.64285714285714,122,0.7622950819672132
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,5,90,16,retention,,89.64285714285715,122,0.8688524590163934
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,6,50,121,cliff,11.785714285714285,58.57142857142858,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,6,60,119,retention,,59.285714285714285,122,0.024590163934426257
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,6,70,90,retention,,69.28571428571428,122,0.2622950819672131
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,6,75,71,retention,,74.64285714285714,122,0.4180327868852459
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,6,80,53,retention,,79.64285714285714,122,0.5655737704918034
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,6,85,29,retention,,84.64285714285714,122,0.7622950819672132
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,6,90,16,retention,,89.64285714285715,122,0.8688524590163934
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,7,50,121,cliff,11.785714285714285,58.57142857142858,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,7,60,119,retention,,59.285714285714285,122,0.024590163934426257
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,7,70,90,retention,,69.28571428571428,122,0.2622950819672131
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,7,75,71,retention,,74.64285714285714,122,0.4180327868852459
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,7,80,53,retention,,79.64285714285714,122,0.5655737704918034
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,7,85,29,retention,,84.64285714285714,122,0.7622950819672132
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,7,90,16,retention,,89.64285714285715,122,0.8688524590163934
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,8,50,121,cliff,11.785714285714285,58.57142857142858,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,8,60,119,retention,,59.285714285714285,122,0.024590163934426257
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,8,70,90,retention,,69.28571428571428,122,0.2622950819672131
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,8,75,71,retention,,74.64285714285714,122,0.4180327868852459
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,8,80,53,retention,,79.64285714285714,122,0.5655737704918034
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,8,85,29,retention,,84.64285714285714,122,0.7622950819672132
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,8,90,16,retention,,89.64285714285715,122,0.8688524590163934
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,10,50,121,cliff,11.785714285714285,58.57142857142858,122,0.008196721311475419
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,10,60,119,retention,,59.285714285714285,122,0.024590163934426257
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,10,70,90,retention,,69.28571428571428,122,0.2622950819672131
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,10,75,71,retention,,74.64285714285714,122,0.4180327868852459
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,10,80,53,retention,,79.64285714285714,122,0.5655737704918034
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,10,85,29,retention,,84.64285714285714,122,0.7622950819672132
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,10,90,16,retention,,89.64285714285715,122,0.8688524590163934
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,3,50,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,3,60,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,3,70,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,3,75,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,3,80,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,3,85,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,3,90,7,retention,,87.91208791208791,122,0.9426229508196722
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,4,50,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,4,60,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,4,70,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,4,75,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,4,80,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,4,85,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,4,90,7,retention,,87.91208791208791,122,0.9426229508196722
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,5,50,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,5,60,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,5,70,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,5,75,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,5,80,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,5,85,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,5,90,7,retention,,87.91208791208791,122,0.9426229508196722
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,6,50,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,6,60,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,6,70,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,6,75,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,6,80,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,6,85,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,6,90,7,retention,,87.91208791208791,122,0.9426229508196722
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,7,50,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,7,60,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,7,70,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,7,75,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,7,80,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,7,85,11,cliff,7.6923076923076925,85.16483516483517,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,7,90,7,retention,,87.91208791208791,122,0.9426229508196722
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,8,50,116,retention,,49.72527472527473,122,0.049180327868852514
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,8,60,70,retention,,59.89010989010989,122,0.42622950819672134
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,8,70,25,retention,,69.78021978021978,122,0.7950819672131147
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,8,75,14,retention,,74.72527472527473,122,0.8852459016393442
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,8,80,11,retention,,77.47252747252747,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,8,85,11,retention,,77.47252747252747,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,8,90,7,retention,,87.91208791208791,122,0.9426229508196722
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,10,50,116,retention,,49.72527472527473,122,0.049180327868852514
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,10,60,70,retention,,59.89010989010989,122,0.42622950819672134
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,10,70,25,retention,,69.78021978021978,122,0.7950819672131147
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,10,75,14,retention,,74.72527472527473,122,0.8852459016393442
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,10,80,11,retention,,77.47252747252747,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,10,85,11,retention,,77.47252747252747,122,0.9098360655737705
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,10,90,7,retention,,87.91208791208791,122,0.9426229508196722
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,3,50,4,cliff,3.4965034965034967,96.5034965034965,122,0.9672131147540983
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,3,60,4,cliff,3.4965034965034967,96.5034965034965,122,0.9672131147540983
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,3,70,4,cliff,3.4965034965034967,96.5034965034965,122,0.9672131147540983
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,3,75,4,cliff,3.4965034965034967,96.5034965034965,122,0.9672131147540983
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,3,80,4,cliff,3.4965034965034967,96.5034965034965,122,0.9672131147540983
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,3,85,4,cliff,3.4965034965034967,96.5034965034965,122,0.9672131147540983
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,3,90,4,cliff,3.4965034965034967,96.5034965034965,122,0.9672131147540983
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,4,50,120,cliff,4.195804195804196,65.03496503496503,122,0.016393442622950838
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,4,60,120,cliff,4.195804195804196,65.03496503496503,122,0.016393442622950838
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,4,70,109,retention,,69.93006993006993,122,0.10655737704918034
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,4,75,98,retention,,74.82517482517483,122,0.19672131147540983
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,4,80,67,retention,,79.37062937062937,122,0.4508196721311475
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,4,85,35,retention,,84.96503496503497,122,0.7131147540983607
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,4,90,13,retention,,89.16083916083916,122,0.8934426229508197
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,5,50,122,end,,,122,0.0
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,5,60,121,retention,,59.44055944055944,122,0.008196721311475419
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,5,70,109,retention,,69.93006993006993,122,0.10655737704918034
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,5,75,98,retention,,74.82517482517483,122,0.19672131147540983
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,5,80,67,retention,,79.37062937062937,122,0.4508196721311475
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,5,85,35,retention,,84.96503496503497,122,0.7131147540983607
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,5,90,13,retention,,89.16083916083916,122,0.8934426229508197
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,6,50,122,end,,,122,0.0
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,6,60,121,retention,,59.44055944055944,122,0.008196721311475419
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,6,70,109,retention,,69.93006993006993,122,0.10655737704918034
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,6,75,98,retention,,74.82517482517483,122,0.19672131147540983
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,6,80,67,retention,,79.37062937062937,122,0.4508196721311475
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,6,85,35,retention,,84.96503496503497,122,0.7131147540983607
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,6,90,13,retention,,89.16083916083916,122,0.8934426229508197
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,7,50,122,end,,,122,0.0
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,7,60,121,retention,,59.44055944055944,122,0.008196721311475419
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,7,70,109,retention,,69.93006993006993,122,0.10655737704918034
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,7,75,98,retention,,74.82517482517483,122,0.19672131147540983
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,7,80,67,retention,,79.37062937062937,122,0.4508196721311475
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,7,85,35,retention,,84.96503496503497,122,0.7131147540983607
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,7,90,13,retention,,89.16083916083916,122,0.8934426229508197
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,8,50,122,end,,,122,0.0
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,8,60,121,retention,,59.44055944055944,122,0.008196721311475419
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,8,70,109,retention,,69.93006993006993,122,0.10655737704918034
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,8,75,98,retention,,74.82517482517483,122,0.19672131147540983
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,8,80,67,retention,,79.37062937062937,122,0.4508196721311475
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,8,85,35,retention,,84.96503496503497,122,0.7131147540983607
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,8,90,13,retention,,89.16083916083916,122,0.8934426229508197
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,10,50,122,end,,,122,0.0
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,10,60,121,retention,,59.44055944055944,122,0.008196721311475419
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,10,70,109,retention,,69.93006993006993,122,0.10655737704918034
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,10,75,98,retention,,74.82517482517483,122,0.19672131147540983
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,10,80,67,retention,,79.37062937062937,122,0.4508196721311475
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,10,85,35,retention,,84.96503496503497,122,0.7131147540983607
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,10,90,13,retention,,89.16083916083916,122,0.8934426229508197
+10,Get my leave applications,1,Get my leave applications,3,50,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,3,60,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,3,70,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,3,75,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,3,80,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,3,85,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,3,90,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,4,50,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,4,60,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,4,70,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,4,75,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,4,80,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,4,85,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,4,90,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,5,50,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,5,60,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,5,70,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,5,75,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,5,80,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,5,85,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,5,90,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,6,50,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,6,60,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,6,70,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,6,75,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,6,80,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,6,85,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,6,90,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,7,50,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,7,60,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,7,70,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,7,75,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,7,80,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,7,85,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,7,90,1,cliff,7.391304347826087,100.0,122,0.9918032786885246
+10,Get my leave applications,1,Get my leave applications,8,50,4,cliff,17.82608695652174,90.8695652173913,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,8,60,4,cliff,17.82608695652174,90.8695652173913,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,8,70,4,cliff,17.82608695652174,90.8695652173913,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,8,75,4,cliff,17.82608695652174,90.8695652173913,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,8,80,4,cliff,17.82608695652174,90.8695652173913,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,8,85,4,cliff,17.82608695652174,90.8695652173913,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,8,90,4,cliff,17.82608695652174,90.8695652173913,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,10,50,4,cliff,17.82608695652174,90.8695652173913,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,10,60,4,cliff,17.82608695652174,90.8695652173913,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,10,70,4,cliff,17.82608695652174,90.8695652173913,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,10,75,4,cliff,17.82608695652174,90.8695652173913,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,10,80,4,cliff,17.82608695652174,90.8695652173913,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,10,85,4,cliff,17.82608695652174,90.8695652173913,122,0.9672131147540983
+10,Get my leave applications,1,Get my leave applications,10,90,4,cliff,17.82608695652174,90.8695652173913,122,0.9672131147540983
+11,Submit a leave application,1,Submit a leave application,3,50,2,cliff,3.4934497816593884,97.81659388646288,122,0.9836065573770492
+11,Submit a leave application,1,Submit a leave application,3,60,2,cliff,3.4934497816593884,97.81659388646288,122,0.9836065573770492
+11,Submit a leave application,1,Submit a leave application,3,70,2,cliff,3.4934497816593884,97.81659388646288,122,0.9836065573770492
+11,Submit a leave application,1,Submit a leave application,3,75,2,cliff,3.4934497816593884,97.81659388646288,122,0.9836065573770492
+11,Submit a leave application,1,Submit a leave application,3,80,2,cliff,3.4934497816593884,97.81659388646288,122,0.9836065573770492
+11,Submit a leave application,1,Submit a leave application,3,85,2,cliff,3.4934497816593884,97.81659388646288,122,0.9836065573770492
+11,Submit a leave application,1,Submit a leave application,3,90,2,cliff,3.4934497816593884,97.81659388646288,122,0.9836065573770492
+11,Submit a leave application,1,Submit a leave application,4,50,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,4,60,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,4,70,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,4,75,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,4,80,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,4,85,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,4,90,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,5,50,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,5,60,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,5,70,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,5,75,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,5,80,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,5,85,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,5,90,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,6,50,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,6,60,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,6,70,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,6,75,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,6,80,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,6,85,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,6,90,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,7,50,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,7,60,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,7,70,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,7,75,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,7,80,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,7,85,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,7,90,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,8,50,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,8,60,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,8,70,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,8,75,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,8,80,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,8,85,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,8,90,3,cliff,8.73362445414847,94.32314410480349,122,0.9754098360655737
+11,Submit a leave application,1,Submit a leave application,10,50,4,cliff,22.707423580786028,85.58951965065502,122,0.9672131147540983
+11,Submit a leave application,1,Submit a leave application,10,60,4,cliff,22.707423580786028,85.58951965065502,122,0.9672131147540983
+11,Submit a leave application,1,Submit a leave application,10,70,4,cliff,22.707423580786028,85.58951965065502,122,0.9672131147540983
+11,Submit a leave application,1,Submit a leave application,10,75,4,cliff,22.707423580786028,85.58951965065502,122,0.9672131147540983
+11,Submit a leave application,1,Submit a leave application,10,80,4,cliff,22.707423580786028,85.58951965065502,122,0.9672131147540983
+11,Submit a leave application,1,Submit a leave application,10,85,4,cliff,22.707423580786028,85.58951965065502,122,0.9672131147540983
+11,Submit a leave application,1,Submit a leave application,10,90,3,retention,,85.58951965065502,122,0.9754098360655737
+12,Find a GitHub repository,1,Find a GitHub repository,3,50,1,cliff,4.739336492890995,100.0,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,3,60,1,cliff,4.739336492890995,100.0,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,3,70,1,cliff,4.739336492890995,100.0,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,3,75,1,cliff,4.739336492890995,100.0,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,3,80,1,cliff,4.739336492890995,100.0,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,3,85,1,cliff,4.739336492890995,100.0,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,3,90,1,cliff,4.739336492890995,100.0,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,4,50,1,cliff,4.739336492890995,100.0,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,4,60,1,cliff,4.739336492890995,100.0,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,4,70,1,cliff,4.739336492890995,100.0,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,4,75,1,cliff,4.739336492890995,100.0,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,4,80,1,cliff,4.739336492890995,100.0,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,4,85,1,cliff,4.739336492890995,100.0,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,4,90,1,cliff,4.739336492890995,100.0,122,0.9918032786885246
+12,Find a GitHub repository,1,Find a GitHub repository,5,50,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,5,60,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,5,70,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,5,75,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,5,80,14,retention,,79.62085308056872,122,0.8852459016393442
+12,Find a GitHub repository,1,Find a GitHub repository,5,85,12,retention,,83.88625592417061,122,0.9016393442622951
+12,Find a GitHub repository,1,Find a GitHub repository,5,90,7,retention,,89.57345971563981,122,0.9426229508196722
+12,Find a GitHub repository,1,Find a GitHub repository,6,50,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,6,60,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,6,70,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,6,75,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,6,80,14,retention,,79.62085308056872,122,0.8852459016393442
+12,Find a GitHub repository,1,Find a GitHub repository,6,85,12,retention,,83.88625592417061,122,0.9016393442622951
+12,Find a GitHub repository,1,Find a GitHub repository,6,90,7,retention,,89.57345971563981,122,0.9426229508196722
+12,Find a GitHub repository,1,Find a GitHub repository,7,50,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,7,60,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,7,70,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,7,75,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,7,80,14,retention,,79.62085308056872,122,0.8852459016393442
+12,Find a GitHub repository,1,Find a GitHub repository,7,85,12,retention,,83.88625592417061,122,0.9016393442622951
+12,Find a GitHub repository,1,Find a GitHub repository,7,90,7,retention,,89.57345971563981,122,0.9426229508196722
+12,Find a GitHub repository,1,Find a GitHub repository,8,50,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,8,60,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,8,70,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,8,75,16,cliff,8.530805687203792,79.14691943127961,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,8,80,14,retention,,79.62085308056872,122,0.8852459016393442
+12,Find a GitHub repository,1,Find a GitHub repository,8,85,12,retention,,83.88625592417061,122,0.9016393442622951
+12,Find a GitHub repository,1,Find a GitHub repository,8,90,7,retention,,89.57345971563981,122,0.9426229508196722
+12,Find a GitHub repository,1,Find a GitHub repository,10,50,99,retention,,49.763033175355446,122,0.1885245901639344
+12,Find a GitHub repository,1,Find a GitHub repository,10,60,36,retention,,59.95260663507109,122,0.7049180327868853
+12,Find a GitHub repository,1,Find a GitHub repository,10,70,17,retention,,68.24644549763033,122,0.860655737704918
+12,Find a GitHub repository,1,Find a GitHub repository,10,75,16,retention,,70.61611374407583,122,0.8688524590163934
+12,Find a GitHub repository,1,Find a GitHub repository,10,80,14,retention,,79.62085308056872,122,0.8852459016393442
+12,Find a GitHub repository,1,Find a GitHub repository,10,85,12,retention,,83.88625592417061,122,0.9016393442622951
+12,Find a GitHub repository,1,Find a GitHub repository,10,90,7,retention,,89.57345971563981,122,0.9426229508196722
+13,Get a file from SharePoint,1,Get a file from SharePoint,3,50,1,cliff,4.66321243523316,100.0,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,3,60,1,cliff,4.66321243523316,100.0,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,3,70,1,cliff,4.66321243523316,100.0,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,3,75,1,cliff,4.66321243523316,100.0,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,3,80,1,cliff,4.66321243523316,100.0,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,3,85,1,cliff,4.66321243523316,100.0,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,3,90,1,cliff,4.66321243523316,100.0,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,4,50,1,cliff,4.66321243523316,100.0,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,4,60,1,cliff,4.66321243523316,100.0,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,4,70,1,cliff,4.66321243523316,100.0,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,4,75,1,cliff,4.66321243523316,100.0,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,4,80,1,cliff,4.66321243523316,100.0,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,4,85,1,cliff,4.66321243523316,100.0,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,4,90,1,cliff,4.66321243523316,100.0,122,0.9918032786885246
+13,Get a file from SharePoint,1,Get a file from SharePoint,5,50,88,retention,,49.740932642487046,122,0.2786885245901639
+13,Get a file from SharePoint,1,Get a file from SharePoint,5,60,37,retention,,59.84455958549223,122,0.6967213114754098
+13,Get a file from SharePoint,1,Get a file from SharePoint,5,70,25,retention,,69.94818652849742,122,0.7950819672131147
+13,Get a file from SharePoint,1,Get a file from SharePoint,5,75,22,retention,,74.61139896373057,122,0.819672131147541
+13,Get a file from SharePoint,1,Get a file from SharePoint,5,80,13,retention,,79.79274611398964,122,0.8934426229508197
+13,Get a file from SharePoint,1,Get a file from SharePoint,5,85,8,retention,,84.4559585492228,122,0.9344262295081968
+13,Get a file from SharePoint,1,Get a file from SharePoint,5,90,3,retention,,89.63730569948186,122,0.9754098360655737
+13,Get a file from SharePoint,1,Get a file from SharePoint,6,50,88,retention,,49.740932642487046,122,0.2786885245901639
+13,Get a file from SharePoint,1,Get a file from SharePoint,6,60,37,retention,,59.84455958549223,122,0.6967213114754098
+13,Get a file from SharePoint,1,Get a file from SharePoint,6,70,25,retention,,69.94818652849742,122,0.7950819672131147
+13,Get a file from SharePoint,1,Get a file from SharePoint,6,75,22,retention,,74.61139896373057,122,0.819672131147541
+13,Get a file from SharePoint,1,Get a file from SharePoint,6,80,13,retention,,79.79274611398964,122,0.8934426229508197
+13,Get a file from SharePoint,1,Get a file from SharePoint,6,85,8,retention,,84.4559585492228,122,0.9344262295081968
+13,Get a file from SharePoint,1,Get a file from SharePoint,6,90,3,retention,,89.63730569948186,122,0.9754098360655737
+13,Get a file from SharePoint,1,Get a file from SharePoint,7,50,88,retention,,49.740932642487046,122,0.2786885245901639
+13,Get a file from SharePoint,1,Get a file from SharePoint,7,60,37,retention,,59.84455958549223,122,0.6967213114754098
+13,Get a file from SharePoint,1,Get a file from SharePoint,7,70,25,retention,,69.94818652849742,122,0.7950819672131147
+13,Get a file from SharePoint,1,Get a file from SharePoint,7,75,22,retention,,74.61139896373057,122,0.819672131147541
+13,Get a file from SharePoint,1,Get a file from SharePoint,7,80,13,retention,,79.79274611398964,122,0.8934426229508197
+13,Get a file from SharePoint,1,Get a file from SharePoint,7,85,8,retention,,84.4559585492228,122,0.9344262295081968
+13,Get a file from SharePoint,1,Get a file from SharePoint,7,90,3,retention,,89.63730569948186,122,0.9754098360655737
+13,Get a file from SharePoint,1,Get a file from SharePoint,8,50,88,retention,,49.740932642487046,122,0.2786885245901639
+13,Get a file from SharePoint,1,Get a file from SharePoint,8,60,37,retention,,59.84455958549223,122,0.6967213114754098
+13,Get a file from SharePoint,1,Get a file from SharePoint,8,70,25,retention,,69.94818652849742,122,0.7950819672131147
+13,Get a file from SharePoint,1,Get a file from SharePoint,8,75,22,retention,,74.61139896373057,122,0.819672131147541
+13,Get a file from SharePoint,1,Get a file from SharePoint,8,80,13,retention,,79.79274611398964,122,0.8934426229508197
+13,Get a file from SharePoint,1,Get a file from SharePoint,8,85,8,retention,,84.4559585492228,122,0.9344262295081968
+13,Get a file from SharePoint,1,Get a file from SharePoint,8,90,3,retention,,89.63730569948186,122,0.9754098360655737
+13,Get a file from SharePoint,1,Get a file from SharePoint,10,50,88,retention,,49.740932642487046,122,0.2786885245901639
+13,Get a file from SharePoint,1,Get a file from SharePoint,10,60,37,retention,,59.84455958549223,122,0.6967213114754098
+13,Get a file from SharePoint,1,Get a file from SharePoint,10,70,25,retention,,69.94818652849742,122,0.7950819672131147
+13,Get a file from SharePoint,1,Get a file from SharePoint,10,75,22,retention,,74.61139896373057,122,0.819672131147541
+13,Get a file from SharePoint,1,Get a file from SharePoint,10,80,13,retention,,79.79274611398964,122,0.8934426229508197
+13,Get a file from SharePoint,1,Get a file from SharePoint,10,85,8,retention,,84.4559585492228,122,0.9344262295081968
+13,Get a file from SharePoint,1,Get a file from SharePoint,10,90,3,retention,,89.63730569948186,122,0.9754098360655737
+14,Run a query against the database,1,Run a query against the database,3,50,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,3,60,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,3,70,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,3,75,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,3,80,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,3,85,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,3,90,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,4,50,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,4,60,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,4,70,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,4,75,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,4,80,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,4,85,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,4,90,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,5,50,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,5,60,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,5,70,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,5,75,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,5,80,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,5,85,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,5,90,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,6,50,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,6,60,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,6,70,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,6,75,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,6,80,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,6,85,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,6,90,2,cliff,6.944444444444445,100.0,122,0.9836065573770492
+14,Run a query against the database,1,Run a query against the database,7,50,107,retention,,49.65277777777778,122,0.12295081967213117
+14,Run a query against the database,1,Run a query against the database,7,60,48,retention,,59.72222222222222,122,0.6065573770491803
+14,Run a query against the database,1,Run a query against the database,7,70,16,retention,,69.09722222222221,122,0.8688524590163934
+14,Run a query against the database,1,Run a query against the database,7,75,11,retention,,74.30555555555556,122,0.9098360655737705
+14,Run a query against the database,1,Run a query against the database,7,80,7,retention,,79.86111111111111,122,0.9426229508196722
+14,Run a query against the database,1,Run a query against the database,7,85,5,retention,,84.02777777777779,122,0.9590163934426229
+14,Run a query against the database,1,Run a query against the database,7,90,3,retention,,87.84722222222221,122,0.9754098360655737
+14,Run a query against the database,1,Run a query against the database,8,50,107,retention,,49.65277777777778,122,0.12295081967213117
+14,Run a query against the database,1,Run a query against the database,8,60,48,retention,,59.72222222222222,122,0.6065573770491803
+14,Run a query against the database,1,Run a query against the database,8,70,16,retention,,69.09722222222221,122,0.8688524590163934
+14,Run a query against the database,1,Run a query against the database,8,75,11,retention,,74.30555555555556,122,0.9098360655737705
+14,Run a query against the database,1,Run a query against the database,8,80,7,retention,,79.86111111111111,122,0.9426229508196722
+14,Run a query against the database,1,Run a query against the database,8,85,5,retention,,84.02777777777779,122,0.9590163934426229
+14,Run a query against the database,1,Run a query against the database,8,90,3,retention,,87.84722222222221,122,0.9754098360655737
+14,Run a query against the database,1,Run a query against the database,10,50,107,retention,,49.65277777777778,122,0.12295081967213117
+14,Run a query against the database,1,Run a query against the database,10,60,48,retention,,59.72222222222222,122,0.6065573770491803
+14,Run a query against the database,1,Run a query against the database,10,70,16,retention,,69.09722222222221,122,0.8688524590163934
+14,Run a query against the database,1,Run a query against the database,10,75,11,retention,,74.30555555555556,122,0.9098360655737705
+14,Run a query against the database,1,Run a query against the database,10,80,7,retention,,79.86111111111111,122,0.9426229508196722
+14,Run a query against the database,1,Run a query against the database,10,85,5,retention,,84.02777777777779,122,0.9590163934426229
+14,Run a query against the database,1,Run a query against the database,10,90,3,retention,,87.84722222222221,122,0.9754098360655737
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,3,50,2,cliff,3.414634146341464,98.04878048780488,122,0.9836065573770492
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,3,60,2,cliff,3.414634146341464,98.04878048780488,122,0.9836065573770492
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,3,70,2,cliff,3.414634146341464,98.04878048780488,122,0.9836065573770492
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,3,75,2,cliff,3.414634146341464,98.04878048780488,122,0.9836065573770492
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,3,80,2,cliff,3.414634146341464,98.04878048780488,122,0.9836065573770492
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,3,85,2,cliff,3.414634146341464,98.04878048780488,122,0.9836065573770492
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,3,90,2,cliff,3.414634146341464,98.04878048780488,122,0.9836065573770492
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,4,50,10,cliff,5.853658536585367,85.85365853658537,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,4,60,10,cliff,5.853658536585367,85.85365853658537,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,4,70,10,cliff,5.853658536585367,85.85365853658537,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,4,75,10,cliff,5.853658536585367,85.85365853658537,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,4,80,10,cliff,5.853658536585367,85.85365853658537,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,4,85,10,cliff,5.853658536585367,85.85365853658537,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,4,90,5,retention,,89.75609756097562,122,0.9590163934426229
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,5,50,10,cliff,5.853658536585367,85.85365853658537,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,5,60,10,cliff,5.853658536585367,85.85365853658537,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,5,70,10,cliff,5.853658536585367,85.85365853658537,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,5,75,10,cliff,5.853658536585367,85.85365853658537,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,5,80,10,cliff,5.853658536585367,85.85365853658537,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,5,85,10,cliff,5.853658536585367,85.85365853658537,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,5,90,5,retention,,89.75609756097562,122,0.9590163934426229
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,6,50,107,retention,,49.51219512195122,122,0.12295081967213117
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,6,60,58,retention,,59.756097560975604,122,0.5245901639344263
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,6,70,17,retention,,69.7560975609756,122,0.860655737704918
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,6,75,15,retention,,73.65853658536585,122,0.8770491803278688
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,6,80,12,retention,,76.09756097560975,122,0.9016393442622951
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,6,85,10,retention,,80.0,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,6,90,5,retention,,89.75609756097562,122,0.9590163934426229
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,7,50,107,retention,,49.51219512195122,122,0.12295081967213117
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,7,60,58,retention,,59.756097560975604,122,0.5245901639344263
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,7,70,17,retention,,69.7560975609756,122,0.860655737704918
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,7,75,15,retention,,73.65853658536585,122,0.8770491803278688
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,7,80,12,retention,,76.09756097560975,122,0.9016393442622951
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,7,85,10,retention,,80.0,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,7,90,5,retention,,89.75609756097562,122,0.9590163934426229
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,8,50,107,retention,,49.51219512195122,122,0.12295081967213117
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,8,60,58,retention,,59.756097560975604,122,0.5245901639344263
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,8,70,17,retention,,69.7560975609756,122,0.860655737704918
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,8,75,15,retention,,73.65853658536585,122,0.8770491803278688
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,8,80,12,retention,,76.09756097560975,122,0.9016393442622951
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,8,85,10,retention,,80.0,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,8,90,5,retention,,89.75609756097562,122,0.9590163934426229
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,10,50,107,retention,,49.51219512195122,122,0.12295081967213117
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,10,60,58,retention,,59.756097560975604,122,0.5245901639344263
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,10,70,17,retention,,69.7560975609756,122,0.860655737704918
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,10,75,15,retention,,73.65853658536585,122,0.8770491803278688
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,10,80,12,retention,,76.09756097560975,122,0.9016393442622951
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,10,85,10,retention,,80.0,122,0.9180327868852459
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,10,90,5,retention,,89.75609756097562,122,0.9590163934426229

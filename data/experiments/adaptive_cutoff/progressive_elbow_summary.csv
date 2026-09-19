@@ -1,0 +1,20 @@
+query_number,query,intent_number,intent_text,peak_score,strongest_head_rank,strongest_head_score,strongest_head_retention,strongest_head_gap_percent,strongest_head_strength,historical_median_gap,tool_name
+1,Send an email to Tom,1,Send an email to Tom,0.7109375,11,0.5625,79.12087912087912,6.043956043956044,3.142857142857143,0.013671875,outlook_mail_management_search_outlook_mail
+2,Reply to Tom's email,1,Reply to Tom 's email,0.72265625,11,0.53125,73.51351351351352,4.594594594594595,2.4285714285714284,0.013671875,outlook_mail_management_search_outlook_mail
+3,Search the web for the latest Nvidia news,1,Search the web for the latest Nvidia news,0.58984375,6,0.458984375,77.81456953642383,1.6556291390728477,1.25,0.0078125,railway_tools_project_info
+4,Create a Word document,1,Create a Word document,0.74609375,14,0.6171875,82.72251308900523,2.6178010471204187,2.5,0.0078125,office_word_mcp_server_api_merge_doucments
+5,Get the current sprint work items,1,Get the current sprint work items,0.73828125,12,0.62109375,84.12698412698413,3.7037037037037033,2.3333333333333335,0.01171875,project_management_tools_delete_work_item
+6,Find the latest Nvidia news and email a summary to Tom,1,Find the latest Nvidia news,0.5625,5,0.515625,91.66666666666666,3.4722222222222223,2.5,0.0078125,railway_tools_project_info
+6,Find the latest Nvidia news and email a summary to Tom,2,email a summary to Tom,0.69921875,11,0.6015625,86.03351955307262,4.4692737430167595,4.0,0.0078125,outlook_mail_management_search_outlook_mail
+7,Get the current sprint work items and create a Word report,1,Get the current sprint work items,0.73828125,12,0.62109375,84.12698412698413,3.7037037037037033,2.3333333333333335,0.01171875,project_management_tools_delete_work_item
+7,Get the current sprint work items and create a Word report,2,create a Word report,0.68359375,13,0.58203125,85.14285714285714,3.428571428571429,2.0,0.01171875,office_word_mcp_server_api_merge_doucments
+8,"Search for Nvidia news, create a report, and email it to Tom",1,Search for Nvidia news,0.58203125,7,0.49609375,85.23489932885906,2.013422818791946,1.5,0.0078125,office_word_mcp_server_api_find_text_in_document
+8,"Search for Nvidia news, create a report, and email it to Tom",2,create a report,0.546875,13,0.50390625,92.14285714285714,1.7857142857142856,2.5,0.00390625,railway_tools_project_create
+8,"Search for Nvidia news, create a report, and email it to Tom",3,email it to Tom,0.7109375,11,0.60546875,85.16483516483517,7.6923076923076925,4.666666666666667,0.01171875,outlook_mail_management_search_outlook_mail
+9,Schedule a meeting with Tom,1,Schedule a meeting with Tom,0.55859375,13,0.50390625,90.20979020979021,1.048951048951049,1.0,0.005859375,gmail_tools_send_google_email
+10,Get my leave applications,1,Get my leave applications,0.8984375,4,0.81640625,90.8695652173913,17.82608695652174,13.666666666666666,0.01171875,carrot_mcp_server_api_submit_leave_application
+11,Submit a leave application,1,Submit a leave application,0.89453125,4,0.765625,85.58951965065502,22.707423580786028,6.5,0.03125,carrot_mcp_server_api_list_leave_application
+12,Find a GitHub repository,1,Find a GitHub repository,0.82421875,16,0.65234375,79.14691943127961,8.530805687203792,9.0,0.0078125,github_mcp_server_delete_file
+13,Get a file from SharePoint,1,Get a file from SharePoint,0.75390625,20,0.5859375,77.720207253886,1.5544041450777202,1.5,0.0078125,quest_studio_file_storage_update_file
+14,Run a query against the database,1,Run a query against the database,0.5625,7,0.46484375,82.63888888888889,2.7777777777777777,1.3333333333333333,0.01171875,supabase_mcp_get_table_schema
+15,Check the deployment status on Railway,1,Check the deployment status on Railway,0.80078125,10,0.6875,85.85365853658537,5.853658536585367,4.0,0.01171875,railway_tools_project_create

@@ -1,0 +1,4486 @@
+[
+  {
+    "name": "railway_tools_project_list",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "project_list",
+    "description": "[API] List all projects in your Railway account\n\n\u26a1\ufe0f Best for:\n  \u2713 Getting an overview of all projects\n  \u2713 Finding project IDs\n  \u2713 Project discovery and management\n\n\u2192 Next steps: project_info, service_list\n\n\u2192 Related: project_create, project_delete",
+    "input_schema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "railway_tools_project_info",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "project_info",
+    "description": "[API] Get detailed information about a specific Railway project\n\n\u26a1\ufe0f Best for:\n  \u2713 Viewing project details and status\n  \u2713 Checking environments and services\n  \u2713 Project configuration review\n\n\u2192 Prerequisites: project_list\n\n\u2192 Next steps: service_list, variable_list\n\n\u2192 Related: project_update, project_delete",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "ID of the project to get information about"
+        }
+      },
+      "required": [
+        "projectId"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "railway_tools_project_create",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "project_create",
+    "description": "[API] Create a new Railway project\n\n\u26a1\ufe0f Best for:\n  \u2713 Starting new applications\n  \u2713 Setting up development environments\n  \u2713 Creating project spaces\n\n\u26a0\ufe0f Not for:\n  \u00d7 Duplicating existing projects\n\n\u2192 Next steps: service_create_from_repo, service_create_from_image, database_deploy\n\n\u2192 Related: project_delete, project_update",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name for the new project"
+        },
+        "teamId": {
+          "type": "string",
+          "description": "Optional team ID to create the project under"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "railway_tools_project_delete",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "project_delete",
+    "description": "[API] Delete a Railway project and all its resources\n\n\u26a1\ufe0f Best for:\n  \u2713 Removing unused projects\n  \u2713 Cleaning up test projects\n\n\u26a0\ufe0f Not for:\n  \u00d7 Temporary project deactivation\n  \u00d7 Service-level cleanup (use service_delete)\n\n\u2192 Prerequisites: project_list, project_info\n\n\u2192 Alternatives: service_delete\n\n\u2192 Related: project_create",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "ID of the project to delete"
+        }
+      },
+      "required": [
+        "projectId"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "railway_tools_project_environments",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "project_environments",
+    "description": "List all environments in a project",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "ID of the project"
+        }
+      },
+      "required": [
+        "projectId"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "railway_tools_service_list",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "service_list",
+    "description": "[API] List all services in a specific Railway project\n\n\u26a1\ufe0f Best for:\n  \u2713 Getting an overview of a project's services\n  \u2713 Finding service IDs\n  \u2713 Checking service status\n\n\u2192 Prerequisites: project_list\n\n\u2192 Next steps: service_info, deployment_list\n\n\u2192 Related: project_info, variable_list",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "ID of the project to list services from"
+        }
+      },
+      "required": [
+        "projectId"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "railway_tools_service_info",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "service_info",
+    "description": "[API] Get detailed information about a specific service\n\n\u26a1\ufe0f Best for:\n  \u2713 Viewing service configuration and status\n  \u2713 Checking deployment details\n  \u2713 Monitoring service health\n\n\u2192 Prerequisites: service_list\n\n\u2192 Next steps: deployment_list, variable_list\n\n\u2192 Related: service_update, deployment_trigger",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "ID of the project containing the service"
+        },
+        "serviceId": {
+          "type": "string",
+          "description": "ID of the service to get information about"
+        },
+        "environmentId": {
+          "type": "string",
+          "description": "ID of the environment to check (usually obtained from service_list)"
+        }
+      },
+      "required": [
+        "projectId",
+        "serviceId",
+        "environmentId"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "railway_tools_service_create_from_repo",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "service_create_from_repo",
+    "description": "[API] Create a new service from a GitHub repository\n\n\u26a1\ufe0f Best for:\n  \u2713 Deploying applications from source code\n  \u2713 Services that need build processes\n  \u2713 GitHub-hosted projects\n\n\u26a0\ufe0f Not for:\n  \u00d7 Pre-built Docker images (use service_create_from_image)\n  \u00d7 Database deployments (use database_deploy)\n  \u00d7 Static file hosting\n\n\u2192 Prerequisites: project_list\n\n\u2192 Alternatives: service_create_from_image, database_deploy\n\n\u2192 Next steps: variable_set, service_update\n\n\u2192 Related: deployment_trigger, service_info",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "ID of the project to create the service in"
+        },
+        "repo": {
+          "type": "string",
+          "description": "GitHub repository URL or name (e.g., 'owner/repo')"
+        },
+        "name": {
+          "type": "string",
+          "description": "Optional custom name for the service"
+        }
+      },
+      "required": [
+        "projectId",
+        "repo"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "railway_tools_service_create_from_image",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "service_create_from_image",
+    "description": "[API] Create a new service from a Docker image\n\n\u26a1\ufe0f Best for:\n  \u2713 Custom database deployments\n  \u2713 Pre-built container deployments\n  \u2713 Specific version requirements\n\n\u26a0\ufe0f Not for:\n  \u00d7 Standard database deployments (use database_deploy)\n  \u00d7 GitHub repository deployments (use service_create_from_repo)\n  \u00d7 Services needing build process\n\n\u2192 Prerequisites: project_list\n\n\u2192 Alternatives: database_deploy, service_create_from_repo\n\n\u2192 Next steps: variable_set, service_update, tcp_proxy_create\n\n\u2192 Related: volume_create, deployment_trigger",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "ID of the project to create the service in"
+        },
+        "image": {
+          "type": "string",
+          "description": "Docker image to use (e.g., 'postgres:13-alpine')"
+        },
+        "name": {
+          "type": "string",
+          "description": "Optional custom name for the service"
+        }
+      },
+      "required": [
+        "projectId",
+        "image"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "railway_tools_service_update",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "service_update",
+    "description": "[API] Update a service's configuration\n\n\u26a1\ufe0f Best for:\n  \u2713 Changing service settings\n  \u2713 Updating resource limits\n  \u2713 Modifying deployment configuration\n\n\u26a0\ufe0f Not for:\n  \u00d7 Updating environment variables (use variable_set)\n  \u00d7 Restarting services (use service_restart)\n  \u00d7 Triggering new deployments (use deployment_trigger)\n\n\u2192 Prerequisites: service_list, service_info\n\n\u2192 Next steps: deployment_trigger\n\n\u2192 Related: service_restart, variable_set",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "ID of the project containing the service"
+        },
+        "serviceId": {
+          "type": "string",
+          "description": "ID of the service to update"
+        },
+        "environmentId": {
+          "type": "string",
+          "description": "ID of the environment to update (usually obtained from service_info)"
+        },
+        "region": {
+          "type": "string",
+          "enum": [
+            "asia-southeast1",
+            "asia-southeast1-eqsg3a",
+            "europe-west4",
+            "europe-west4-drams3a",
+            "us-east4",
+            "us-east4-eqdc4a",
+            "us-west1",
+            "us-west2"
+          ],
+          "description": "Optional: Region to deploy the service in"
+        },
+        "rootDirectory": {
+          "type": "string",
+          "description": "Optional: Root directory containing the service code"
+        },
+        "buildCommand": {
+          "type": "string",
+          "description": "Optional: Command to build the service"
+        },
+        "startCommand": {
+          "type": "string",
+          "description": "Optional: Command to start the service"
+        },
+        "numReplicas": {
+          "type": "number",
+          "description": "Optional: Number of service replicas to run"
+        },
+        "healthcheckPath": {
+          "type": "string",
+          "description": "Optional: Path for health checks"
+        },
+        "sleepApplication": {
+          "type": "boolean",
+          "description": "Optional: Whether to enable sleep mode"
+        }
+      },
+      "required": [
+        "projectId",
+        "serviceId",
+        "environmentId"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "railway_tools_service_delete",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "service_delete",
+    "description": "[API] Delete a service from a project\n\n\u26a1\ufe0f Best for:\n  \u2713 Removing unused services\n  \u2713 Cleaning up test services\n  \u2713 Project reorganization\n\n\u26a0\ufe0f Not for:\n  \u00d7 Temporary service stoppage (use service_restart)\n  \u00d7 Updating service configuration (use service_update)\n\n\u2192 Prerequisites: service_list, service_info\n\n\u2192 Alternatives: service_restart\n\n\u2192 Related: project_delete",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "ID of the project containing the service"
+        },
+        "serviceId": {
+          "type": "string",
+          "description": "ID of the service to delete"
+        }
+      },
+      "required": [
+        "projectId",
+        "serviceId"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "railway_tools_service_restart",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "service_restart",
+    "description": "[API] Restart a service in a specific environment\n\n\u26a1\ufe0f Best for:\n  \u2713 Applying configuration changes\n  \u2713 Clearing service state\n  \u2713 Resolving runtime issues\n\n\u26a0\ufe0f Not for:\n  \u00d7 Deploying new code (use deployment_trigger)\n  \u00d7 Updating service config (use service_update)\n  \u00d7 Long-term service stoppage (use service_delete)\n\n\u2192 Prerequisites: service_list\n\n\u2192 Alternatives: deployment_trigger\n\n\u2192 Related: service_info, deployment_logs",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "serviceId": {
+          "type": "string",
+          "description": "ID of the service to restart"
+        },
+        "environmentId": {
+          "type": "string",
+          "description": "ID of the environment where the service should be restarted (usually obtained from service_info)"
+        }
+      },
+      "required": [
+        "serviceId",
+        "environmentId"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "railway_tools_database_list_types",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "database_list_types",
+    "description": "[QUERY] List all available database types that can be deployed using Railway's official templates\n\n\u26a1\ufe0f Best for:\n  \u2713 Discovering supported database types\n  \u2713 Planning database deployments\n  \u2713 Checking template availability\n\n\u26a0\ufe0f Not for:\n  \u00d7 Listing existing databases\n  \u00d7 Getting database connection details\n\n\u2192 Alternatives: service_create_from_image\n\n\u2192 Next steps: database_deploy\n\n\u2192 Related: database_deploy, service_create_from_image",
+    "input_schema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "railway_tools_volume_list",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "volume_list",
+    "description": "[API] List all volumes in a project\n\n\u26a1\ufe0f Best for:\n  \u2713 Viewing persistent storage configurations\n  \u2713 Managing data volumes\n  \u2713 Auditing storage usage\n\n\u2192 Prerequisites: project_list\n\n\u2192 Next steps: volume_create\n\n\u2192 Related: service_info, database_deploy",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "ID of the project to list volumes for"
+        }
+      },
+      "required": [
+        "projectId"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "railway_tools_volume_create",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "volume_create",
+    "description": "[API] Create a new persistent volume for a service\n\n\u26a1\ufe0f Best for:\n  \u2713 Setting up database storage\n  \u2713 Configuring persistent data\n  \u2713 Adding file storage\n\n\u26a0\ufe0f Not for:\n  \u00d7 Temporary storage needs\n  \u00d7 Static file hosting\n  \u00d7 Memory caching\n\n\u2192 Prerequisites: service_list\n\n\u2192 Next steps: volume_list\n\n\u2192 Related: service_update, database_deploy",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "description": "ID of the project containing the service"
+        },
+        "environmentId": {
+          "type": "string",
+          "description": "ID of the environment for the volume (usually obtained from service_info)"
+        },
+        "serviceId": {
+          "type": "string",
+          "description": "ID of the service to attach volume to"
+        },
+        "mountPath": {
+          "type": "string",
+          "description": "Path where the volume should be mounted in the container"
+        }
+      },
+      "required": [
+        "projectId",
+        "environmentId",
+        "serviceId",
+        "mountPath"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "railway_tools_volume_update",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "volume_update",
+    "description": "Update a volume's properties",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "volumeId": {
+          "type": "string",
+          "description": "ID of the volume to update"
+        },
+        "name": {
+          "type": "string",
+          "description": "New name for the volume"
+        }
+      },
+      "required": [
+        "volumeId",
+        "name"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "railway_tools_volume_delete",
+    "mcp_name": "railway-tools",
+    "mcp_url": "https://twynity-staging.mcp.4th-ir.com/railway/mcp",
+    "tool_name": "volume_delete",
+    "description": "[API] Delete a volume from a service\n\n\u26a1\ufe0f Best for:\n  \u2713 Removing unused storage\n  \u2713 Storage cleanup\n  \u2713 Resource management\n\n\u26a0\ufe0f Not for:\n  \u00d7 Temporary data removal\n  \u00d7 Data backup (use volume_backup first)\n\n\u2192 Prerequisites: volume_list\n\n\u2192 Related: service_update",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "volumeId": {
+          "type": "string",
+          "description": "ID of the volume to delete"
+        }
+      },
+      "required": [
+        "volumeId"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "carrot_mcp_server_api_create_employee",
+    "mcp_name": "Carrot MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/carrot/mcp",
+    "tool_name": "create_employee",
+    "description": "Create Employee\n\nAdd a new employee to the organisation.\n\nrole must be one of: OrgAdmin, OrgProjectManager, OrgMember\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "name"
+        },
+        "email": {
+          "type": "string",
+          "title": "email"
+        },
+        "organization_role": {
+          "type": "string",
+          "title": "organization_role"
+        },
+        "role": {
+          "type": "string",
+          "title": "role",
+          "default": "OrgMember"
+        }
+      },
+      "title": "create_employeeArguments",
+      "required": [
+        "name",
+        "email",
+        "organization_role"
+      ]
+    }
+  },
+  {
+    "name": "carrot_mcp_server_api_list_employees",
+    "mcp_name": "Carrot MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/carrot/mcp",
+    "tool_name": "list_employees",
+    "description": "List Employees\n\nList employees in the organisation (paginated).\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "default": 1,
+          "title": "page"
+        },
+        "page_size": {
+          "type": "integer",
+          "default": 20,
+          "title": "page_size"
+        }
+      },
+      "title": "list_employeesArguments"
+    }
+  },
+  {
+    "name": "carrot_mcp_server_api_get_employee",
+    "mcp_name": "Carrot MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/carrot/mcp",
+    "tool_name": "get_employee",
+    "description": "Get Employee\n\nGet full details of an employee by their ID.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "employee_id": {
+          "type": "string",
+          "title": "employee_id"
+        }
+      },
+      "title": "get_employeeArguments",
+      "required": [
+        "employee_id"
+      ]
+    }
+  },
+  {
+    "name": "carrot_mcp_server_api_update_employee",
+    "mcp_name": "Carrot MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/carrot/mcp",
+    "tool_name": "update_employee",
+    "description": "Update Employee\n\nUpdate details of an employee.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "employee_id": {
+          "type": "string",
+          "title": "employee_id"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "name",
+          "type": "string"
+        },
+        "email": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "email",
+          "type": "string"
+        },
+        "organization_role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "organization_role",
+          "type": "string"
+        },
+        "parent_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "parent_id",
+          "type": "string"
+        },
+        "is_enabled": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "is_enabled",
+          "type": "boolean"
+        }
+      },
+      "title": "update_employeeArguments",
+      "required": [
+        "employee_id"
+      ]
+    }
+  },
+  {
+    "name": "carrot_mcp_server_api_log_hours_entry",
+    "mcp_name": "Carrot MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/carrot/mcp",
+    "tool_name": "log_hours_entry",
+    "description": "Log Hours Entry\n\nLog work hours for a project and task.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "title": "start_date"
+        },
+        "end_date": {
+          "type": "string",
+          "title": "end_date"
+        },
+        "duration_hours": {
+          "type": "integer",
+          "title": "duration_hours"
+        },
+        "duration_minutes": {
+          "type": "integer",
+          "title": "duration_minutes"
+        },
+        "project_id": {
+          "type": "string",
+          "title": "project_id"
+        },
+        "task_id": {
+          "type": "string",
+          "title": "task_id"
+        },
+        "user_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "user_id",
+          "type": "string"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "notes",
+          "type": "string"
+        }
+      },
+      "title": "log_hours_entryArguments",
+      "required": [
+        "start_date",
+        "end_date",
+        "duration_hours",
+        "duration_minutes",
+        "project_id",
+        "task_id"
+      ]
+    }
+  },
+  {
+    "name": "carrot_mcp_server_api_work_hours_summary",
+    "mcp_name": "Carrot MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/carrot/mcp",
+    "tool_name": "work_hours_summary",
+    "description": "Work Hours Summary\n\nGet summarized work hours grouped by project and employee for a date range (YYYY-MM-DD).\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "title": "start_date"
+        },
+        "end_date": {
+          "type": "string",
+          "title": "end_date"
+        },
+        "user_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "user_id",
+          "type": "string"
+        }
+      },
+      "title": "work_hours_summaryArguments",
+      "required": [
+        "start_date",
+        "end_date"
+      ]
+    }
+  },
+  {
+    "name": "carrot_mcp_server_api_create_leave_application",
+    "mcp_name": "Carrot MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/carrot/mcp",
+    "tool_name": "create_leave_application",
+    "description": "Create Leave Application\n\nCreate a leave application.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "title": "start_date"
+        },
+        "end_date": {
+          "type": "string",
+          "title": "end_date"
+        },
+        "duration_hours": {
+          "type": "integer",
+          "title": "duration_hours"
+        },
+        "duration_minutes": {
+          "type": "integer",
+          "title": "duration_minutes"
+        },
+        "leave_type_id": {
+          "type": "string",
+          "title": "leave_type_id"
+        },
+        "user_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "user_id",
+          "type": "string"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "notes",
+          "type": "string"
+        }
+      },
+      "title": "create_leave_applicationArguments",
+      "required": [
+        "start_date",
+        "end_date",
+        "duration_hours",
+        "duration_minutes",
+        "leave_type_id"
+      ]
+    }
+  },
+  {
+    "name": "carrot_mcp_server_api_list_leave_application",
+    "mcp_name": "Carrot MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/carrot/mcp",
+    "tool_name": "list_leave_application",
+    "description": "List Leave Application\n\nList leave applications (optionally filtered by date range or employee).\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "start_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "start_date",
+          "type": "string"
+        },
+        "end_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "end_date",
+          "type": "string"
+        },
+        "user_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "user_id",
+          "type": "string"
+        }
+      },
+      "title": "list_leave_applicationArguments"
+    }
+  },
+  {
+    "name": "carrot_mcp_server_api_update_leave_application",
+    "mcp_name": "Carrot MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/carrot/mcp",
+    "tool_name": "update_leave_application",
+    "description": "Update Leave Application\n\nUpdate details of a leave application.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "allocation_id": {
+          "type": "string",
+          "title": "allocation_id"
+        },
+        "start_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "start_date",
+          "type": "string"
+        },
+        "end_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "end_date",
+          "type": "string"
+        },
+        "duration_hours": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "duration_hours",
+          "type": "integer"
+        },
+        "duration_minutes": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "duration_minutes",
+          "type": "integer"
+        },
+        "leave_type_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "leave_type_id",
+          "type": "string"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "notes",
+          "type": "string"
+        }
+      },
+      "title": "update_leave_applicationArguments",
+      "required": [
+        "allocation_id"
+      ]
+    }
+  },
+  {
+    "name": "carrot_mcp_server_api_submit_leave_application",
+    "mcp_name": "Carrot MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/carrot/mcp",
+    "tool_name": "submit_leave_application",
+    "description": "Submit Leave Application\n\nSubmit a leave application for approval.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "title": "start_date"
+        },
+        "end_date": {
+          "type": "string",
+          "title": "end_date"
+        },
+        "duration_hours": {
+          "type": "integer",
+          "title": "duration_hours"
+        },
+        "duration_minutes": {
+          "type": "integer",
+          "title": "duration_minutes"
+        },
+        "leave_type_id": {
+          "type": "string",
+          "title": "leave_type_id"
+        },
+        "user_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "user_id",
+          "type": "string"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "notes",
+          "type": "string"
+        }
+      },
+      "title": "submit_leave_applicationArguments",
+      "required": [
+        "start_date",
+        "end_date",
+        "duration_hours",
+        "duration_minutes",
+        "leave_type_id"
+      ]
+    }
+  },
+  {
+    "name": "carrot_mcp_server_api_hr_dashboard_summary",
+    "mcp_name": "Carrot MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/carrot/mcp",
+    "tool_name": "hr_dashboard_summary",
+    "description": "Hr Dashboard Summary\n\nGet a high-level HR summary dashboard including headcount, total hours worked, leave totals, and active/pending leave requests.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "title": "start_date"
+        },
+        "end_date": {
+          "type": "string",
+          "title": "end_date"
+        }
+      },
+      "title": "hr_dashboard_summaryArguments",
+      "required": [
+        "start_date",
+        "end_date"
+      ]
+    }
+  },
+  {
+    "name": "outlook_mail_management_send_email",
+    "mcp_name": "Outlook Mail Management",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/email-tools/mcp",
+    "tool_name": "send_email",
+    "description": "Send Email\n\nSend an email to the specified address\n\nArgs:\n    recipient_email (str): The recipient's email address.\n    cc_addresses (list[str]): A list of CC email addresses.\n    subject (str): The subject of the email.\n    message (str): The body of the email message.\n\nReturns:\n    (dict): response message\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "recipient_email": {
+          "type": "string",
+          "title": "recipient_email",
+          "description": "The email address of the recepient"
+        },
+        "cc_addresses": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "title": "cc_addresses",
+          "description": "A list of CC email addresses",
+          "default": []
+        },
+        "subject": {
+          "type": "string",
+          "title": "subject",
+          "description": "The subject of the email"
+        },
+        "message": {
+          "type": "string",
+          "title": "message",
+          "description": "The content of the email in HTML format"
+        }
+      },
+      "title": "send_emailArguments",
+      "required": [
+        "recipient_email",
+        "subject",
+        "message"
+      ]
+    }
+  },
+  {
+    "name": "outlook_mail_management_get_email_messages",
+    "mcp_name": "Outlook Mail Management",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/email-tools/mcp",
+    "tool_name": "get_email_messages",
+    "description": "Get Email Messages\n\nGets messages from email inbox\n\nArgs:\n    from_address (str, optional): Filter emails by the sender's email address. Defaults to None.\n    date (str, optional): Filters emails by date sent (YYYY-MM-DD)\n    count (int): the number of emails to retrieve [1 - 1000]\nReturns:\n    (list[dict]): list of retrieved emails\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json\n\n**Example Response:**\n```json\n[\n  {}\n]\n```",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "from_address": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Sender's email address",
+          "title": "from_address",
+          "type": "string"
+        },
+        "date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Emails sent on this date (YYYY-MM-DD)",
+          "title": "date",
+          "type": "string"
+        },
+        "count": {
+          "type": "integer",
+          "description": "Number of emails to return",
+          "default": 10,
+          "title": "count"
+        }
+      },
+      "title": "get_email_messagesArguments"
+    }
+  },
+  {
+    "name": "outlook_mail_management_compose_email",
+    "mcp_name": "Outlook Mail Management",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/email-tools/mcp",
+    "tool_name": "compose_email",
+    "description": "Compose Email\n\nCompose an email to the specified address\n\nArgs:\n    recipient_email (str): The recipient's email address.\n    cc_addresses (list[str]): A list of CC email addresses.\n    subject (str): The subject of the email.\n    message (str): The body of the email message in HTML format.\n\nReturns:\n    {\n        \"recipient_email\": str,\n        \"cc_addresses\": list[str],\n        \"subject\": str,\n        \"message\": str\n    }\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "recipient_email": {
+          "type": "string",
+          "title": "recipient_email",
+          "description": "The email address of the recepient"
+        },
+        "cc_addresses": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "title": "cc_addresses",
+          "description": "A list of CC email addresses",
+          "default": []
+        },
+        "subject": {
+          "type": "string",
+          "title": "subject",
+          "description": "The subject of the email"
+        },
+        "message": {
+          "type": "string",
+          "title": "message",
+          "description": "The content of the email in HTML format"
+        }
+      },
+      "title": "compose_emailArguments",
+      "required": [
+        "recipient_email",
+        "subject",
+        "message"
+      ]
+    }
+  },
+  {
+    "name": "outlook_mail_management_reply_to_email",
+    "mcp_name": "Outlook Mail Management",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/email-tools/mcp",
+    "tool_name": "reply_to_email",
+    "description": "Reply To Email\n\nSend a reply to an email\n\nReturns:\n    (dict): response message\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "message_id": {
+          "type": "string",
+          "title": "message_id"
+        },
+        "message": {
+          "type": "string",
+          "title": "message",
+          "description": "The reply message in HTML format"
+        },
+        "cc_addresses": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "title": "cc_addresses",
+          "description": "A list of CC email addresses",
+          "default": []
+        }
+      },
+      "title": "reply_to_emailArguments",
+      "required": [
+        "message_id",
+        "message"
+      ]
+    }
+  },
+  {
+    "name": "outlook_mail_management_forward_email",
+    "mcp_name": "Outlook Mail Management",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/email-tools/mcp",
+    "tool_name": "forward_email",
+    "description": "Forward Email\n\nForward an email to the specified address\n\nArgs:\n    message_id (str): The ID of the message to forward.\n    to_address (str): The recipient's email address for forwarding.\n\nReturns:\n    (dict): response message\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "message_id": {
+          "type": "string",
+          "title": "message_id"
+        },
+        "recepients": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "title": "recepients"
+        }
+      },
+      "title": "forward_emailArguments",
+      "required": [
+        "message_id",
+        "recepients"
+      ]
+    }
+  },
+  {
+    "name": "outlook_mail_management_search_outlook_mail",
+    "mcp_name": "Outlook Mail Management",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/email-tools/mcp",
+    "tool_name": "search_outlook_mail",
+    "description": "Search Outlook Mail\n\nSearch for emails in the Outlook mailbox.\nArgs:\n    query (str): The search term to look for in email subjects or bodies.\nReturns:\n    dict: A dictionary containing a list of matching emails.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "Search term",
+          "title": "query"
+        },
+        "count": {
+          "type": "integer",
+          "description": "Number of emails to return",
+          "default": 3,
+          "title": "count"
+        }
+      },
+      "title": "search_outlook_mailArguments",
+      "required": [
+        "query"
+      ]
+    }
+  },
+  {
+    "name": "outlook_mail_management_delete_email_message",
+    "mcp_name": "Outlook Mail Management",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/email-tools/mcp",
+    "tool_name": "delete_email_message",
+    "description": "Delete Email Message\n\nDelete an email message.\n\nArgs:\n    message_id (str): The ID of the message to delete.\n\nReturns:\n    (dict): response message\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "message_id": {
+          "type": "string",
+          "title": "message_id"
+        }
+      },
+      "title": "delete_email_messageArguments",
+      "required": [
+        "message_id"
+      ]
+    }
+  },
+  {
+    "name": "outlook_mail_management_find_email_address",
+    "mcp_name": "Outlook Mail Management",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/email-tools/mcp",
+    "tool_name": "find_email_address",
+    "description": "Find Email Address\n\nFind email address using a name\n\nArgs:\n    name (str): The name of the entity whose address you want.\n\nReturns:\n    (list): List of possible addresses matching the name\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the email account",
+          "title": "name"
+        }
+      },
+      "title": "find_email_addressArguments",
+      "required": [
+        "name"
+      ]
+    }
+  },
+  {
+    "name": "github_mcp_server_create_branch",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "create_branch",
+    "description": "Create a new branch in a GitHub repository",
+    "input_schema": {
+      "properties": {
+        "branch": {
+          "description": "Name for new branch",
+          "type": "string"
+        },
+        "from_branch": {
+          "description": "Source branch (defaults to repo default)",
+          "type": "string"
+        },
+        "owner": {
+          "description": "Repository owner",
+          "type": "string"
+        },
+        "repo": {
+          "description": "Repository name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner",
+        "repo",
+        "branch"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "github_mcp_server_create_or_update_file",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "create_or_update_file",
+    "description": "Create or update a single file in a GitHub repository. If updating, you must provide the SHA of the file you want to update. Use this tool to create or update a file in a GitHub repository remotely; do not use it for local file operations.",
+    "input_schema": {
+      "properties": {
+        "branch": {
+          "description": "Branch to create/update the file in",
+          "type": "string"
+        },
+        "content": {
+          "description": "Content of the file",
+          "type": "string"
+        },
+        "message": {
+          "description": "Commit message",
+          "type": "string"
+        },
+        "owner": {
+          "description": "Repository owner (username or organization)",
+          "type": "string"
+        },
+        "path": {
+          "description": "Path where to create/update the file",
+          "type": "string"
+        },
+        "repo": {
+          "description": "Repository name",
+          "type": "string"
+        },
+        "sha": {
+          "description": "Required if updating an existing file. The blob SHA of the file being replaced.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner",
+        "repo",
+        "path",
+        "content",
+        "message",
+        "branch"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "github_mcp_server_create_pull_request",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "create_pull_request",
+    "description": "Create a new pull request in a GitHub repository.",
+    "input_schema": {
+      "properties": {
+        "base": {
+          "description": "Branch to merge into",
+          "type": "string"
+        },
+        "body": {
+          "description": "PR description",
+          "type": "string"
+        },
+        "draft": {
+          "description": "Create as draft PR",
+          "type": "boolean"
+        },
+        "head": {
+          "description": "Branch containing changes",
+          "type": "string"
+        },
+        "maintainer_can_modify": {
+          "description": "Allow maintainer edits",
+          "type": "boolean"
+        },
+        "owner": {
+          "description": "Repository owner",
+          "type": "string"
+        },
+        "repo": {
+          "description": "Repository name",
+          "type": "string"
+        },
+        "title": {
+          "description": "PR title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner",
+        "repo",
+        "title",
+        "head",
+        "base"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "github_mcp_server_create_repository",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "create_repository",
+    "description": "Create a new GitHub repository in your account or specified organization",
+    "input_schema": {
+      "properties": {
+        "autoInit": {
+          "description": "Initialize with README",
+          "type": "boolean"
+        },
+        "description": {
+          "description": "Repository description",
+          "type": "string"
+        },
+        "name": {
+          "description": "Repository name",
+          "type": "string"
+        },
+        "organization": {
+          "description": "Organization to create the repository in (omit to create in your personal account)",
+          "type": "string"
+        },
+        "private": {
+          "description": "Whether repo should be private",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "github_mcp_server_delete_file",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "delete_file",
+    "description": "Delete a file from a GitHub repository",
+    "input_schema": {
+      "properties": {
+        "branch": {
+          "description": "Branch to delete the file from",
+          "type": "string"
+        },
+        "message": {
+          "description": "Commit message",
+          "type": "string"
+        },
+        "owner": {
+          "description": "Repository owner (username or organization)",
+          "type": "string"
+        },
+        "path": {
+          "description": "Path to the file to delete",
+          "type": "string"
+        },
+        "repo": {
+          "description": "Repository name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner",
+        "repo",
+        "path",
+        "message",
+        "branch"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "github_mcp_server_get_commit",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "get_commit",
+    "description": "Get details for a commit from a GitHub repository",
+    "input_schema": {
+      "properties": {
+        "include_diff": {
+          "default": true,
+          "description": "Whether to include file diffs and stats in the response. Default is true.",
+          "type": "boolean"
+        },
+        "owner": {
+          "description": "Repository owner",
+          "type": "string"
+        },
+        "page": {
+          "description": "Page number for pagination (min 1)",
+          "minimum": 1,
+          "type": "number"
+        },
+        "perPage": {
+          "description": "Results per page for pagination (min 1, max 100)",
+          "maximum": 100,
+          "minimum": 1,
+          "type": "number"
+        },
+        "repo": {
+          "description": "Repository name",
+          "type": "string"
+        },
+        "sha": {
+          "description": "Commit SHA, branch name, or tag name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner",
+        "repo",
+        "sha"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "github_mcp_server_get_file_contents",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "get_file_contents",
+    "description": "Get the contents of a file or directory from a GitHub repository",
+    "input_schema": {
+      "properties": {
+        "owner": {
+          "description": "Repository owner (username or organization)",
+          "type": "string"
+        },
+        "path": {
+          "default": "/",
+          "description": "Path to file/directory (directories must end with a slash '/')",
+          "type": "string"
+        },
+        "ref": {
+          "description": "Accepts optional git refs such as `refs/tags/{tag}`, `refs/heads/{branch}` or `refs/pull/{pr_number}/head`",
+          "type": "string"
+        },
+        "repo": {
+          "description": "Repository name",
+          "type": "string"
+        },
+        "sha": {
+          "description": "Accepts optional commit SHA. If specified, it will be used instead of ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner",
+        "repo"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "github_mcp_server_get_me",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "get_me",
+    "description": "Get details of the authenticated GitHub user. Use this when a request is about the user's own profile for GitHub. Or when information is missing to build other tool calls.",
+    "input_schema": {
+      "properties": {},
+      "type": "object"
+    }
+  },
+  {
+    "name": "github_mcp_server_list_branches",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "list_branches",
+    "description": "List branches in a GitHub repository",
+    "input_schema": {
+      "properties": {
+        "owner": {
+          "description": "Repository owner",
+          "type": "string"
+        },
+        "page": {
+          "description": "Page number for pagination (min 1)",
+          "minimum": 1,
+          "type": "number"
+        },
+        "perPage": {
+          "description": "Results per page for pagination (min 1, max 100)",
+          "maximum": 100,
+          "minimum": 1,
+          "type": "number"
+        },
+        "repo": {
+          "description": "Repository name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner",
+        "repo"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "github_mcp_server_list_commits",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "list_commits",
+    "description": "Get list of commits of a branch in a GitHub repository. Returns at least 30 results per page by default, but can return more if specified using the perPage parameter (up to 100).",
+    "input_schema": {
+      "properties": {
+        "author": {
+          "description": "Author username or email address to filter commits by",
+          "type": "string"
+        },
+        "owner": {
+          "description": "Repository owner",
+          "type": "string"
+        },
+        "page": {
+          "description": "Page number for pagination (min 1)",
+          "minimum": 1,
+          "type": "number"
+        },
+        "perPage": {
+          "description": "Results per page for pagination (min 1, max 100)",
+          "maximum": 100,
+          "minimum": 1,
+          "type": "number"
+        },
+        "repo": {
+          "description": "Repository name",
+          "type": "string"
+        },
+        "sha": {
+          "description": "Commit SHA, branch or tag name to list commits of. If not provided, uses the default branch of the repository. If a commit SHA is provided, will list commits up to that SHA.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner",
+        "repo"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "github_mcp_server_list_pull_requests",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "list_pull_requests",
+    "description": "List pull requests in a GitHub repository. If the user specifies an author, then DO NOT use this tool and use the search_pull_requests tool instead.",
+    "input_schema": {
+      "properties": {
+        "base": {
+          "description": "Filter by base branch",
+          "type": "string"
+        },
+        "direction": {
+          "description": "Sort direction",
+          "enum": [
+            "asc",
+            "desc"
+          ],
+          "type": "string"
+        },
+        "head": {
+          "description": "Filter by head user/org and branch",
+          "type": "string"
+        },
+        "owner": {
+          "description": "Repository owner",
+          "type": "string"
+        },
+        "page": {
+          "description": "Page number for pagination (min 1)",
+          "minimum": 1,
+          "type": "number"
+        },
+        "perPage": {
+          "description": "Results per page for pagination (min 1, max 100)",
+          "maximum": 100,
+          "minimum": 1,
+          "type": "number"
+        },
+        "repo": {
+          "description": "Repository name",
+          "type": "string"
+        },
+        "sort": {
+          "description": "Sort by",
+          "enum": [
+            "created",
+            "updated",
+            "popularity",
+            "long-running"
+          ],
+          "type": "string"
+        },
+        "state": {
+          "description": "Filter by state",
+          "enum": [
+            "open",
+            "closed",
+            "all"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner",
+        "repo"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "github_mcp_server_merge_pull_request",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "merge_pull_request",
+    "description": "Merge a pull request in a GitHub repository.",
+    "input_schema": {
+      "properties": {
+        "commit_message": {
+          "description": "Extra detail for merge commit",
+          "type": "string"
+        },
+        "commit_title": {
+          "description": "Title for merge commit",
+          "type": "string"
+        },
+        "merge_method": {
+          "description": "Merge method",
+          "enum": [
+            "merge",
+            "squash",
+            "rebase"
+          ],
+          "type": "string"
+        },
+        "owner": {
+          "description": "Repository owner",
+          "type": "string"
+        },
+        "pullNumber": {
+          "description": "Pull request number",
+          "type": "number"
+        },
+        "repo": {
+          "description": "Repository name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner",
+        "repo",
+        "pullNumber"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "github_mcp_server_pull_request_read",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "pull_request_read",
+    "description": "Get information on a specific pull request in GitHub repository.",
+    "input_schema": {
+      "properties": {
+        "method": {
+          "description": "Action to specify what pull request data needs to be retrieved from GitHub. \nPossible options: \n 1. get - Get details of a specific pull request.\n 2. get_diff - Get the diff of a pull request.\n 3. get_status - Get status of a head commit in a pull request. This reflects status of builds and checks.\n 4. get_files - Get the list of files changed in a pull request. Use with pagination parameters to control the number of results returned.\n 5. get_review_comments - Get the review comments on a pull request. Use with pagination parameters to control the number of results returned.\n 6. get_reviews - Get the reviews on a pull request. When asked for review comments, use get_review_comments method.\n",
+          "type": "string"
+        },
+        "owner": {
+          "description": "Repository owner",
+          "type": "string"
+        },
+        "page": {
+          "description": "Page number for pagination (min 1)",
+          "minimum": 1,
+          "type": "number"
+        },
+        "perPage": {
+          "description": "Results per page for pagination (min 1, max 100)",
+          "maximum": 100,
+          "minimum": 1,
+          "type": "number"
+        },
+        "pullNumber": {
+          "description": "Pull request number",
+          "type": "number"
+        },
+        "repo": {
+          "description": "Repository name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "method",
+        "owner",
+        "repo",
+        "pullNumber"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "github_mcp_server_push_files",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "push_files",
+    "description": "Push multiple files to a GitHub repository in a single commit",
+    "input_schema": {
+      "properties": {
+        "branch": {
+          "description": "Branch to push to",
+          "type": "string"
+        },
+        "files": {
+          "description": "Array of file objects to push, each object with path (string) and content (string)",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "content": {
+                "description": "file content",
+                "type": "string"
+              },
+              "path": {
+                "description": "path to the file",
+                "type": "string"
+              }
+            },
+            "required": [
+              "path",
+              "content"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "message": {
+          "description": "Commit message",
+          "type": "string"
+        },
+        "owner": {
+          "description": "Repository owner",
+          "type": "string"
+        },
+        "repo": {
+          "description": "Repository name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner",
+        "repo",
+        "branch",
+        "files",
+        "message"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "github_mcp_server_search_repositories",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "search_repositories",
+    "description": "Find GitHub repositories by name, description, readme, topics, or other metadata. Perfect for discovering projects, finding examples, or locating specific repositories across GitHub.",
+    "input_schema": {
+      "properties": {
+        "minimal_output": {
+          "default": true,
+          "description": "Return minimal repository information (default: true). When false, returns full GitHub API repository objects.",
+          "type": "boolean"
+        },
+        "page": {
+          "description": "Page number for pagination (min 1)",
+          "minimum": 1,
+          "type": "number"
+        },
+        "perPage": {
+          "description": "Results per page for pagination (min 1, max 100)",
+          "maximum": 100,
+          "minimum": 1,
+          "type": "number"
+        },
+        "query": {
+          "description": "Repository search query. Examples: 'machine learning in:name stars:>1000 language:python', 'topic:react', 'user:facebook'. Supports advanced search syntax for precise filtering.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "github_mcp_server_update_pull_request",
+    "mcp_name": "github-mcp-server",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/github/mcp",
+    "tool_name": "update_pull_request",
+    "description": "Update an existing pull request in a GitHub repository.",
+    "input_schema": {
+      "properties": {
+        "base": {
+          "description": "New base branch name",
+          "type": "string"
+        },
+        "body": {
+          "description": "New description",
+          "type": "string"
+        },
+        "draft": {
+          "description": "Mark pull request as draft (true) or ready for review (false)",
+          "type": "boolean"
+        },
+        "maintainer_can_modify": {
+          "description": "Allow maintainer edits",
+          "type": "boolean"
+        },
+        "owner": {
+          "description": "Repository owner",
+          "type": "string"
+        },
+        "pullNumber": {
+          "description": "Pull request number to update",
+          "type": "number"
+        },
+        "repo": {
+          "description": "Repository name",
+          "type": "string"
+        },
+        "reviewers": {
+          "description": "GitHub usernames to request reviews from",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "state": {
+          "description": "New state",
+          "enum": [
+            "open",
+            "closed"
+          ],
+          "type": "string"
+        },
+        "title": {
+          "description": "New title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "owner",
+        "repo",
+        "pullNumber"
+      ],
+      "type": "object"
+    }
+  },
+  {
+    "name": "project_management_tools_view_board",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "view_board",
+    "description": "View Board\n\nView boards for a specific project and team in Azure DevOps\n\nArgs:\n    project (str): The project ID or name to view boards for.\n    team (str): The team ID or name to view boards for.\n\nReturns:\n    (dict): A list of boards for the specified project and team\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "title": "project"
+        },
+        "team": {
+          "type": "string",
+          "title": "team"
+        }
+      },
+      "title": "view_boardArguments",
+      "required": [
+        "project",
+        "team"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_list_projects",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "list_projects",
+    "description": "List Projects\n\nList all Azure DevOps projects\n\nArgs:\n\nReturns:\n    (dict): A dictionary listing all projects\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "title": "list_projectsArguments"
+    }
+  },
+  {
+    "name": "project_management_tools_create_project",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "create_project",
+    "description": "Create Project\n\nCreate a new Azure DevOps project\n\nArgs:\n    name(str): The name of the project\n    description(str, optional): A description of the project\n\nReturns:\n    (dict): The created project details\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "name"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "description",
+          "type": "string"
+        }
+      },
+      "title": "create_projectArguments",
+      "required": [
+        "name"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_get_project",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "get_project",
+    "description": "Get Project\n\nGet details of a specific Azure DevOps project\n\nArgs:\n    project_id (str): The ID of the project to retrieve details for.\n\nReturns:\n    (dict): The project details\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "title": "project_id"
+        }
+      },
+      "title": "get_projectArguments",
+      "required": [
+        "project_id"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_update_project",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "update_project",
+    "description": "Update Project\n\nUpdate an existing Azure DevOps project\n\nArgs:\n    project_id (str): The ID of the project to update.\n    name(str, optional): The name to update the project with\n    description(str, optional): A description to update the project with\n\nReturns:\n    (dict): The updated project details\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "title": "project_id"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "name",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "description",
+          "type": "string"
+        }
+      },
+      "title": "update_projectArguments",
+      "required": [
+        "project_id"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_delete_project",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "delete_project",
+    "description": "Delete Project\n\nDelete an Azure DevOps project\n\nArgs:\n    project_id (str): The ID of the project to delete.\n\nReturns:\n    (dict): A message confirming the deletion\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "title": "project_id"
+        }
+      },
+      "title": "delete_projectArguments",
+      "required": [
+        "project_id"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_list_sprints",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "list_sprints",
+    "description": "List Sprints\n\nList all sprints for a specific project and team in Azure DevOps\n\nArgs:\n    project (str): The project ID or name to list sprints for.\n    team (str): The team ID or name to list sprints for.\n\nReturns:\n    (dict): A list of sprints for the specified project and team\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json\n\n**Example Response:**\n```json\n[\n  {}\n]\n```",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "title": "project"
+        },
+        "team": {
+          "type": "string",
+          "title": "team"
+        }
+      },
+      "title": "list_sprintsArguments",
+      "required": [
+        "project",
+        "team"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_create_sprint",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "create_sprint",
+    "description": "Create Sprint\n\nCreate a new sprint for a specific project and team in Azure DevOps\n\nArgs:\n    project (str): The project ID or name to create the sprint in.\n    team (str): The team ID or name to create the sprint for.\n    name (str): The name of the sprint.\n    start_date (str): The start date of the sprint in ISO format. YYYY-MM-DD\n    end_date (str): The end date of the sprint in ISO format. YYYY-MM-DD\n\nReturns:\n    (dict): The created sprint details\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "title": "project"
+        },
+        "team": {
+          "type": "string",
+          "title": "team"
+        },
+        "name": {
+          "type": "string",
+          "title": "name"
+        },
+        "start_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "start_date",
+          "type": "string"
+        },
+        "end_date": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "end_date",
+          "type": "string"
+        }
+      },
+      "title": "create_sprintArguments",
+      "required": [
+        "project",
+        "team",
+        "name"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_get_sprint",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "get_sprint",
+    "description": "Get Sprint\n\nGet details of a specific sprint for a project and team in Azure DevOps\n\nArgs:\n    project (str): The project ID or name to get the sprint from.\n    team (str): The team ID or name to get the sprint for.\n    sprint_id (str): The ID of the sprint to retrieve details for.\n\nReturns:\n    (dict): The sprint details\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "sprint_id": {
+          "type": "string",
+          "title": "sprint_id"
+        },
+        "project": {
+          "type": "string",
+          "title": "project"
+        },
+        "team": {
+          "type": "string",
+          "title": "team"
+        }
+      },
+      "title": "get_sprintArguments",
+      "required": [
+        "sprint_id",
+        "project",
+        "team"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_delete_sprint",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "delete_sprint",
+    "description": "Delete Sprint\n\nDelete a specific sprint for a project and team in Azure DevOps\n\nArgs:\n    project (str): The project ID or name to delete the sprint from.\n    team (str): The team ID or name to delete the sprint for.\n    sprint_id (str): The ID of the sprint to delete.\n\nReturns:\n    (dict): A message confirming the deletion of the sprint\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "sprint_id": {
+          "type": "string",
+          "title": "sprint_id"
+        },
+        "project": {
+          "type": "string",
+          "title": "project"
+        },
+        "team": {
+          "type": "string",
+          "title": "team"
+        }
+      },
+      "title": "delete_sprintArguments",
+      "required": [
+        "sprint_id",
+        "project",
+        "team"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_export_sprint_to_sharepoint",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "export_sprint_to_sharepoint",
+    "description": "Export Sprint To Sharepoint\n\nExport all work items for a specific sprint to Excel and upload to SharePoint\n\nArgs:\n    sprint_id (str): The ID of the sprint to retrieve work items for.\n    project (str): The project ID or name to get the sprint from.\n    team (str): The team ID or name to get the sprint for.\n    site_address (str): Full SharePoint site URL\n    folder_path (str): Path inside the document library\n    file_name (str): Optional custom file name\n\nReturns:\n    dict: Success message with download link\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "sprint_id": {
+          "type": "string",
+          "title": "sprint_id"
+        },
+        "project": {
+          "type": "string",
+          "title": "project",
+          "description": "The project ID or name"
+        },
+        "team": {
+          "type": "string",
+          "title": "team",
+          "description": "The team ID or name"
+        },
+        "site_address": {
+          "type": "string",
+          "title": "site_address",
+          "description": "Full SharePoint site URL",
+          "default": "https://4thir0.sharepoint.com/sites/TwynityBotFiles"
+        },
+        "folder_path": {
+          "type": "string",
+          "title": "folder_path",
+          "description": "Path inside the document library, e.g. 'Documents/Reports'"
+        },
+        "file_name": {
+          "type": "string",
+          "title": "file_name",
+          "description": "Optional custom file name (will auto-generate if not provided)"
+        }
+      },
+      "title": "export_sprint_to_sharepointArguments",
+      "required": [
+        "sprint_id",
+        "project"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_get_user_capacity",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "get_user_capacity",
+    "description": "Get User Capacity\n\nGet user capacity for a specific sprint in Azure DevOps\n\nArgs:\n    project (str): The project ID or name to get user capacity for.\n    team (str): The team ID or name to get user capacity for.\n    sprint_id (str): The ID of the sprint to get user capacity for.\n\nReturns:\n    (dict): A list of user capacities for the specified sprint\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json\n\n**Example Response:**\n```json\n[\n  {}\n]\n```",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "title": "project"
+        },
+        "team": {
+          "type": "string",
+          "title": "team"
+        },
+        "sprint_id": {
+          "type": "string",
+          "title": "sprint_id"
+        }
+      },
+      "title": "get_user_capacityArguments",
+      "required": [
+        "project",
+        "team",
+        "sprint_id"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_update_user_capacity",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "update_user_capacity",
+    "description": "Update User Capacity\n\nUpdate user capacity for a specific sprint in Azure DevOps\n\nArgs:\n    project (str): The project ID or name to update user capacity for.\n    team (str): The team ID or name to update user capacity for.\n    sprint_id (str): The ID of the sprint to update user capacity for.\n    user_id (str): The ID of the user to update capacity for.\n    capacity_hours (float): The number of hours to set as the user's capacity per day.\n\nReturns:\n    (dict): The updated user capacity details for the specified sprint\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "title": "project"
+        },
+        "team": {
+          "type": "string",
+          "title": "team"
+        },
+        "sprint_id": {
+          "type": "string",
+          "title": "sprint_id"
+        },
+        "user_id": {
+          "type": "string",
+          "title": "user_id"
+        },
+        "capacity_hours": {
+          "type": "number",
+          "title": "capacity_hours"
+        }
+      },
+      "title": "update_user_capacityArguments",
+      "required": [
+        "project",
+        "team",
+        "sprint_id",
+        "user_id",
+        "capacity_hours"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_list_teams",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "list_teams",
+    "description": "List Teams\n\nList all teams for a specific project in Azure DevOps\n\nArgs:\n    project (str): The project ID or name to list teams for.\n\nReturns:\n    (dict): A list of teams for the specified project\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json\n\n**Example Response:**\n```json\n[\n  {}\n]\n```",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "title": "project"
+        }
+      },
+      "title": "list_teamsArguments",
+      "required": [
+        "project"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_create_team",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "create_team",
+    "description": "Create Team\n\nCreate a new team in Azure DevOps\n\nArgs:\n    project(str): The project ID or name to create the team in.\n    name (str): The name of the team to create.\n    description (Optional[str]): A description of the team.\n\nReturns:\n    (dict): The created team details\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "title": "project"
+        },
+        "name": {
+          "type": "string",
+          "title": "name"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "description",
+          "type": "string"
+        }
+      },
+      "title": "create_teamArguments",
+      "required": [
+        "project",
+        "name"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_list_team_members",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "list_team_members",
+    "description": "List Team Members\n\nList all members of a specific team in Azure DevOps\n\nArgs:\n    project_id (str): The ID of the project to list team members for.\n    team_id (str): The ID of the team to list members for.\n\nReturns:\n    (dict): A list of team members for the specified project and team\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "title": "project_id"
+        },
+        "team_id": {
+          "type": "string",
+          "title": "team_id"
+        }
+      },
+      "title": "list_team_membersArguments",
+      "required": [
+        "project_id",
+        "team_id"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_get_team",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "get_team",
+    "description": "Get Team\n\nGet team details for a specific team in Azure DevOps\n\nArgs:\n    project (str): The project ID or name to get the team from.\n    team_id (str): The ID of the team to retrieve details for.\n\nReturns:\n    (dict): The team details for the specified project and team\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "team_id": {
+          "type": "string",
+          "title": "team_id"
+        },
+        "project": {
+          "type": "string",
+          "title": "project"
+        }
+      },
+      "title": "get_teamArguments",
+      "required": [
+        "team_id",
+        "project"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_delete_team",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "delete_team",
+    "description": "Delete Team\n\nDelete a specific team in Azure DevOps\n\nArgs:\n    project(str): The project ID or name to delete the team from.\n    team_id (str): The ID of the team to delete.\n\nReturns:\n    (dict): A message confirming the deletion of the team\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "team_id": {
+          "type": "string",
+          "title": "team_id"
+        },
+        "project": {
+          "type": "string",
+          "title": "project"
+        }
+      },
+      "title": "delete_teamArguments",
+      "required": [
+        "team_id",
+        "project"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_list_users",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "list_users",
+    "description": "List Users\n\nList all users in Azure DevOps\n\nReturns:\n    (dict): A list of users in Azure DevOps\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "title": "list_usersArguments"
+    }
+  },
+  {
+    "name": "project_management_tools_create_work_item",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "create_work_item",
+    "description": "Create Work Item\n\nBatch create new work items in Azure DevOps\nReturns:\n    (dict): The created work item details\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "work_items": {
+          "items": {
+            "properties": {
+              "project": {
+                "type": "string",
+                "title": "Project"
+              },
+              "item_type": {
+                "type": "string",
+                "enum": [
+                  "Bug",
+                  "Task",
+                  "User Story",
+                  "Feature",
+                  "Epic"
+                ],
+                "title": "Item Type"
+              },
+              "title": {
+                "type": "string",
+                "title": "Title"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Description"
+              },
+              "assigned_to": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Assigned To"
+              },
+              "priority": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Priority"
+              },
+              "tags": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Tags"
+              },
+              "parent_id": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Parent Id"
+              },
+              "iteration_path": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Iteration Path"
+              }
+            },
+            "type": "object",
+            "required": [
+              "project",
+              "item_type",
+              "title"
+            ],
+            "title": "WorkItemSchema"
+          },
+          "type": "array",
+          "title": "work_items"
+        }
+      },
+      "title": "create_work_itemArguments",
+      "required": [
+        "work_items"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_list_work_items",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "list_work_items",
+    "description": "List Work Items\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project_name": {
+          "type": "string",
+          "title": "project_name"
+        },
+        "sprint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Iteration path (sprint) to filter by",
+          "title": "sprint",
+          "type": "string"
+        }
+      },
+      "title": "list_work_itemsArguments",
+      "required": [
+        "project_name"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_get_work_item",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "get_work_item",
+    "description": "Get Work Item\n\nGet details of a specific work item in Azure DevOps\n\nArgs:\n    item_id (int): The ID of the work item to retrieve.\n\nReturns:\n    (dict): The work item details\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "type": "integer",
+          "title": "item_id"
+        }
+      },
+      "title": "get_work_itemArguments",
+      "required": [
+        "item_id"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_update_work_item",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "update_work_item",
+    "description": "Update Work Item\n\nUpdate an existing work item in Azure DevOps\n\nArgs:\n    item_id (int): The ID of the work item to update.\n    title (Optional[str]): The new title for the work item.\n    description (Optional[str]): The new description for the work item.\n    assigned_to (Optional[str]): The user ID to assign the work item to.\n    priority (Optional[int]): The new priority of the work item.\n    tags (Optional[List[str]]): A list of tags to associate with the work item.\n    sprint (Optional[str]): The sprint/iteration path to assign the work item to.\n\nReturns:\n    (dict): The updated work item details\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "type": "integer",
+          "title": "item_id"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "title",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "description",
+          "type": "string"
+        },
+        "assigned_to": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "assigned_to",
+          "type": "string"
+        },
+        "priority": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "priority",
+          "type": "integer"
+        },
+        "tags": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "tags",
+          "type": "array"
+        },
+        "sprint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "sprint",
+          "type": "string"
+        }
+      },
+      "title": "update_work_itemArguments",
+      "required": [
+        "item_id"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_delete_work_item",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "delete_work_item",
+    "description": "Delete Work Item\n\nDelete a work item in Azure DevOps\n\nArgs:\n    item_id (int): The ID of the work item to delete.\n\nReturns:\n    (dict): A message confirming the deletion\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "type": "integer",
+          "title": "item_id"
+        }
+      },
+      "title": "delete_work_itemArguments",
+      "required": [
+        "item_id"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_update_task_status",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "update_task_status",
+    "description": "Update Task Status\n\nUpdate the status of a work item in Azure DevOps\n\nArgs:\n    item_id (int): The ID of the work item to update.\n    new_state (Literal[\"New\", \"Active\", \"Resolved\", \"Closed\"]): The new state to set for the work item.\n\nReturns:\n    (dict): The updated work item details\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "type": "integer",
+          "title": "item_id"
+        },
+        "new_state": {
+          "enum": [
+            "New",
+            "Active",
+            "Resolved",
+            "Closed"
+          ],
+          "type": "string",
+          "title": "new_state"
+        }
+      },
+      "title": "update_task_statusArguments",
+      "required": [
+        "item_id",
+        "new_state"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_assign_work_item",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "assign_work_item",
+    "description": "Assign Task\n\nAssign a work item to a user in Azure DevOps\n\nArgs:\n    item_id (int): The ID of the work item\n    assignee: (Optional[str]): The user to assign the work item to. If None, it will unassign the work item.\n\nReturns:\n    (dict): The updated work item details\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "type": "integer",
+          "title": "item_id"
+        },
+        "assignee": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "assignee",
+          "type": "string"
+        }
+      },
+      "title": "assign_work_itemArguments",
+      "required": [
+        "item_id",
+        "assignee"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_get_work_item_comments",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "get_work_item_comments",
+    "description": "Get Work Item Comments\n\nGet comments for a specific work item in Azure DevOps\n\nArgs:\n    item_id (int): The ID of the work item to retrieve comments for.\n    project (str): The project ID or name where the work item is located.\n\nReturns:\n    (dict): A list of comments for the work item\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "type": "integer",
+          "title": "item_id"
+        },
+        "project": {
+          "type": "string",
+          "title": "project"
+        }
+      },
+      "title": "get_work_item_commentsArguments",
+      "required": [
+        "item_id",
+        "project"
+      ]
+    }
+  },
+  {
+    "name": "project_management_tools_add_work_item_comment",
+    "mcp_name": "Project Management Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/azureboard-mcp/mcp",
+    "tool_name": "add_work_item_comment",
+    "description": "Add Work Item Comment\n\nAdd a comment to a work item in Azure DevOps\n\nArgs:\n    item_id (int): The ID of the work item to add a comment to.\n    project (str): The project ID or name where the work item is located.\n    text (str): The comment text to add to the work item.\n\nReturns:\n    (dict): The added comment details\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "type": "integer",
+          "title": "item_id"
+        },
+        "project": {
+          "type": "string",
+          "title": "project"
+        },
+        "text": {
+          "type": "string",
+          "title": "text"
+        }
+      },
+      "title": "add_work_item_commentArguments",
+      "required": [
+        "item_id",
+        "project",
+        "text"
+      ]
+    }
+  },
+  {
+    "name": "sharepoint_tools_get_sharepoint_documents",
+    "mcp_name": "Sharepoint Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/sharepoint/mcp",
+    "tool_name": "get_sharepoint_documents",
+    "description": "Get Sharepoint Documents\n\nRetrieve documents from a SharePoint site's default document library.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json\n\n**Example Response:**\n```json\n{\n  \"folders\": [\n    {}\n  ],\n  \"files\": [\n    {}\n  ]\n}\n```",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "site_address": {
+          "type": "string",
+          "description": "Full SharePoint site URL",
+          "title": "site_address"
+        },
+        "folder_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The folder to get. If not set retrieves the content of root",
+          "title": "folder_id",
+          "type": "string"
+        }
+      },
+      "title": "get_sharepoint_documentsArguments",
+      "required": [
+        "site_address"
+      ]
+    }
+  },
+  {
+    "name": "sharepoint_tools_get_sharepoint_sites",
+    "mcp_name": "Sharepoint Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/sharepoint/mcp",
+    "tool_name": "get_sharepoint_sites",
+    "description": "Get Sharepoint Sites\n\nRetrieve a list of SharePoint sites accessible to the signed-in user.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json\n\n**Example Response:**\n```json\n[\n  {}\n]\n```",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "title": "get_sharepoint_sitesArguments"
+    }
+  },
+  {
+    "name": "sharepoint_tools_create_txt_file_in_sharepoint",
+    "mcp_name": "Sharepoint Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/sharepoint/mcp",
+    "tool_name": "create_txt_file_in_sharepoint",
+    "description": "Create Txt File In Sharepoint\n\nCreate a txt file in a SharePoint site's default document library.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "site_address": {
+          "type": "string",
+          "title": "site_address",
+          "description": "Full SharePoint site URL",
+          "default": "https://4thir0.sharepoint.com/sites/TwynityBotFiles"
+        },
+        "folder_path": {
+          "type": "string",
+          "title": "folder_path",
+          "description": "Path inside the document library, e.g. 'Documents/Reports'"
+        },
+        "file_name": {
+          "type": "string",
+          "title": "file_name",
+          "description": "Name of the file"
+        },
+        "text": {
+          "type": "string",
+          "title": "text",
+          "description": "Text to write to the file"
+        }
+      },
+      "title": "create_txt_file_in_sharepointArguments",
+      "required": [
+        "folder_path",
+        "file_name",
+        "text"
+      ]
+    }
+  },
+  {
+    "name": "gmail_tools_send_google_email",
+    "mcp_name": "Gmail Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/gmail/mcp",
+    "tool_name": "send_google_email",
+    "description": "Send Email\n\nSends an email using google api\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "to": {
+          "type": "string",
+          "format": "email",
+          "title": "to"
+        },
+        "subject": {
+          "type": "string",
+          "title": "subject"
+        },
+        "body": {
+          "type": "string",
+          "title": "body"
+        },
+        "cc": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string",
+                "format": "email"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "cc",
+          "type": "array"
+        }
+      },
+      "title": "send_google_emailArguments",
+      "required": [
+        "to",
+        "subject",
+        "body"
+      ]
+    }
+  },
+  {
+    "name": "gmail_tools_get_google_emails",
+    "mcp_name": "Gmail Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/gmail/mcp",
+    "tool_name": "get_google_emails",
+    "description": "Get Emails From User\n\nGets emails from user\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "sender": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "sender",
+          "type": "string"
+        },
+        "start_date": {
+          "type": "string",
+          "title": "start_date"
+        },
+        "end_date": {
+          "type": "string",
+          "title": "end_date"
+        }
+      },
+      "title": "get_google_emailsArguments",
+      "required": [
+        "sender",
+        "start_date",
+        "end_date"
+      ]
+    }
+  },
+  {
+    "name": "gmail_tools_reply_google_email",
+    "mcp_name": "Gmail Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/gmail/mcp",
+    "tool_name": "reply_google_email",
+    "description": "Reply Email\n\nReplies to an email using google api\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "message_id": {
+          "type": "string",
+          "title": "message_id"
+        },
+        "thread_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "thread_id",
+          "type": "string"
+        },
+        "content": {
+          "type": "string",
+          "title": "content"
+        },
+        "cc": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string",
+                "format": "email"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "cc",
+          "type": "array"
+        }
+      },
+      "title": "reply_google_emailArguments",
+      "required": [
+        "message_id",
+        "content"
+      ]
+    }
+  },
+  {
+    "name": "gmail_tools_forward_google_email",
+    "mcp_name": "Gmail Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/gmail/mcp",
+    "tool_name": "forward_google_email",
+    "description": "Forward Email\n\nForwards an email using google api\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "to": {
+          "items": {
+            "type": "string",
+            "format": "email"
+          },
+          "type": "array",
+          "title": "to"
+        },
+        "message_id": {
+          "type": "string",
+          "title": "message_id"
+        }
+      },
+      "title": "forward_google_emailArguments",
+      "required": [
+        "to",
+        "message_id"
+      ]
+    }
+  },
+  {
+    "name": "gmail_tools_delete_google_email",
+    "mcp_name": "Gmail Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/gmail/mcp",
+    "tool_name": "delete_google_email",
+    "description": "Delete Email\n\nDeletes an email using google api\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "message_id": {
+          "type": "string",
+          "title": "message_id"
+        }
+      },
+      "title": "delete_google_emailArguments",
+      "required": [
+        "message_id"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_list_files",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "list_files",
+    "description": "Get Files List\n\nList all Word documents with optional filtering.\n\nQuery Parameters:\n- file_collection: Filter by collection Agent ID, Persona ID\n- file_group: Filter by group\n- limit: Max results (default: 100)\n- offset: Skip n results (default: 0)\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_collection": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "file_collection",
+          "type": "string"
+        },
+        "file_group": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "file_group",
+          "type": "string"
+        },
+        "limit": {
+          "type": "integer",
+          "default": 100,
+          "title": "limit"
+        },
+        "offset": {
+          "type": "integer",
+          "default": 0,
+          "title": "offset"
+        }
+      },
+      "title": "list_filesArguments"
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_create_word_document",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "create_word_document",
+    "description": "Create Word Document\n\nCreate a new Word document and upload to Quest File Storage. \nFile collection should be saved by Persona ID\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "filename": {
+          "type": "string",
+          "title": "filename"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "title",
+          "type": "string"
+        },
+        "author": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "author",
+          "type": "string"
+        },
+        "file_collection": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "file_collection",
+          "type": "string"
+        }
+      },
+      "title": "create_word_documentArguments",
+      "required": [
+        "filename"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_copy_document",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "copy_document",
+    "description": "Copy Document\n\nCreate a copy of a Word document from Quest File Storage.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "source_file_id_or_url": {
+          "type": "string",
+          "title": "source_file_id_or_url"
+        },
+        "destination_filename": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "destination_filename",
+          "type": "string"
+        }
+      },
+      "title": "copy_documentArguments",
+      "required": [
+        "source_file_id_or_url"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_get_document_info",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "get_document_info",
+    "description": "Get Document Info\n\nGet information about a Word document from Quest File Storage.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id_or_url": {
+          "type": "string",
+          "title": "file_id_or_url"
+        }
+      },
+      "title": "get_document_infoArguments",
+      "required": [
+        "file_id_or_url"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_get_document_text",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "get_document_text",
+    "description": "Get Document Text\n\nExtract all text from a Word document in Quest File Storage.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id_or_url": {
+          "type": "string",
+          "title": "file_id_or_url"
+        }
+      },
+      "title": "get_document_textArguments",
+      "required": [
+        "file_id_or_url"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_get_document_outline",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "get_document_outline",
+    "description": "Get Document Outline\n\nGet the structure of a Word document from Quest File Storage.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id_or_url": {
+          "type": "string",
+          "title": "file_id_or_url"
+        }
+      },
+      "title": "get_document_outlineArguments",
+      "required": [
+        "file_id_or_url"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_get_document_xml",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "get_document_xml",
+    "description": "Get Document Xml\n\nGet the raw XML structure of a Word document from Quest File Storage.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id_or_url": {
+          "type": "string",
+          "title": "file_id_or_url"
+        }
+      },
+      "title": "get_document_xmlArguments",
+      "required": [
+        "file_id_or_url"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_merge_doucments",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "merge_doucments",
+    "description": "Merge Documents\n\nMerge multiple Word documents from Quest File Storage into one.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "target_filename": {
+          "type": "string",
+          "title": "target_filename"
+        },
+        "add_page_breaks": {
+          "type": "boolean",
+          "default": true,
+          "title": "add_page_breaks"
+        }
+      },
+      "title": "merge_doucmentsArguments",
+      "required": [
+        "target_filename"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_delete_document",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "delete_document",
+    "description": "Delete Document\n\nDelete a Word document from Quest File Storage.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id": {
+          "type": "string",
+          "title": "file_id"
+        }
+      },
+      "title": "delete_documentArguments",
+      "required": [
+        "file_id"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_add_paragraph",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "add_paragraph",
+    "description": "Add Paragraph\n\nAdd a paragraph to a Word document with optional formatting.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id_or_url": {
+          "type": "string",
+          "title": "file_id_or_url"
+        },
+        "text": {
+          "type": "string",
+          "title": "text"
+        },
+        "style": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "style",
+          "type": "string"
+        },
+        "font_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "font_name",
+          "type": "string"
+        },
+        "font_size": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "font_size",
+          "type": "integer"
+        },
+        "bold": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "bold",
+          "type": "boolean"
+        },
+        "italic": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "italic",
+          "type": "boolean"
+        },
+        "color": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "color",
+          "type": "string"
+        }
+      },
+      "title": "add_paragraphArguments",
+      "required": [
+        "file_id_or_url",
+        "text"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_add_heading",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "add_heading",
+    "description": "Add Heading\n\nAdd a heading to a Word document with optional formatting.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id_or_url": {
+          "type": "string",
+          "title": "file_id_or_url"
+        },
+        "text": {
+          "type": "string",
+          "title": "text"
+        },
+        "level": {
+          "type": "integer",
+          "default": 1,
+          "title": "level"
+        },
+        "font_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "font_name",
+          "type": "string"
+        },
+        "font_size": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "font_size",
+          "type": "integer"
+        },
+        "bold": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "bold",
+          "type": "boolean"
+        },
+        "italic": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "italic",
+          "type": "boolean"
+        },
+        "border_bottom": {
+          "type": "boolean",
+          "default": false,
+          "title": "border_bottom"
+        }
+      },
+      "title": "add_headingArguments",
+      "required": [
+        "file_id_or_url",
+        "text"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_add_picture",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "add_picture",
+    "description": "Add Picture\n\nAdd an image to a Word document.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id_or_url": {
+          "type": "string",
+          "title": "file_id_or_url"
+        },
+        "width": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "width",
+          "type": "number"
+        },
+        "image": {
+          "type": "string",
+          "format": "binary",
+          "title": "image"
+        }
+      },
+      "title": "add_pictureArguments",
+      "required": [
+        "file_id_or_url",
+        "image"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_add_table",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "add_table",
+    "description": "Add Table\n\nAdd a table to a Word document.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id_or_url": {
+          "type": "string",
+          "title": "file_id_or_url"
+        },
+        "rows": {
+          "type": "integer",
+          "title": "rows"
+        },
+        "cols": {
+          "type": "integer",
+          "title": "cols"
+        }
+      },
+      "title": "add_tableArguments",
+      "required": [
+        "file_id_or_url",
+        "rows",
+        "cols"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_add_page_break",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "add_page_break",
+    "description": "Add Page Break\n\nAdd a page break to a Word document.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id_or_url": {
+          "type": "string",
+          "title": "file_id_or_url"
+        }
+      },
+      "title": "add_page_breakArguments",
+      "required": [
+        "file_id_or_url"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_delete_paragraph",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "delete_paragraph",
+    "description": "Delete Paragraph\n\nDelete a paragraph from a document.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id_or_url": {
+          "type": "string",
+          "title": "file_id_or_url"
+        },
+        "paragraph_index": {
+          "type": "integer",
+          "title": "paragraph_index"
+        }
+      },
+      "title": "delete_paragraphArguments",
+      "required": [
+        "file_id_or_url",
+        "paragraph_index"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_search_replace",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "search_replace",
+    "description": "Search And Replace\n\nSearch for text and replace all occurrences.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id_or_url": {
+          "type": "string",
+          "title": "file_id_or_url"
+        },
+        "find_text": {
+          "type": "string",
+          "title": "find_text"
+        },
+        "replace_text": {
+          "type": "string",
+          "title": "replace_text"
+        }
+      },
+      "title": "search_replaceArguments",
+      "required": [
+        "file_id_or_url",
+        "find_text",
+        "replace_text"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_get_paragraph_text_from_document",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "get_paragraph_text_from_document",
+    "description": "Get Paragraph Text From Document\n\nGet text from a specific paragraph.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id_or_url": {
+          "type": "string",
+          "title": "file_id_or_url"
+        },
+        "paragraph_index": {
+          "type": "integer",
+          "title": "paragraph_index"
+        }
+      },
+      "title": "get_paragraph_text_from_documentArguments",
+      "required": [
+        "file_id_or_url",
+        "paragraph_index"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_find_text_in_document",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "find_text_in_document",
+    "description": "Find Text In Document\n\nFind occurrences of specific text in a Word document.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id_or_url": {
+          "type": "string",
+          "title": "file_id_or_url"
+        },
+        "text_to_find": {
+          "type": "string",
+          "title": "text_to_find"
+        },
+        "match_case": {
+          "type": "boolean",
+          "default": true,
+          "title": "match_case"
+        },
+        "whole_word": {
+          "type": "boolean",
+          "default": false,
+          "title": "whole_word"
+        }
+      },
+      "title": "find_text_in_documentArguments",
+      "required": [
+        "file_id_or_url",
+        "text_to_find"
+      ]
+    }
+  },
+  {
+    "name": "office_word_mcp_server_api_convert_to_pdf",
+    "mcp_name": "Office Word MCP Server API",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/office/mcp",
+    "tool_name": "convert_to_pdf",
+    "description": "Convert To Pdf\n\nConvert a Word document to PDF format and upload to Quest File Storage.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id_or_url": {
+          "type": "string",
+          "title": "file_id_or_url"
+        },
+        "output_filename": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "output_filename",
+          "type": "string"
+        }
+      },
+      "title": "convert_to_pdfArguments",
+      "required": [
+        "file_id_or_url"
+      ]
+    }
+  },
+  {
+    "name": "web_search_tools_web_search",
+    "mcp_name": "Web Search Tools",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/web-search/mcp",
+    "tool_name": "web_search",
+    "description": "Web Search\n\nSearch the web for current information on any topic.\n\nArgs:\n    search_query: The search query string.\n\nReturns:\n    List of results with name, website URL, and description.\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json\n\n**Example Response:**\n```json\n[\n  {\n    \"name\": \"Name\",\n    \"website\": \"Website\"\n  }\n]\n```",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "search_query": {
+          "type": "string",
+          "title": "search_query",
+          "description": "Query to search for"
+        }
+      },
+      "title": "web_searchArguments",
+      "required": [
+        "search_query"
+      ]
+    }
+  },
+  {
+    "name": "quest_studio_file_storage_get_files",
+    "mcp_name": "Quest Studio File Storage",
+    "mcp_url": "https://twynity-dev.api.4th-ir.com/file-management/mcp",
+    "tool_name": "get_files",
+    "description": "Get Files\n\nGets available files for an agent\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json\n\n**Example Response:**\n```json\n{\n  \"items\": [\n    {\n      \"filename\": \"Filename\",\n      \"group\": \"Group\",\n      \"require_auth\": true,\n      \"id\": \"Id\",\n      \"size\": 1,\n      \"storage_location\": \"Storage Location\",\n      \"date_created\": \"2023-01-01T00:00:00Z\",\n      \"date_modified\": \"2023-01-01T00:00:00Z\",\n      \"download_link\": \"Download Link\"\n    }\n  ],\n  \"item_count\": 1\n}\n```",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_collection": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Comma separated list of file collections to fetch from",
+          "title": "file_collection",
+          "type": "string"
+        },
+        "cursor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Cursor for the next page",
+          "title": "cursor",
+          "type": "string"
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Number of files to get per page. Set limit = 0 for all files",
+          "default": 10,
+          "title": "limit"
+        },
+        "group": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The file group to filter by",
+          "title": "group",
+          "type": "string"
+        },
+        "mime_types": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Comma separated list of mime types to filter by",
+          "title": "mime_types",
+          "type": "string"
+        },
+        "include_global_files": {
+          "type": "boolean",
+          "description": "Whether to include global files",
+          "default": true,
+          "title": "include_global_files"
+        }
+      },
+      "title": "get_filesArguments"
+    }
+  },
+  {
+    "name": "quest_studio_file_storage_get_storage_usage",
+    "mcp_name": "Quest Studio File Storage",
+    "mcp_url": "https://twynity-dev.api.4th-ir.com/file-management/mcp",
+    "tool_name": "get_storage_usage",
+    "description": "Get Storage Usage\n\nGets the total and used storage for a user\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "title": "get_storage_usageArguments"
+    }
+  },
+  {
+    "name": "quest_studio_file_storage_query_files",
+    "mcp_name": "Quest Studio File Storage",
+    "mcp_url": "https://twynity-dev.api.4th-ir.com/file-management/mcp",
+    "tool_name": "query_files",
+    "description": "Query Files\n\nQueries the vector index for files\n\nReturns:\n    list[Document]: The file chunks\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json\n\n**Example Response:**\n```json\n[\n  {\n    \"page_content\": \"Page Content\",\n    \"metadata\": {}\n  }\n]\n```",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "index_names": {
+          "type": "string",
+          "title": "index_names",
+          "description": "Comma separated list of index names to query"
+        },
+        "query": {
+          "type": "string",
+          "title": "query",
+          "description": "The query to search for"
+        },
+        "k": {
+          "type": "integer",
+          "minimum": 4.0,
+          "title": "k",
+          "description": "The number of results to return",
+          "default": 4
+        }
+      },
+      "title": "query_filesArguments",
+      "required": [
+        "index_names",
+        "query"
+      ]
+    }
+  },
+  {
+    "name": "quest_studio_file_storage_get_file",
+    "mcp_name": "Quest Studio File Storage",
+    "mcp_url": "https://twynity-dev.api.4th-ir.com/file-management/mcp",
+    "tool_name": "get_file",
+    "description": "Get File\n\nGet file for a user by its id\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json\n\n**Example Response:**\n```json\n{\n  \"filename\": \"Filename\",\n  \"group\": \"Group\",\n  \"require_auth\": true,\n  \"id\": \"Id\",\n  \"size\": 1,\n  \"storage_location\": \"Storage Location\",\n  \"date_created\": \"2023-01-01T00:00:00Z\",\n  \"date_modified\": \"2023-01-01T00:00:00Z\",\n  \"download_link\": \"Download Link\"\n}\n```",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id": {
+          "type": "string",
+          "title": "file_id"
+        }
+      },
+      "title": "get_fileArguments",
+      "required": [
+        "file_id"
+      ]
+    }
+  },
+  {
+    "name": "quest_studio_file_storage_update_file",
+    "mcp_name": "Quest Studio File Storage",
+    "mcp_url": "https://twynity-dev.api.4th-ir.com/file-management/mcp",
+    "tool_name": "update_file",
+    "description": "Update File\n\nUpdates a file\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json\n\n**Example Response:**\n```json\n{\n  \"filename\": \"Filename\",\n  \"group\": \"Group\",\n  \"require_auth\": true,\n  \"id\": \"Id\",\n  \"size\": 1,\n  \"storage_location\": \"Storage Location\",\n  \"date_created\": \"2023-01-01T00:00:00Z\",\n  \"date_modified\": \"2023-01-01T00:00:00Z\",\n  \"download_link\": \"Download Link\"\n}\n```",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id": {
+          "type": "string",
+          "title": "file_id"
+        },
+        "filename": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "filename",
+          "type": "string"
+        },
+        "group": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "group",
+          "type": "string"
+        },
+        "require_auth": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "require_auth",
+          "type": "boolean"
+        },
+        "archived_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "archived_at",
+          "type": "string"
+        }
+      },
+      "title": "update_fileArguments",
+      "required": [
+        "file_id"
+      ]
+    }
+  },
+  {
+    "name": "quest_studio_file_storage_delete_file",
+    "mcp_name": "Quest Studio File Storage",
+    "mcp_url": "https://twynity-dev.api.4th-ir.com/file-management/mcp",
+    "tool_name": "delete_file",
+    "description": "Delete File\n\nDeletes a user's file\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id": {
+          "type": "string",
+          "title": "file_id"
+        }
+      },
+      "title": "delete_fileArguments",
+      "required": [
+        "file_id"
+      ]
+    }
+  },
+  {
+    "name": "quest_studio_file_storage_get_file_content",
+    "mcp_name": "Quest Studio File Storage",
+    "mcp_url": "https://twynity-dev.api.4th-ir.com/file-management/mcp",
+    "tool_name": "get_file_content",
+    "description": "Get File Content\n\nGets the content of a file\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json\n\n**Example Response:**\n```json\n[\n  {}\n]\n```",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "file_id": {
+          "type": "string",
+          "title": "file_id"
+        }
+      },
+      "title": "get_file_contentArguments",
+      "required": [
+        "file_id"
+      ]
+    }
+  },
+  {
+    "name": "supabase_mcp_get_all_supabase_projects",
+    "mcp_name": "Supabase MCP",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/supabase/mcp",
+    "tool_name": "get_all_supabase_projects",
+    "description": "Get all Supabase projects\n\nRetrieve all Supabase projects available to the current user or persona. Returns project names to use in subsequent tool calls.\n\n### Responses:\n\n**200**: List of project names (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {},
+      "title": "get_all_supabase_projectsArguments"
+    }
+  },
+  {
+    "name": "supabase_mcp_check_database_health",
+    "mcp_name": "Supabase MCP",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/supabase/mcp",
+    "tool_name": "check_database_health",
+    "description": "Check database connectivity for a project\n\nTest database connection for a specific project\n\n### Responses:\n\n**200**: Connection status (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "title": "project"
+        }
+      },
+      "title": "check_database_healthArguments",
+      "required": [
+        "project"
+      ]
+    }
+  },
+  {
+    "name": "supabase_mcp_get_database_tables",
+    "mcp_name": "Supabase MCP",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/supabase/mcp",
+    "tool_name": "get_database_tables",
+    "description": "Get all tables for a project\n\nRetrieve list of all tables in the public schema for a specific project\n\n### Responses:\n\n**200**: List of table names (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "title": "project"
+        }
+      },
+      "title": "get_database_tablesArguments",
+      "required": [
+        "project"
+      ]
+    }
+  },
+  {
+    "name": "supabase_mcp_select_database_table_data",
+    "mcp_name": "Supabase MCP",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/supabase/mcp",
+    "tool_name": "select_database_table_data",
+    "description": "Select Data\n\nExecute SELECT operation for a specific project\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "title": "project"
+        },
+        "table_name": {
+          "type": "string",
+          "title": "table_name"
+        },
+        "select_columns": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "select_columns",
+          "type": "array"
+        },
+        "filters": {
+          "anyOf": [
+            {
+              "items": {
+                "properties": {
+                  "column": {
+                    "type": "string",
+                    "title": "Column"
+                  },
+                  "operator": {
+                    "type": "string",
+                    "title": "Operator",
+                    "description": "eq, neq, gt, lt, gte, lte, like, ilike, in",
+                    "default": "eq"
+                  },
+                  "value": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "items": {},
+                        "type": "array"
+                      }
+                    ],
+                    "title": "Value"
+                  }
+                },
+                "type": "object",
+                "required": [
+                  "column",
+                  "value"
+                ],
+                "title": "QueryFilter"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "filters",
+          "type": "array"
+        },
+        "order_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "order_by",
+          "type": "string"
+        },
+        "order_direction": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "order_direction",
+          "description": "asc or desc",
+          "default": "asc",
+          "type": "string"
+        },
+        "limit": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "maximum": 1000.0
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "limit",
+          "default": 100,
+          "type": "integer"
+        },
+        "offset": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0.0
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "offset",
+          "default": 0,
+          "type": "integer"
+        }
+      },
+      "title": "select_database_table_dataArguments",
+      "required": [
+        "project",
+        "table_name"
+      ]
+    }
+  },
+  {
+    "name": "supabase_mcp_insert_table_data",
+    "mcp_name": "Supabase MCP",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/supabase/mcp",
+    "tool_name": "insert_table_data",
+    "description": "Insert Data\n\nInsert data into a table for a specific project\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "title": "project"
+        },
+        "table_name": {
+          "type": "string",
+          "title": "table_name"
+        },
+        "data": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "items": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "type": "array"
+            }
+          ],
+          "title": "data",
+          "type": "array"
+        }
+      },
+      "title": "insert_table_dataArguments",
+      "required": [
+        "project",
+        "table_name",
+        "data"
+      ]
+    }
+  },
+  {
+    "name": "supabase_mcp_update_database_table_data",
+    "mcp_name": "Supabase MCP",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/supabase/mcp",
+    "tool_name": "update_database_table_data",
+    "description": "Update Data\n\nUpdate rows in a table for a specific project\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "title": "project"
+        },
+        "table_name": {
+          "type": "string",
+          "title": "table_name"
+        },
+        "data": {
+          "additionalProperties": true,
+          "type": "object",
+          "title": "data"
+        },
+        "filters": {
+          "items": {
+            "properties": {
+              "column": {
+                "type": "string",
+                "title": "Column"
+              },
+              "operator": {
+                "type": "string",
+                "title": "Operator",
+                "description": "eq, neq, gt, lt, gte, lte, like, ilike, in",
+                "default": "eq"
+              },
+              "value": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "items": {},
+                    "type": "array"
+                  }
+                ],
+                "title": "Value"
+              }
+            },
+            "type": "object",
+            "required": [
+              "column",
+              "value"
+            ],
+            "title": "QueryFilter"
+          },
+          "type": "array",
+          "title": "filters"
+        }
+      },
+      "title": "update_database_table_dataArguments",
+      "required": [
+        "project",
+        "table_name",
+        "data",
+        "filters"
+      ]
+    }
+  },
+  {
+    "name": "supabase_mcp_get_table_schema",
+    "mcp_name": "Supabase MCP",
+    "mcp_url": "https://twynity-dev.mcp.4th-ir.com/supabase/mcp",
+    "tool_name": "get_table_schema",
+    "description": "Get table schema\n\nGet basic schema information for a table in a specific project\n\n### Responses:\n\n**200**: Successful Response (Success Response)\nContent-Type: application/json",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "project": {
+          "type": "string",
+          "title": "project"
+        },
+        "table_name": {
+          "type": "string",
+          "title": "table_name"
+        }
+      },
+      "title": "get_table_schemaArguments",
+      "required": [
+        "project",
+        "table_name"
+      ]
+    }
+  }
+]

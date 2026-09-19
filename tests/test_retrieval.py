@@ -10,6 +10,113 @@ from octopus.tool_registry import (
     get_all_tools,
     set_tools,
 )
+import torch
+
+import octopus.retriever as retriever
+
+
+def test_refresh_index_returns_built_embeddings(
+    monkeypatch,
+):
+    tools = [
+        {
+            "name": "web_search",
+            "description": "Search the web",
+        },
+        {
+            "name": "send_email",
+            "description": "Send an email",
+        },
+    ]
+
+    expected_embeddings = object()
+
+    class FakeModel:
+        def encode(
+            self,
+            texts,
+            convert_to_tensor,
+            normalize_embeddings,
+        ):
+            assert texts == [
+                "web_search: Search the web",
+                "send_email: Send an email",
+            ]
+            assert convert_to_tensor is True
+            assert normalize_embeddings is True
+
+            return expected_embeddings
+
+    monkeypatch.setattr(
+        retriever,
+        "model",
+        FakeModel(),
+    )
+
+    monkeypatch.setattr(
+        retriever,
+        "get_all_tools",
+        lambda: tools,
+    )
+
+    monkeypatch.setattr(
+        retriever,
+        "TOOLS",
+        [],
+    )
+
+    monkeypatch.setattr(
+        retriever,
+        "tool_embeddings",
+        None,
+    )
+
+    result = retriever.refresh_index()
+
+    assert result is expected_embeddings
+    assert retriever.tool_embeddings is expected_embeddings
+
+
+def test_load_index_uses_precomputed_embeddings(
+    monkeypatch,
+):
+    tools = [
+        {
+            "name": "web_search",
+            "description": "Search the web",
+        },
+        {
+            "name": "send_email",
+            "description": "Send an email",
+        },
+    ]
+
+    embeddings = torch.tensor(
+        [
+            [0.1, 0.2, 0.3],
+            [0.4, 0.5, 0.6],
+        ]
+    )
+
+    monkeypatch.setattr(
+        retriever,
+        "TOOLS",
+        [],
+    )
+
+    monkeypatch.setattr(
+        retriever,
+        "tool_embeddings",
+        None,
+    )
+
+    retriever.load_index(
+        tools=tools,
+        embeddings=embeddings,
+    )
+
+    assert retriever.TOOLS == tools
+    assert retriever.tool_embeddings is embeddings
 
 
 TEST_TOOLS = [
@@ -176,15 +283,6 @@ def test_results_are_deduplicated():
     assert len(names) == len(set(names))
 
 
-def test_per_intent_limit_is_respected():
-    results = retrieve_tools(
-        "send an email to Tom",
-        per_intent_k=2,
-    )
-
-    assert len(results) <= 2
-
-
 def test_empty_query_returns_no_tools():
     assert retrieve_tools("") == []
     assert retrieve_tools("   ") == []
@@ -214,3 +312,125 @@ def test_retriever_uses_current_registry():
     finally:
         set_tools(original_tools)
         refresh_index()
+
+
+def test_retrieval_uses_bounded_max_gap(
+    monkeypatch,
+):
+    ranked_tools = [
+        {"name": "tool_1", "score": 0.90},
+        {"name": "tool_2", "score": 0.89},
+        {"name": "tool_3", "score": 0.88},
+        {"name": "tool_4", "score": 0.70},
+        {"name": "tool_5", "score": 0.69},
+    ]
+
+    monkeypatch.setattr(
+        "octopus.retriever.rank_tools",
+        lambda query: ranked_tools,
+    )
+
+    from octopus.retriever import retrieve_tools
+
+    selected = retrieve_tools("test query")
+
+    assert [tool["name"] for tool in selected] == [
+        "tool_1",
+        "tool_2",
+        "tool_3",
+    ]
+
+
+def test_retrieval_selects_per_intent_then_merges(
+    monkeypatch,
+):
+    intents = [
+        {
+            "text": "Search for Nvidia news",
+        },
+        {
+            "text": "email a summary to Tom",
+        },
+    ]
+
+    monkeypatch.setattr(
+        "octopus.retriever.analyze_intents",
+        lambda query: intents,
+    )
+
+    rankings = {
+        "Search for Nvidia news": [
+            {"name": "github_search", "score": 0.90},
+            {"name": "web_search", "score": 0.89},
+            {"name": "railway_info", "score": 0.70},
+        ],
+        "email a summary to Tom": [
+            {"name": "send_email", "score": 0.90},
+            {"name": "find_email", "score": 0.89},
+            {"name": "search_mail", "score": 0.70},
+        ],
+    }
+
+    monkeypatch.setattr(
+        "octopus.retriever.rank_tools",
+        lambda query: rankings[query],
+    )
+
+    from octopus.retriever import retrieve_tools
+
+    selected = retrieve_tools(
+        "Find the latest Nvidia news " "and email a summary to Tom"
+    )
+
+    assert [tool["name"] for tool in selected] == [
+        "github_search",
+        "web_search",
+        "send_email",
+        "find_email",
+    ]
+
+
+def test_retrieval_deduplicates_tools_across_intents(
+    monkeypatch,
+):
+    intents = [
+        {
+            "text": "Find Nvidia news",
+        },
+        {
+            "text": "Research Nvidia",
+        },
+    ]
+
+    monkeypatch.setattr(
+        "octopus.retriever.analyze_intents",
+        lambda query: intents,
+    )
+
+    rankings = {
+        "Find Nvidia news": [
+            {"name": "web_search", "score": 0.90},
+            {"name": "github_search", "score": 0.89},
+            {"name": "unrelated_1", "score": 0.60},
+        ],
+        "Research Nvidia": [
+            {"name": "web_search", "score": 0.91},
+            {"name": "company_search", "score": 0.90},
+            {"name": "unrelated_2", "score": 0.60},
+        ],
+    }
+
+    monkeypatch.setattr(
+        "octopus.retriever.rank_tools",
+        lambda query: rankings[query],
+    )
+
+    from octopus.retriever import retrieve_tools
+
+    selected = retrieve_tools("Find and research Nvidia news")
+
+    assert [tool["name"] for tool in selected] == [
+        "web_search",
+        "github_search",
+        "company_search",
+    ]
