@@ -1,0 +1,170 @@
+Brown Octopus Exploratory Hybrid Diagnostic
+============================================
+
+Status
+------
+This is an exploratory post-Milestone-4 analysis. It must not be treated as
+unbiased validation because the hybrid hypothesis was developed after observing
+Milestone 3/4 results. Production Octopus was not modified.
+
+Frozen inputs
+-------------
+Dataset: data/evals/octopus_capability_benchmark.json
+Tool universe: 122 tools
+Embedding model: Qwen/Qwen3-Embedding-0.6B
+Tool representation: name + description
+Git commit: 6dd17fa8a3fc27f3f0909581978b6dd45bb2b2d6
+Dataset hash: 9106ee47a5377563cbeb34bd46423cd13852b367c9c924bfabe099e987e55735
+Tool-universe hash: b32fb327544ea91e40a33f2f420dc2204423fca1b5cb935341abb948e9b7baf2
+
+Exploratory policy
+------------------
+selected_k = max(4, bounded_max_gap_k)
+Max Gap upper bound: 16 per intent
+Existing intent decomposition, ranking, merge/dedupe, active memory, TTL, and
+active-cap behavior were preserved.
+
+1. Fixed-K=4 failure analysis
+-----------------------------
+There were 5 required-capability misses under Fixed-K=4 across the frozen
+50-task benchmark.
+
+Task             Category          Required tool                                      Rank  Score     MaxGapK  Hybrid recovers
+compound_001     compound          outlook_mail_management_send_email                  5     0.65625   11       yes
+compound_004     compound          outlook_mail_management_send_email                  6     0.60547   5        no
+compound_005     compound          outlook_mail_management_send_email                  7     0.60938   16       yes
+dependency_001   hidden_dependency outlook_mail_management_send_email                 87     0.58984   3        no
+conversation_006 multi_turn        quest_studio_file_storage_get_files                20     0.57422   4        no
+
+Rank distribution of Fixed-K=4 misses:
+rank 5:     1
+rank 6:     1
+rank 7:     1
+rank 8:     0
+rank 9-16:  0
+rank >16:   2
+
+Interpretation: three misses were just outside the Fixed-K=4 cutoff. Max Gap
+expanded far enough to recover two of those three. The third, rank 6 in
+compound_004, was not recovered because Max Gap stopped at 5. The two very
+low-ranked misses were not recoverable by this hybrid without expanding far
+beyond the current bound/cutoff.
+
+2. Aggregate comparison
+-----------------------
+Metrics are calculated per exposed turn. The held-out split is the meaningful
+comparison, while development results are included for transparency.
+
+Held-out method       Req recall  Complete  Support  Mean tools  Median  P90  P95  Max  Mean schema tokens  Token reduction
+Fixed-K=4             1.000       1.000     0.792    4.71        4.0     6    6    8    960.92              0.961
+Fixed-K=8             1.000       1.000     0.833    9.33        8.0     12   14   15   1863.42             0.926
+Bounded Max Gap       0.958       0.958     0.583    2.92        1.5     7    7    8    586.96              0.977
+Min-4 + Max Gap       1.000       1.000     0.813    5.21        4.5     7    8    8    1058.21             0.958
+
+The hybrid adds about 0.50 exposed tools/turn and about 97 schema tokens/turn
+over Fixed-K=4 on held-out tasks, while matching Fixed-K=4 required recall and
+complete-required rate. It remains substantially smaller than Fixed-K=8.
+
+3. Held-out per-category comparison
+------------------------------------
+Category          Method             Req recall  Complete  Support  Mean tools  Mean schema tokens
+single_capability Fixed-K=4          1.000       1.000     1.000    4.00        801.00
+single_capability Min-4 + Max Gap    1.000       1.000     1.000    4.00        801.00
+capability_family Fixed-K=4          1.000       1.000     0.500    4.00        756.25
+capability_family Min-4 + Max Gap    1.000       1.000     0.500    4.75        868.75
+compound          Fixed-K=4          1.000       1.000     1.000    6.50        1389.25
+compound          Min-4 + Max Gap    1.000       1.000     1.000    6.50        1389.25
+hidden_dependency Fixed-K=4          1.000       1.000     0.250    4.00        912.75
+hidden_dependency Min-4 + Max Gap    1.000       1.000     0.375    4.75        1089.50
+multi_turn        Fixed-K=4          1.000       1.000     1.000    4.875       953.125
+multi_turn        Min-4 + Max Gap    1.000       1.000     1.000    5.625       1103.00
+
+4. Selected-K distribution
+--------------------------
+Intent-level held-out mean K / median / P90 / P95 / max:
+Fixed-K=4:          4.00 / 4 / 4 / 4 / 4
+Fixed-K=8:          8.00 / 8 / 8 / 8 / 8
+Bounded Max Gap:    2.14 / 1 / 5 / 7 / 7
+Min-4 + Max Gap:    4.36 / 4 / 5 / 7 / 7
+
+The hybrid is genuinely adaptive above the floor: it expanded beyond four
+tools for 17 intents across the full benchmark and never exceeded K=7 on the
+held-out split. Full rank/count detail is in hybrid_k_distribution.csv.
+
+5. Expansion analysis
+---------------------
+Across 17 expansion intents:
+
+Expansion intents:                                      17
+Expansion intents recovering a required tool missed by K=4: 2
+Expansion intents recovering a supporting tool missed by K=4: 6
+Expansion intents adding only unlabeled tools:          9
+Added tools across expansion intents:                   82
+Additional schema tokens summed across expansion turns: 18,270
+
+Exact required-capability recoveries:
+
+development / compound_001 / intent "email a summary to Tom"
+  Max Gap K=11; recovered outlook_mail_management_send_email at rank 5.
+
+development / compound_005 / intent "send a file summary by email"
+  Max Gap K=16; recovered outlook_mail_management_send_email at rank 7.
+
+Exact supporting-capability recoveries:
+
+development / family_002: outlook_mail_management_find_email_address
+development / compound_001: outlook_mail_management_find_email_address
+development / compound_003: github_mcp_server_get_file_contents
+development / dependency_002: office_word_mcp_server_api_add_table
+held_out / dependency_009: supabase_mcp_get_table_schema
+development / conversation_001: outlook_mail_management_find_email_address
+
+Exact held-out expansion cases with no labeled benefit:
+
+family_008, intent "Query a Supabase table", K=7, +578 schema tokens
+conversation_007, intent "Mark that item as done", K=5, +404 schema tokens
+conversation_009, intent "Create a new Word document", K=6, +301 schema tokens
+conversation_010, intent "Get the platform team", K=5, +202 schema tokens
+
+The complete expansion list, including every added rank-5-through-K tool and
+its independent required/supporting/unlabeled label, is in
+hybrid_expansion_summary.csv and hybrid_expansion_tools.csv.
+
+6. Recommendation
+-----------------
+The evidence supports a narrow conclusion: Max Gap contains some useful
+expansion information once a safe four-tool floor is imposed. On this frozen
+benchmark, the hybrid recovered two Fixed-K=4 required misses and six
+supporting misses, while costing less context than Fixed-K=8.
+
+However, this is exploratory and not production validation. Nine expansion
+intents added only unlabeled tools, and the hybrid's improvement over Fixed-K=4
+was not demonstrated on genuinely unseen tasks. Freeze the rule exactly as
+specified for a future preregistered test, but do not change production yet.
+
+Recommended next test before agent evaluation:
+1. Create a new, independently authored task set with no overlap in queries or
+   tool/task templates with the 50-task benchmark.
+2. Freeze the rule and all parameters before inspecting results.
+3. Compare Fixed-K=4, Fixed-K=8, Max Gap, and Min-4 + Max Gap.
+4. Keep required and supporting labels independent of all retrieval outputs.
+5. Only if the hybrid reproduces its recall/context behavior should it be
+   considered for downstream agent evaluation.
+
+Artifacts
+---------
+Raw:
+results/raw/hybrid_diagnostic_20260919T201534_107859Z.json
+
+Reports:
+results/reports/hybrid_diagnostic_summary.csv
+results/reports/hybrid_diagnostic_category_summary.csv
+results/reports/hybrid_fixed4_failures.csv
+results/reports/hybrid_expansion_summary.csv
+results/reports/hybrid_expansion_tools.csv
+results/reports/hybrid_k_distribution.csv
+results/reports/hybrid_recall_context.csv
+
+Tests
+-----
+Focused evaluation tests: 12 passed.

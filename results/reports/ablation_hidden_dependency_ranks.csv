@@ -1,0 +1,21 @@
+task_id,query,supporting_tool,best_dense_rank,rank_and_cutoff_by_intent,selected_before_memory
+dependency_001,Email Tom the sprint report,outlook_mail_management_find_email_address,59,"[{""cutoff"": 3, ""intent"": ""Email Tom the sprint report"", ""rank"": 59}]",False
+dependency_002,Create a polished Word report about the project,office_word_mcp_server_api_add_heading,1,"[{""cutoff"": 5, ""intent"": ""Create a polished Word report about the project"", ""rank"": 1}]",True
+dependency_002,Create a polished Word report about the project,office_word_mcp_server_api_add_paragraph,3,"[{""cutoff"": 5, ""intent"": ""Create a polished Word report about the project"", ""rank"": 3}]",True
+dependency_002,Create a polished Word report about the project,office_word_mcp_server_api_add_table,5,"[{""cutoff"": 5, ""intent"": ""Create a polished Word report about the project"", ""rank"": 5}]",True
+dependency_003,Open a pull request for the completed feature,github_mcp_server_get_file_contents,16,"[{""cutoff"": 2, ""intent"": ""Open a pull request for the completed feature"", ""rank"": 16}]",False
+dependency_003,Open a pull request for the completed feature,github_mcp_server_list_branches,12,"[{""cutoff"": 2, ""intent"": ""Open a pull request for the completed feature"", ""rank"": 12}]",False
+dependency_004,Submit my annual leave request,carrot_mcp_server_api_create_leave_application,2,"[{""cutoff"": 4, ""intent"": ""Submit my annual leave request"", ""rank"": 2}]",True
+dependency_004,Submit my annual leave request,carrot_mcp_server_api_list_leave_application,4,"[{""cutoff"": 4, ""intent"": ""Submit my annual leave request"", ""rank"": 4}]",True
+dependency_005,Update the login bug work item,project_management_tools_get_work_item,8,"[{""cutoff"": 4, ""intent"": ""Update the login bug work item"", ""rank"": 8}]",False
+dependency_005,Update the login bug work item,project_management_tools_list_work_items,10,"[{""cutoff"": 4, ""intent"": ""Update the login bug work item"", ""rank"": 10}]",False
+dependency_006,Deploy the application from its repository,railway_tools_project_list,56,"[{""cutoff"": 1, ""intent"": ""Deploy the application from its repository"", ""rank"": 56}]",False
+dependency_006,Deploy the application from its repository,railway_tools_service_list,27,"[{""cutoff"": 1, ""intent"": ""Deploy the application from its repository"", ""rank"": 27}]",False
+dependency_007,Add the findings table to the new document,office_word_mcp_server_api_create_word_document,9,"[{""cutoff"": 1, ""intent"": ""Add the findings table to the new document"", ""rank"": 9}]",False
+dependency_007,Add the findings table to the new document,office_word_mcp_server_api_add_paragraph,3,"[{""cutoff"": 1, ""intent"": ""Add the findings table to the new document"", ""rank"": 3}]",False
+dependency_008,Create the note in our SharePoint library,sharepoint_tools_get_sharepoint_sites,28,"[{""cutoff"": 1, ""intent"": ""Create the note in our SharePoint library"", ""rank"": 28}]",False
+dependency_008,Create the note in our SharePoint library,sharepoint_tools_get_sharepoint_documents,16,"[{""cutoff"": 1, ""intent"": ""Create the note in our SharePoint library"", ""rank"": 16}]",False
+dependency_009,Run the customer query against Supabase,supabase_mcp_check_database_health,2,"[{""cutoff"": 7, ""intent"": ""Run the customer query against Supabase"", ""rank"": 2}]",True
+dependency_009,Run the customer query against Supabase,supabase_mcp_get_table_schema,6,"[{""cutoff"": 7, ""intent"": ""Run the customer query against Supabase"", ""rank"": 6}]",True
+dependency_010,Push the prepared changes to the repository,github_mcp_server_get_file_contents,22,"[{""cutoff"": 1, ""intent"": ""Push the prepared changes to the repository"", ""rank"": 22}]",False
+dependency_010,Push the prepared changes to the repository,github_mcp_server_list_branches,19,"[{""cutoff"": 1, ""intent"": ""Push the prepared changes to the repository"", ""rank"": 19}]",False

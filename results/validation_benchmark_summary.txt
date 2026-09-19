@@ -1,0 +1,186 @@
+Brown Octopus Independent Validation Benchmark
+===============================================
+
+Status
+------
+This is the first independently authored validation benchmark after the
+50-task development/exploratory benchmark. No production Octopus changes were
+made. The frozen hybrid policy is:
+
+selected_k = max(4, bounded_max_gap_k)
+
+with the existing Max Gap calculation, MAX_TOOLS=16, MIN_GAP_PERCENT=2%,
+Qwen/Qwen3-Embedding-0.6B, name + description representation, intent
+decomposition, merge/dedupe, memory, TTL, and active-cap behavior.
+
+Benchmark methodology
+----------------------
+The validation set contains 100 tasks, 20 in each existing category:
+single capability, capability family, compound, hidden dependency, and
+multi-turn. It uses new query wording and new task compositions; no exact query
+is duplicated from the 50-task development benchmark.
+
+Queries and required/supporting labels were authored from the canonical tool
+names and descriptions before validation retrieval was run. Retrieval rankings
+and selector outputs were not used to assign or revise labels. No parameters or
+heuristics were selected using this benchmark.
+
+Benchmark file:
+data/evals/octopus_validation_benchmark_v1.json
+
+Frozen configuration
+--------------------
+Tool universe: 122 tools
+Embedding model: Qwen/Qwen3-Embedding-0.6B
+Tool representation: name + description
+Git commit: 6dd17fa8a3fc27f3f0909581978b6dd45bb2b2d6
+Dataset hash: 0f693c072dc0fc20fb8f61190066c2d707dd151eff14d08b3dc3b5cd59a3856c
+Tool-universe hash: b32fb327544ea91e40a33f2f420dc2204423fca1b5cb935341abb948e9b7baf2
+
+Aggregate results
+-----------------
+All metrics are per exposed turn. There are 120 turns and 142 operational
+intents in the 100 tasks.
+
+Method                Req recall  Complete  Support  Mean tools  Median  P90  P95  Max  Mean schema tokens  Token reduction
+Fixed-K=4             0.938       0.925     0.663    5.15        4.0     8    8    8    1110.68             0.956
+Fixed-K=8             0.979       0.975     0.783    9.96        8.0     15   15   16   2114.76             0.916
+Bounded Max Gap       0.900       0.883     0.575    3.81        2.0     8    11   15    823.55             0.967
+Min-4 + Max Gap       0.967       0.958     0.717    6.11        4.0     10   13   17   1312.81             0.948
+
+The hybrid improves required recall over Fixed-K=4 by 0.029 and complete
+required rate by 0.033, while using 0.96 additional tools/turn and 202.13
+additional schema tokens/turn. It remains substantially smaller than Fixed-K=8,
+but does not match Fixed-K=8's recall or supporting recall.
+
+Per-category results
+--------------------
+Category / Method             Req recall  Complete  Support  Mean tools  Schema tokens
+single / Fixed-K=4             1.000       1.000     1.000    4.20        895.25
+single / Fixed-K=8             1.000       1.000     1.000    8.40        1730.80
+single / Max Gap               0.900       0.900     1.000    1.55        292.10
+single / Min-4 + Max Gap       1.000       1.000     1.000    4.30        910.05
+family / Fixed-K=4             1.000       1.000     0.375    4.50        981.15
+family / Fixed-K=8             1.000       1.000     0.575    9.05        1946.25
+family / Max Gap               0.900       0.900     0.350    2.60        556.00
+family / Min-4 + Max Gap       1.000       1.000     0.475    4.75        1020.15
+compound / Fixed-K=4           0.925       0.850     0.625    7.30        1509.55
+compound / Fixed-K=8           0.975       0.950     0.775    13.70       2879.70
+compound / Max Gap             0.900       0.800     0.450    5.10        1049.70
+compound / Min-4 + Max Gap     0.950       0.900     0.700    8.15        1687.25
+hidden / Fixed-K=4             0.900       0.900     0.275    4.00        941.45
+hidden / Fixed-K=8             0.950       0.950     0.400    8.00        1792.95
+hidden / Max Gap               0.850       0.850     0.100    1.90        468.65
+hidden / Min-4 + Max Gap       0.900       0.900     0.275    4.10        956.40
+multi-turn / Fixed-K=4         0.900       0.900     0.850    5.45        1168.33
+multi-turn / Fixed-K=8         0.975       0.975     0.975    10.30       2169.43
+multi-turn / Max Gap           0.925       0.925     0.775    5.85        1287.43
+multi-turn / Min-4 + Max Gap   0.975       0.975     0.925    7.675       1651.50
+
+Required-tool rank distribution
+--------------------------------
+Required tools: 120 total.
+Rank 1: 104
+Rank 2: 18
+Rank 3: 4
+Rank 4: 4
+Rank 5: 2
+Rank 6: 2
+Rank 7: 2
+Rank 8: 0
+Ranks 9-16: 0
+Rank 18: 1
+Rank 20: 1
+Rank 26: 1
+Rank 65: 1
+
+Important limitation: 104/120 required-tool instances (86.7%) ranked first.
+This distribution was measured only after labels were frozen, and the tasks and
+labels have not been changed. The benchmark therefore contains useful
+nontrivial cases, including six rank-5-to-16 cases and four much lower-ranked
+cases, but it is still dominated by easy rank-1 retrievals. The results should
+not be treated as definitive broad validation of adaptive expansion.
+
+Required tools beyond rank 4
+----------------------------
+Task             Intent                                      Required tool                                      Rank  Score     MaxGapK  K4  Hybrid  K8
+compound_v001    Find repositories about graph databases     github_mcp_server_get_file_contents                26    0.54297   4        no  no      no
+compound_v009    Find the latest support email               outlook_mail_management_search_outlook_mail        6     0.59375   11       no  yes     yes
+compound_v015    then inspect the inbox for the reply        gmail_tools_get_google_emails                       5     0.54297   2        no  no      yes
+dependency_v001  Send the deployment notes to the release coordinator outlook_mail_management_send_email       65    0.38281   4        no  no      no
+dependency_v004  Create the report document with the findings section office_word_mcp_server_api_create_word_document 7 0.43555 1 no no yes
+conversation_v002 Find the architecture document in my files quest_studio_file_storage_query_files              7     0.54297   7        no  yes     yes
+conversation_v004 Find the team's latest email                outlook_mail_management_search_outlook_mail       5     0.64063   10       no  yes     yes
+conversation_v013 Remove the obsolete export                  quest_studio_file_storage_delete_file              6     0.46094   7        no  yes     yes
+conversation_v015 Find the design message                     gmail_tools_get_google_emails                       20    0.45117   1        no  no      no
+conversation_v018 Show its current properties                  railway_tools_volume_list                            18    0.43945   2        yes yes     yes
+
+The conversation_v018 Fixed-K=4 hit is due to active memory from the earlier
+turn, despite the tool's current dense rank being 18.
+
+Near-boundary required cases (ranks 5-16)
+------------------------------------------
+Number of cases: 6
+Fixed-K=4 recovery: 0/6 = 0.000
+Min-4 + Max Gap recovery: 4/6 = 0.667
+Fixed-K=8 recovery: 6/6 = 1.000
+Bounded Max Gap recovery: 4/6 = 0.667
+
+This is the clearest evidence for the hybrid hypothesis: Max Gap recovered
+four of six rank-5-to-16 cases, while the four-tool floor alone recovered none.
+However, Fixed-K=8 recovered all six and the hybrid did not recover the two
+cases where Max Gap stopped too early.
+
+Expansion utility
+-----------------
+Across every hybrid intent with K > 4:
+
+Expansion intents:                                      23
+Expansions recovering at least one required capability: 4
+Expansions recovering supporting capability only:       4
+Expansions adding only unlabeled tools:                 15
+Additional tools exposed across expansions:             87
+Additional schema tokens versus Fixed-K=4:              17,762 total
+
+The 23 expansion intents selected K values above four using the existing Max
+Gap signal; no new tuning or heuristic was added. The full per-intent and
+per-tool expansion records are in the CSV artifacts below.
+
+Recommendation
+--------------
+The hybrid reproduces the exploratory direction on independent data: it
+improves required recall and complete-required rate over Fixed-K=4, and its
+6.11 tools/turn context is materially smaller than Fixed-K=8's 9.96.
+
+It does not dominate Fixed-K=8: it has lower required recall (0.967 vs 0.979),
+lower complete rate (0.958 vs 0.975), and lower supporting recall (0.717 vs
+0.783). It also adds unlabeled tools in 15 of 23 expansion intents.
+
+Recommendation: freeze this validation result as evidence supporting further
+agent-level comparison, but do not change production Octopus yet. The hybrid
+is a credible recall/context middle point, not a proven replacement for either
+Fixed-K=4 or Fixed-K=8. Because the required-rank distribution is dominated by
+rank-1 cases, use this report as preliminary evidence and author a future
+harder validation set independently before making a production decision. Do not
+alter this benchmark retroactively. If agent evaluation proceeds, keep all four
+policies as separate frozen conditions.
+
+Artifacts
+---------
+Raw:
+results/raw/validation_20260919T204743_708747Z.json
+
+Reports:
+results/reports/validation_summary.csv
+results/reports/validation_category_summary.csv
+results/reports/validation_required_rank_analysis.csv
+results/reports/validation_expansion_summary.csv
+results/reports/validation_expansion_tools.csv
+results/reports/validation_k_distribution.csv
+
+Tests
+-----
+Focused evaluation tests: 14 passed.
+Non-live repository suite: 96 passed, 5 live/integration tests deselected.
+The full suite's live-MCP tests could not connect in this environment and its
+temporary-directory tests were blocked by environment permissions.

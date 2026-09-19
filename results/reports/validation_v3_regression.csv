@@ -1,0 +1,2 @@
+split,method,category,task_count,turn_count,required_recall,complete_required_rate,supporting_recall,mean_exposed_tools_per_turn,median_exposed_tools_per_turn,p90_exposed_tools_per_turn,p95_exposed_tools_per_turn,max_exposed_tools_per_turn,mean_schema_tokens_per_turn,schema_token_reduction
+validation,brown_octopus_v3,all,100,120,0.9666666666666667,0.9583333333333334,0.7166666666666667,6.108333333333333,4.0,10,13,17,1312.8083333333334,0.9479374867808799

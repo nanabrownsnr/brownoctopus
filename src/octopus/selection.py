@@ -1,4 +1,5 @@
 MAX_TOOLS = 16
+MIN_TOOLS = 4
 MIN_GAP_PERCENT = 2.0
 
 
@@ -47,3 +48,27 @@ def select_bounded_max_gap(
         return selected_window
 
     return ranked_tools[: strongest_gap["cutoff"]]
+
+
+def select_min4_bounded_max_gap(
+    ranked_tools: list[dict],
+    min_tools: int = MIN_TOOLS,
+    max_tools: int = MAX_TOOLS,
+    min_gap_percent: float = MIN_GAP_PERCENT,
+) -> list[dict]:
+    """Select a bounded Max Gap prefix with a per-intent minimum floor.
+
+    The existing Max Gap implementation remains the only source of the
+    adaptive cutoff. The minimum is applied to each operational intent before
+    the caller merges and deduplicates selections from multiple intents.
+    """
+    if not ranked_tools:
+        return []
+
+    max_gap_selected = select_bounded_max_gap(
+        ranked_tools,
+        max_tools=max_tools,
+        min_gap_percent=min_gap_percent,
+    )
+    cutoff = min(max_tools, max(min_tools, len(max_gap_selected)))
+    return ranked_tools[:cutoff]

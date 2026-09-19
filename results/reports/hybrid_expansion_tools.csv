@@ -1,0 +1,83 @@
+split,task_id,category,turn,query,intent,rank,tool_id,score,label
+development,family_002,capability_family,1,Send an email to Tom,Send an email to Tom,5,gmail_tools_reply_google_email,0.640625,unlabeled
+development,family_002,capability_family,1,Send an email to Tom,Send an email to Tom,6,gmail_tools_forward_google_email,0.625,unlabeled
+development,family_002,capability_family,1,Send an email to Tom,Send an email to Tom,7,gmail_tools_get_google_emails,0.609375,unlabeled
+development,family_002,capability_family,1,Send an email to Tom,Send an email to Tom,8,gmail_tools_delete_google_email,0.6015625,unlabeled
+development,family_002,capability_family,1,Send an email to Tom,Send an email to Tom,9,outlook_mail_management_forward_email,0.58984375,unlabeled
+development,family_002,capability_family,1,Send an email to Tom,Send an email to Tom,10,outlook_mail_management_find_email_address,0.578125,supporting
+development,family_002,capability_family,1,Send an email to Tom,Send an email to Tom,11,outlook_mail_management_search_outlook_mail,0.5625,unlabeled
+held_out,family_008,capability_family,1,Query a Supabase table,Query a Supabase table,5,supabase_mcp_insert_table_data,0.703125,unlabeled
+held_out,family_008,capability_family,1,Query a Supabase table,Query a Supabase table,6,supabase_mcp_update_database_table_data,0.69921875,unlabeled
+held_out,family_008,capability_family,1,Query a Supabase table,Query a Supabase table,7,supabase_mcp_check_database_health,0.671875,unlabeled
+development,compound_001,compound,1,Find the latest Nvidia news and email a summary to Tom,email a summary to Tom,5,outlook_mail_management_send_email,0.65625,required
+development,compound_001,compound,1,Find the latest Nvidia news and email a summary to Tom,email a summary to Tom,6,gmail_tools_get_google_emails,0.6484375,unlabeled
+development,compound_001,compound,1,Find the latest Nvidia news and email a summary to Tom,email a summary to Tom,7,gmail_tools_forward_google_email,0.640625,unlabeled
+development,compound_001,compound,1,Find the latest Nvidia news and email a summary to Tom,email a summary to Tom,8,outlook_mail_management_find_email_address,0.62109375,supporting
+development,compound_001,compound,1,Find the latest Nvidia news and email a summary to Tom,email a summary to Tom,9,gmail_tools_delete_google_email,0.6171875,unlabeled
+development,compound_001,compound,1,Find the latest Nvidia news and email a summary to Tom,email a summary to Tom,10,outlook_mail_management_forward_email,0.60546875,unlabeled
+development,compound_001,compound,1,Find the latest Nvidia news and email a summary to Tom,email a summary to Tom,11,outlook_mail_management_search_outlook_mail,0.6015625,unlabeled
+development,compound_002,compound,1,Get the current sprint work items and create a Word report,Get the current sprint work items,5,project_management_tools_export_sprint_to_sharepoint,0.6796875,unlabeled
+development,compound_002,compound,1,Get the current sprint work items and create a Word report,Get the current sprint work items,6,project_management_tools_create_work_item,0.6640625,unlabeled
+development,compound_002,compound,1,Get the current sprint work items and create a Word report,Get the current sprint work items,7,project_management_tools_update_work_item,0.65234375,unlabeled
+development,compound_002,compound,1,Get the current sprint work items and create a Word report,Get the current sprint work items,8,project_management_tools_get_user_capacity,0.65234375,unlabeled
+development,compound_002,compound,1,Get the current sprint work items and create a Word report,Get the current sprint work items,9,project_management_tools_create_sprint,0.63671875,unlabeled
+development,compound_002,compound,1,Get the current sprint work items and create a Word report,Get the current sprint work items,10,project_management_tools_get_work_item_comments,0.625,unlabeled
+development,compound_002,compound,1,Get the current sprint work items and create a Word report,Get the current sprint work items,11,project_management_tools_delete_sprint,0.62109375,unlabeled
+development,compound_002,compound,1,Get the current sprint work items and create a Word report,Get the current sprint work items,12,project_management_tools_delete_work_item,0.62109375,unlabeled
+development,compound_003,compound,1,Find a GitHub repository and update a file in it,Find a GitHub repository,5,github_mcp_server_get_file_contents,0.765625,supporting
+development,compound_003,compound,1,Find a GitHub repository and update a file in it,Find a GitHub repository,6,github_mcp_server_get_me,0.74609375,unlabeled
+development,compound_003,compound,1,Find a GitHub repository and update a file in it,Find a GitHub repository,7,github_mcp_server_create_or_update_file,0.7421875,required
+development,compound_003,compound,1,Find a GitHub repository and update a file in it,Find a GitHub repository,8,github_mcp_server_list_pull_requests,0.73828125,unlabeled
+development,compound_003,compound,1,Find a GitHub repository and update a file in it,Find a GitHub repository,9,github_mcp_server_list_branches,0.734375,unlabeled
+development,compound_003,compound,1,Find a GitHub repository and update a file in it,Find a GitHub repository,10,github_mcp_server_list_commits,0.73046875,unlabeled
+development,compound_003,compound,1,Find a GitHub repository and update a file in it,Find a GitHub repository,11,github_mcp_server_merge_pull_request,0.703125,unlabeled
+development,compound_003,compound,1,Find a GitHub repository and update a file in it,Find a GitHub repository,12,github_mcp_server_create_pull_request,0.703125,unlabeled
+development,compound_003,compound,1,Find a GitHub repository and update a file in it,Find a GitHub repository,13,github_mcp_server_create_branch,0.69140625,unlabeled
+development,compound_003,compound,1,Find a GitHub repository and update a file in it,Find a GitHub repository,14,github_mcp_server_update_pull_request,0.6796875,unlabeled
+development,compound_003,compound,1,Find a GitHub repository and update a file in it,Find a GitHub repository,15,railway_tools_service_create_from_repo,0.65625,unlabeled
+development,compound_003,compound,1,Find a GitHub repository and update a file in it,Find a GitHub repository,16,github_mcp_server_delete_file,0.65234375,unlabeled
+development,compound_004,compound,1,Check my leave balance and email my manager,Check my leave balance,5,carrot_mcp_server_api_submit_leave_application,0.7265625,unlabeled
+development,compound_004,compound,1,Check my leave balance and email my manager,email my manager,5,gmail_tools_reply_google_email,0.625,unlabeled
+development,compound_005,compound,1,List my files and send a file summary by email,List my files,5,quest_studio_file_storage_get_file,0.58984375,unlabeled
+development,compound_005,compound,1,List my files and send a file summary by email,List my files,6,quest_studio_file_storage_delete_file,0.578125,unlabeled
+development,compound_005,compound,1,List my files and send a file summary by email,List my files,7,project_management_tools_list_work_items,0.5625,unlabeled
+development,compound_005,compound,1,List my files and send a file summary by email,send a file summary by email,5,gmail_tools_reply_google_email,0.61328125,unlabeled
+development,compound_005,compound,1,List my files and send a file summary by email,send a file summary by email,6,office_word_mcp_server_api_get_document_outline,0.609375,unlabeled
+development,compound_005,compound,1,List my files and send a file summary by email,send a file summary by email,7,outlook_mail_management_send_email,0.609375,required
+development,compound_005,compound,1,List my files and send a file summary by email,send a file summary by email,8,outlook_mail_management_reply_to_email,0.59765625,unlabeled
+development,compound_005,compound,1,List my files and send a file summary by email,send a file summary by email,9,office_word_mcp_server_api_add_picture,0.58984375,unlabeled
+development,compound_005,compound,1,List my files and send a file summary by email,send a file summary by email,10,office_word_mcp_server_api_get_document_info,0.58984375,unlabeled
+development,compound_005,compound,1,List my files and send a file summary by email,send a file summary by email,11,project_management_tools_export_sprint_to_sharepoint,0.58984375,unlabeled
+development,compound_005,compound,1,List my files and send a file summary by email,send a file summary by email,12,office_word_mcp_server_api_copy_document,0.5859375,unlabeled
+development,compound_005,compound,1,List my files and send a file summary by email,send a file summary by email,13,office_word_mcp_server_api_get_document_xml,0.58203125,unlabeled
+development,compound_005,compound,1,List my files and send a file summary by email,send a file summary by email,14,office_word_mcp_server_api_get_document_text,0.58203125,unlabeled
+development,compound_005,compound,1,List my files and send a file summary by email,send a file summary by email,15,gmail_tools_forward_google_email,0.58203125,unlabeled
+development,compound_005,compound,1,List my files and send a file summary by email,send a file summary by email,16,office_word_mcp_server_api_merge_doucments,0.58203125,unlabeled
+development,compound_006,compound,1,List Railway projects and check a service status,List Railway projects,5,railway_tools_project_environments,0.82421875,unlabeled
+development,compound_006,compound,1,List Railway projects and check a service status,List Railway projects,6,railway_tools_project_create,0.80078125,unlabeled
+development,compound_006,compound,1,List Railway projects and check a service status,List Railway projects,7,railway_tools_service_info,0.78125,required
+development,dependency_002,hidden_dependency,1,Create a polished Word report about the project,Create a polished Word report about the project,5,office_word_mcp_server_api_add_table,0.58984375,supporting
+held_out,dependency_009,hidden_dependency,1,Run the customer query against Supabase,Run the customer query against Supabase,5,supabase_mcp_update_database_table_data,0.6328125,unlabeled
+held_out,dependency_009,hidden_dependency,1,Run the customer query against Supabase,Run the customer query against Supabase,6,supabase_mcp_get_table_schema,0.62890625,supporting
+held_out,dependency_009,hidden_dependency,1,Run the customer query against Supabase,Run the customer query against Supabase,7,supabase_mcp_get_database_tables,0.62109375,unlabeled
+development,conversation_001,multi_turn,2,Email it to Tom,Email it to Tom,5,gmail_tools_reply_google_email,0.65234375,unlabeled
+development,conversation_001,multi_turn,2,Email it to Tom,Email it to Tom,6,gmail_tools_forward_google_email,0.64453125,unlabeled
+development,conversation_001,multi_turn,2,Email it to Tom,Email it to Tom,7,gmail_tools_get_google_emails,0.625,unlabeled
+development,conversation_001,multi_turn,2,Email it to Tom,Email it to Tom,8,outlook_mail_management_forward_email,0.62109375,unlabeled
+development,conversation_001,multi_turn,2,Email it to Tom,Email it to Tom,9,gmail_tools_delete_google_email,0.59765625,unlabeled
+development,conversation_001,multi_turn,2,Email it to Tom,Email it to Tom,10,outlook_mail_management_search_outlook_mail,0.58984375,unlabeled
+development,conversation_001,multi_turn,2,Email it to Tom,Email it to Tom,11,outlook_mail_management_find_email_address,0.57421875,supporting
+development,conversation_002,multi_turn,2,Create a Word report from them,Create a Word report from them,5,office_word_mcp_server_api_convert_to_pdf,0.6484375,unlabeled
+development,conversation_002,multi_turn,2,Create a Word report from them,Create a Word report from them,6,office_word_mcp_server_api_add_picture,0.63671875,unlabeled
+development,conversation_002,multi_turn,2,Create a Word report from them,Create a Word report from them,7,office_word_mcp_server_api_add_page_break,0.6328125,unlabeled
+development,conversation_002,multi_turn,2,Create a Word report from them,Create a Word report from them,8,office_word_mcp_server_api_get_document_xml,0.6328125,unlabeled
+development,conversation_002,multi_turn,2,Create a Word report from them,Create a Word report from them,9,office_word_mcp_server_api_get_document_outline,0.6328125,unlabeled
+development,conversation_002,multi_turn,2,Create a Word report from them,Create a Word report from them,10,office_word_mcp_server_api_merge_doucments,0.625,unlabeled
+development,conversation_002,multi_turn,2,Create a Word report from them,Create a Word report from them,11,office_word_mcp_server_api_copy_document,0.625,unlabeled
+development,conversation_002,multi_turn,2,Create a Word report from them,Create a Word report from them,12,office_word_mcp_server_api_get_document_text,0.6171875,unlabeled
+development,conversation_002,multi_turn,2,Create a Word report from them,Create a Word report from them,13,office_word_mcp_server_api_list_files,0.61328125,unlabeled
+development,conversation_002,multi_turn,2,Create a Word report from them,Create a Word report from them,14,office_word_mcp_server_api_get_document_info,0.60546875,unlabeled
+held_out,conversation_007,multi_turn,2,Mark that item as done,Mark that item as done,5,project_management_tools_update_work_item,0.5234375,unlabeled
+held_out,conversation_009,multi_turn,1,Create a new Word document,Create a new Word document,5,office_word_mcp_server_api_add_picture,0.64453125,unlabeled
+held_out,conversation_009,multi_turn,1,Create a new Word document,Create a new Word document,6,office_word_mcp_server_api_add_page_break,0.6328125,unlabeled
+held_out,conversation_010,multi_turn,1,Get the platform team,Get the platform team,5,project_management_tools_list_team_members,0.59375,unlabeled

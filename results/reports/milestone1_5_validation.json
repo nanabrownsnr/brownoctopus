@@ -1,0 +1,16 @@
+{
+  "mean_tools_definition": "Milestone 1 summary used the mean unique tool union per task. This is retained as conversation-level mean_unique_tools_per_task, not the main per-turn exposure metric.",
+  "main_tool_count_definition": "Milestone 2 uses the number of tool definitions exposed on each evaluated turn. Its aggregate is mean_exposed_tools_per_turn.",
+  "dense_conversation_001": {
+    "turn_1_exposed": 16,
+    "turn_2_exposed": 16,
+    "unique_union": 32
+  },
+  "octopus_conversation_001": {
+    "turn_1_exposed": 2,
+    "turn_2_exposed": 13,
+    "unique_union": 13
+  },
+  "universe_count": 122,
+  "canonical_universe_file": "data/indexes/default/tools.json"
+}

@@ -1,0 +1,88 @@
+task_id,category,turn,query,intent,rank,tool_id,score,label
+single_v004,single_capability,1,Find the raw contents of the quarterly plan file,Find the raw contents of the quarterly plan file,5,office_word_mcp_server_api_get_document_info,0.5859375,unlabeled
+single_v004,single_capability,1,Find the raw contents of the quarterly plan file,Find the raw contents of the quarterly plan file,6,office_word_mcp_server_api_copy_document,0.58203125,unlabeled
+family_v002,capability_family,1,Inspect a Word file before exporting it as a PDF,Inspect a Word file before exporting it as a PDF,5,office_word_mcp_server_api_get_document_text,0.75390625,supporting
+family_v009,capability_family,1,Move an Azure work item to a new owner,Move an Azure work item to a new owner,5,project_management_tools_delete_work_item,0.67578125,unlabeled
+family_v009,capability_family,1,Move an Azure work item to a new owner,Move an Azure work item to a new owner,6,project_management_tools_get_work_item,0.66796875,supporting
+family_v020,capability_family,1,Remove a project volume after checking its details,Remove a project volume after checking its details,5,railway_tools_volume_list,0.625,supporting
+family_v020,capability_family,1,Remove a project volume after checking its details,Remove a project volume after checking its details,6,railway_tools_volume_update,0.60546875,supporting
+compound_v003,compound,1,Create a Word memo and turn it into a PDF,Create a Word memo,5,office_word_mcp_server_api_add_table,0.6484375,unlabeled
+compound_v003,compound,1,Create a Word memo and turn it into a PDF,Create a Word memo,6,office_word_mcp_server_api_add_page_break,0.6328125,unlabeled
+compound_v005,compound,1,List SharePoint sites and create a note in the selected library,create a note in the selected library,5,office_word_mcp_server_api_add_picture,0.5703125,unlabeled
+compound_v009,compound,1,Find the latest support email and reply with an update,Find the latest support email,5,outlook_mail_management_reply_to_email,0.625,required
+compound_v009,compound,1,Find the latest support email and reply with an update,Find the latest support email,6,outlook_mail_management_search_outlook_mail,0.59375,required
+compound_v009,compound,1,Find the latest support email and reply with an update,Find the latest support email,7,gmail_tools_forward_google_email,0.58203125,unlabeled
+compound_v009,compound,1,Find the latest support email and reply with an update,Find the latest support email,8,gmail_tools_delete_google_email,0.57421875,unlabeled
+compound_v009,compound,1,Find the latest support email and reply with an update,Find the latest support email,9,outlook_mail_management_compose_email,0.56640625,unlabeled
+compound_v009,compound,1,Find the latest support email and reply with an update,Find the latest support email,10,outlook_mail_management_get_email_messages,0.5546875,supporting
+compound_v009,compound,1,Find the latest support email and reply with an update,Find the latest support email,11,outlook_mail_management_send_email,0.53125,unlabeled
+compound_v016,compound,1,Create a Railway project and deploy a service from a repository,Create a Railway project,5,railway_tools_service_list,0.734375,unlabeled
+compound_v016,compound,1,Create a Railway project and deploy a service from a repository,Create a Railway project,6,railway_tools_project_environments,0.703125,unlabeled
+compound_v019,compound,1,Search my files and update the selected file,Search my files,5,office_word_mcp_server_api_find_text_in_document,0.74609375,unlabeled
+compound_v019,compound,1,Search my files and update the selected file,Search my files,6,quest_studio_file_storage_get_files,0.73828125,supporting
+compound_v020,compound,1,Get the project team and assign its work item,Get the project team,5,project_management_tools_create_team,0.65625,unlabeled
+compound_v020,compound,1,Get the project team and assign its work item,assign its work item,5,project_management_tools_update_task_status,0.6015625,unlabeled
+compound_v020,compound,1,Get the project team and assign its work item,assign its work item,6,project_management_tools_list_work_items,0.6015625,unlabeled
+compound_v020,compound,1,Get the project team and assign its work item,assign its work item,7,project_management_tools_delete_work_item,0.59765625,unlabeled
+compound_v020,compound,1,Get the project team and assign its work item,assign its work item,8,project_management_tools_add_work_item_comment,0.578125,unlabeled
+dependency_v005,hidden_dependency,1,Add the chart to the existing Word report,Add the chart to the existing Word report,5,office_word_mcp_server_api_add_page_break,0.53515625,unlabeled
+dependency_v007,hidden_dependency,1,Open a pull request for the authentication fix,Open a pull request for the authentication fix,5,github_mcp_server_merge_pull_request,0.63671875,unlabeled
+conversation_v001,multi_turn,1,Review the open security pull requests,Review the open security pull requests,5,github_mcp_server_merge_pull_request,0.609375,unlabeled
+conversation_v001,multi_turn,1,Review the open security pull requests,Review the open security pull requests,6,github_mcp_server_list_commits,0.60546875,unlabeled
+conversation_v001,multi_turn,1,Review the open security pull requests,Review the open security pull requests,7,github_mcp_server_create_or_update_file,0.578125,unlabeled
+conversation_v001,multi_turn,1,Review the open security pull requests,Review the open security pull requests,8,github_mcp_server_list_branches,0.5703125,unlabeled
+conversation_v001,multi_turn,1,Review the open security pull requests,Review the open security pull requests,9,github_mcp_server_get_commit,0.5703125,unlabeled
+conversation_v001,multi_turn,1,Review the open security pull requests,Review the open security pull requests,10,github_mcp_server_search_repositories,0.5703125,unlabeled
+conversation_v002,multi_turn,1,Find the architecture document in my files,Find the architecture document in my files,5,office_word_mcp_server_api_get_document_text,0.55078125,unlabeled
+conversation_v002,multi_turn,1,Find the architecture document in my files,Find the architecture document in my files,6,quest_studio_file_storage_get_file_content,0.546875,unlabeled
+conversation_v002,multi_turn,1,Find the architecture document in my files,Find the architecture document in my files,7,quest_studio_file_storage_query_files,0.54296875,required
+conversation_v002,multi_turn,2,Read its contents,Read its contents,5,office_word_mcp_server_api_find_text_in_document,0.48046875,unlabeled
+conversation_v002,multi_turn,2,Read its contents,Read its contents,6,office_word_mcp_server_api_get_document_outline,0.478515625,unlabeled
+conversation_v002,multi_turn,2,Read its contents,Read its contents,7,office_word_mcp_server_api_get_document_info,0.466796875,unlabeled
+conversation_v002,multi_turn,2,Read its contents,Read its contents,8,office_word_mcp_server_api_get_document_xml,0.4609375,unlabeled
+conversation_v002,multi_turn,2,Read its contents,Read its contents,9,office_word_mcp_server_api_copy_document,0.447265625,unlabeled
+conversation_v002,multi_turn,2,Read its contents,Read its contents,10,office_word_mcp_server_api_merge_doucments,0.4375,unlabeled
+conversation_v002,multi_turn,2,Read its contents,Read its contents,11,quest_studio_file_storage_query_files,0.4375,unlabeled
+conversation_v002,multi_turn,2,Read its contents,Read its contents,12,office_word_mcp_server_api_search_replace,0.431640625,unlabeled
+conversation_v002,multi_turn,2,Read its contents,Read its contents,13,office_word_mcp_server_api_add_heading,0.423828125,unlabeled
+conversation_v004,multi_turn,1,Find the team's latest email,Find the team 's latest email,5,outlook_mail_management_search_outlook_mail,0.640625,required
+conversation_v004,multi_turn,1,Find the team's latest email,Find the team 's latest email,6,outlook_mail_management_find_email_address,0.6328125,unlabeled
+conversation_v004,multi_turn,1,Find the team's latest email,Find the team 's latest email,7,outlook_mail_management_get_email_messages,0.62109375,unlabeled
+conversation_v004,multi_turn,1,Find the team's latest email,Find the team 's latest email,8,gmail_tools_delete_google_email,0.61328125,unlabeled
+conversation_v004,multi_turn,1,Find the team's latest email,Find the team 's latest email,9,outlook_mail_management_compose_email,0.609375,unlabeled
+conversation_v004,multi_turn,1,Find the team's latest email,Find the team 's latest email,10,gmail_tools_forward_google_email,0.60546875,unlabeled
+conversation_v008,multi_turn,1,Open the current sprint,Open the current sprint,5,project_management_tools_export_sprint_to_sharepoint,0.625,unlabeled
+conversation_v008,multi_turn,1,Open the current sprint,Open the current sprint,6,project_management_tools_get_user_capacity,0.59375,unlabeled
+conversation_v008,multi_turn,1,Open the current sprint,Open the current sprint,7,project_management_tools_update_user_capacity,0.58203125,unlabeled
+conversation_v010,multi_turn,1,Look up the feature repository,Look up the feature repository,5,github_mcp_server_list_branches,0.55859375,unlabeled
+conversation_v010,multi_turn,1,Look up the feature repository,Look up the feature repository,6,github_mcp_server_list_commits,0.55078125,unlabeled
+conversation_v010,multi_turn,1,Look up the feature repository,Look up the feature repository,7,github_mcp_server_list_pull_requests,0.54296875,unlabeled
+conversation_v010,multi_turn,1,Look up the feature repository,Look up the feature repository,8,github_mcp_server_get_file_contents,0.54296875,unlabeled
+conversation_v010,multi_turn,1,Look up the feature repository,Look up the feature repository,9,github_mcp_server_get_me,0.5390625,unlabeled
+conversation_v010,multi_turn,1,Look up the feature repository,Look up the feature repository,10,github_mcp_server_create_or_update_file,0.53125,unlabeled
+conversation_v010,multi_turn,1,Look up the feature repository,Look up the feature repository,11,railway_tools_service_create_from_repo,0.5078125,unlabeled
+conversation_v010,multi_turn,1,Look up the feature repository,Look up the feature repository,12,github_mcp_server_create_pull_request,0.50390625,unlabeled
+conversation_v010,multi_turn,1,Look up the feature repository,Look up the feature repository,13,github_mcp_server_merge_pull_request,0.5,unlabeled
+conversation_v010,multi_turn,1,Look up the feature repository,Look up the feature repository,14,github_mcp_server_update_pull_request,0.4921875,unlabeled
+conversation_v010,multi_turn,1,Look up the feature repository,Look up the feature repository,15,github_mcp_server_create_branch,0.48828125,unlabeled
+conversation_v013,multi_turn,2,Remove the obsolete export,Remove the obsolete export,5,office_word_mcp_server_api_delete_document,0.466796875,unlabeled
+conversation_v013,multi_turn,2,Remove the obsolete export,Remove the obsolete export,6,quest_studio_file_storage_delete_file,0.4609375,required
+conversation_v013,multi_turn,2,Remove the obsolete export,Remove the obsolete export,7,office_word_mcp_server_api_delete_paragraph,0.453125,unlabeled
+conversation_v017,multi_turn,1,Find the sprint work items,Find the sprint work items,5,project_management_tools_get_work_item,0.70703125,unlabeled
+conversation_v017,multi_turn,1,Find the sprint work items,Find the sprint work items,6,project_management_tools_create_sprint,0.6953125,unlabeled
+conversation_v017,multi_turn,1,Find the sprint work items,Find the sprint work items,7,project_management_tools_create_work_item,0.6953125,unlabeled
+conversation_v017,multi_turn,1,Find the sprint work items,Find the sprint work items,8,project_management_tools_update_work_item,0.69140625,unlabeled
+conversation_v017,multi_turn,1,Find the sprint work items,Find the sprint work items,9,project_management_tools_delete_sprint,0.67578125,unlabeled
+conversation_v017,multi_turn,1,Find the sprint work items,Find the sprint work items,10,project_management_tools_get_user_capacity,0.66796875,unlabeled
+conversation_v017,multi_turn,1,Find the sprint work items,Find the sprint work items,11,project_management_tools_delete_work_item,0.65234375,unlabeled
+conversation_v017,multi_turn,1,Find the sprint work items,Find the sprint work items,12,project_management_tools_get_work_item_comments,0.6328125,unlabeled
+conversation_v017,multi_turn,1,Find the sprint work items,Find the sprint work items,13,project_management_tools_assign_work_item,0.62890625,unlabeled
+conversation_v017,multi_turn,1,Find the sprint work items,Find the sprint work items,14,project_management_tools_update_user_capacity,0.61328125,unlabeled
+conversation_v019,multi_turn,1,Search the repository history,Search the repository history,5,github_mcp_server_pull_request_read,0.6796875,unlabeled
+conversation_v019,multi_turn,1,Search the repository history,Search the repository history,6,github_mcp_server_list_branches,0.6640625,unlabeled
+conversation_v019,multi_turn,1,Search the repository history,Search the repository history,7,github_mcp_server_create_or_update_file,0.63671875,unlabeled
+conversation_v019,multi_turn,1,Search the repository history,Search the repository history,8,github_mcp_server_get_file_contents,0.63671875,unlabeled
+conversation_v020,multi_turn,1,Check the data table definition,Check the data table definition,5,supabase_mcp_select_database_table_data,0.474609375,unlabeled
+conversation_v020,multi_turn,1,Check the data table definition,Check the data table definition,6,supabase_mcp_check_database_health,0.462890625,unlabeled
+conversation_v020,multi_turn,1,Check the data table definition,Check the data table definition,7,supabase_mcp_insert_table_data,0.462890625,unlabeled
+conversation_v020,multi_turn,1,Check the data table definition,Check the data table definition,8,railway_tools_database_list_types,0.45703125,unlabeled

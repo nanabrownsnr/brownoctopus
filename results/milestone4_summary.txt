@@ -1,0 +1,86 @@
+Brown Octopus Milestone 4 Summary
+=================================
+
+Scope
+-----
+Selection-only evaluation after the frozen intent decomposition and Qwen dense
+ranking pipeline. Production Octopus was not modified.
+
+Frozen configuration
+--------------------
+Tool universe: 122 tools
+Embedding model: Qwen/Qwen3-Embedding-0.6B
+Tool representation: name + description
+Dataset: data/evals/octopus_capability_benchmark.json
+Dataset hash: 9106ee47a5377563cbeb34bd46423cd13852b367c9c924bfabe099e987e55735
+Tool-universe hash: b32fb327544ea91e40a33f2f420dc2204423fca1b5cb935341abb948e9b7baf2
+Git commit: 6dd17fa8a3fc27f3f0909581978b6dd45bb2b2d6
+
+Development and held-out protocol
+----------------------------------
+30 tasks were used for development: the first six tasks in each category.
+20 tasks were held out: the final four tasks in each category.
+The relative-threshold alpha was selected only on the development split.
+Selected alpha: 0.80.
+
+Held-out results
+----------------
+Method                  Required  Complete  Supporting  Mean tools/turn
+Fixed-K=1                0.896     0.875      0.375        1.33
+Fixed-K=2                0.958     0.958      0.604        2.46
+Fixed-K=4                1.000     1.000      0.792        4.71
+Fixed-K=8                1.000     1.000      0.833        9.33
+Fixed-K=16               1.000     1.000      0.917       18.50
+Bounded Max Gap          0.958     0.958      0.583        2.92
+Relative threshold .80   1.000     1.000      0.813        8.00
+Score-knee               1.000     1.000      0.917       15.08
+
+Context statistics
+------------------
+Bounded Max Gap exposed 2.92 tools/turn on average, with median 1, P90 5,
+P95 7, and maximum 7.
+
+Relative threshold .80 exposed 8.00 tools/turn on average, with median 7,
+P90 15, P95 16, and maximum 18.
+
+Score-knee exposed 15.08 tools/turn on average, with median 16, P90 20,
+P95 23, and maximum 27.
+
+Interpretation
+--------------
+No tested dynamic selector improved the recall/context frontier over Fixed-K=4.
+Bounded Max Gap is more context-efficient than Fixed-K=4, but loses required
+capability recall and complete-task rate. The relative threshold and score-knee
+selectors recover full required recall, but use substantially more context.
+
+The result does not justify changing production Octopus parameters or selection
+behavior. Fixed-K=4 remains the strongest practical comparison point in this
+experiment. Max Gap remains useful as a compact adaptive baseline, but it has
+not demonstrated an advantage over Fixed-K=4 at the required recall level.
+
+Notable failure
+---------------
+single_010 required railway_tools_service_list. It ranked second, while
+Bounded Max Gap selected only rank one. This is a selection failure, not a
+dense-ranking failure. Fixed-K=2 and the tested alternative selectors recovered
+the tool.
+
+Artifacts
+---------
+Raw results:
+results/raw/selection_20260919T195231_504359Z.json
+
+Reports:
+results/reports/selection_heldout_summary.csv
+results/reports/selection_category_summary.csv
+results/reports/selection_k_distribution.csv
+results/reports/selection_recall_context.csv
+results/reports/selection_failure_analysis.csv
+results/reports/selection_single_capability_analysis.csv
+
+Methodology:
+docs/milestone4_selection_methods.md
+
+Verification
+------------
+uv run pytest -q: 99 passed, 1 warning

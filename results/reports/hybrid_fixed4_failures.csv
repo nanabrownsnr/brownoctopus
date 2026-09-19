@@ -1,0 +1,6 @@
+split,task_id,category,query,detected_intent,required_tool,dense_rank,dense_score,fixed_k_cutoff,max_gap_cutoff,hybrid_cutoff,rank_bucket,hybrid_would_recover
+development,compound_001,compound,Find the latest Nvidia news and email a summary to Tom,email a summary to Tom,outlook_mail_management_send_email,5,0.65625,4,11,11,rank_5,True
+development,compound_004,compound,Check my leave balance and email my manager,email my manager,outlook_mail_management_send_email,6,0.60546875,4,5,5,rank_6,False
+development,compound_005,compound,List my files and send a file summary by email,send a file summary by email,outlook_mail_management_send_email,7,0.609375,4,16,16,rank_7,True
+development,dependency_001,hidden_dependency,Email Tom the sprint report,Email Tom the sprint report,outlook_mail_management_send_email,87,0.58984375,4,3,4,rank_gt_16,False
+development,conversation_006,multi_turn,Find the sprint report in my files,Find the sprint report in my files,quest_studio_file_storage_get_files,20,0.57421875,4,4,4,rank_gt_16,False

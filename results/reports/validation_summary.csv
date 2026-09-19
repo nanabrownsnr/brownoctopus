@@ -1,0 +1,5 @@
+split,method,category,task_count,turn_count,required_recall,complete_required_rate,supporting_recall,mean_exposed_tools_per_turn,median_exposed_tools_per_turn,p90_exposed_tools_per_turn,p95_exposed_tools_per_turn,max_exposed_tools_per_turn,mean_schema_tokens_per_turn,schema_token_reduction
+validation,bounded_max_gap,all,100,120,0.9,0.8833333333333333,0.575,3.808333333333333,2.0,8,11,15,823.55,0.9673401808375635
+validation,fixed_k_4,all,100,120,0.9375,0.925,0.6625,5.15,4.0,8,8,8,1110.675,0.9559535612309644
+validation,fixed_k_8,all,100,120,0.9791666666666666,0.975,0.7833333333333333,9.958333333333334,8.0,15,15,16,2114.758333333333,0.9161342666032148
+validation,min_4_plus_max_gap,all,100,120,0.9666666666666667,0.9583333333333334,0.7166666666666667,6.108333333333333,4.0,10,13,17,1312.8083333333334,0.9479374867808799

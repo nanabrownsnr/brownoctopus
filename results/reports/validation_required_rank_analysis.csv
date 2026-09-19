@@ -1,0 +1,141 @@
+task_id,category,turn,query,intent,required_tool,required_rank,required_score,max_gap_k,fixed4_recovers,hybrid_recovers,fixed8_recovers,max_gap_recovers
+single_v001,single_capability,1,Show every environment configured for my Railway workspace,Show every environment configured for my Railway workspace,railway_tools_project_environments,1,0.80859375,1,True,True,True,True
+single_v002,single_capability,1,Restart the payments service in its active environment,Restart the payments service in its active environment,railway_tools_service_restart,1,0.6796875,1,True,True,True,True
+single_v003,single_capability,1,How much disk space is my account using?,How much disk space is my account using,quest_studio_file_storage_get_storage_usage,1,0.76953125,1,True,True,True,True
+single_v004,single_capability,1,Find the raw contents of the quarterly plan file,Find the raw contents of the quarterly plan file,quest_studio_file_storage_get_file_content,4,0.5859375,6,True,True,True,True
+single_v005,single_capability,1,Look up repositories implementing event sourcing,Look up repositories,github_mcp_server_search_repositories,1,0.7578125,1,True,True,True,True
+single_v006,single_capability,1,Show the commits on the release branch,Show the commits on the release branch,github_mcp_server_list_commits,1,0.75,2,True,True,True,True
+single_v007,single_capability,1,Tell me who is on the platform team,Tell me who is on the platform team,project_management_tools_list_team_members,1,0.70703125,3,True,True,True,True
+single_v008,single_capability,1,Display the current Azure board for the mobile project,Display the current Azure board for the mobile project,project_management_tools_view_board,1,0.734375,1,True,True,True,True
+single_v009,single_capability,1,List the people in our organisation,List the people in our organisation,carrot_mcp_server_api_list_employees,1,0.80078125,1,True,True,True,True
+single_v010,single_capability,1,Show the HR summary for this month,Show the HR summary for this month,carrot_mcp_server_api_hr_dashboard_summary,1,0.7421875,2,True,True,True,True
+single_v011,single_capability,1,Search my inbox for messages about the renewal,Search my inbox for messages about the renewal,outlook_mail_management_search_outlook_mail,2,0.73828125,2,True,True,True,True
+single_v012,single_capability,1,Remove the selected Outlook message,Remove the selected Outlook message,outlook_mail_management_delete_email_message,1,0.69921875,1,True,True,True,True
+single_v013,single_capability,1,List the sites I can access in SharePoint,List the sites I can access in SharePoint,sharepoint_tools_get_sharepoint_sites,1,0.91015625,1,True,True,True,True
+single_v014,single_capability,1,Send a note through Gmail to the design group,Send a note through Gmail to the design group,gmail_tools_send_google_email,1,0.69921875,1,True,True,True,True
+single_v015,single_capability,1,Find the headings in the contract document,Find the headings in the contract document,office_word_mcp_server_api_get_document_outline,4,0.478515625,1,True,True,True,False
+single_v016,single_capability,1,Replace the old company name throughout the document,Replace the old company name throughout the document,office_word_mcp_server_api_search_replace,1,0.5859375,1,True,True,True,True
+single_v017,single_capability,1,Check whether the analytics database is reachable,Check whether the analytics database is reachable,supabase_mcp_check_database_health,1,0.69921875,1,True,True,True,True
+single_v018,single_capability,1,List the tables in the reporting project,List the tables in the reporting project,supabase_mcp_get_database_tables,1,0.7734375,1,True,True,True,True
+single_v019,single_capability,1,Create a persistent volume for the worker service,Create a persistent volume for the worker service,railway_tools_volume_create,1,0.78125,1,True,True,True,True
+single_v020,single_capability,1,Show the messages in my Gmail inbox,Show the messages in my Gmail inbox,gmail_tools_get_google_emails,3,0.7265625,1,True,True,True,False
+family_v001,capability_family,1,Draft a Word memo with a title and explanatory paragraphs,Draft a Word memo with a title explanatory paragraphs,office_word_mcp_server_api_create_word_document,4,0.65234375,2,True,True,True,False
+family_v002,capability_family,1,Inspect a Word file before exporting it as a PDF,Inspect a Word file before exporting it as a PDF,office_word_mcp_server_api_convert_to_pdf,1,0.77734375,5,True,True,True,True
+family_v003,capability_family,1,Open a pull request for the changes on my feature branch,Open a pull request for the changes on my feature branch,github_mcp_server_create_pull_request,1,0.78125,2,True,True,True,True
+family_v004,capability_family,1,Remove an obsolete GitHub branch and its files,Remove an obsolete GitHub branch its files,github_mcp_server_delete_file,1,0.65234375,1,True,True,True,True
+family_v005,capability_family,1,Prepare a new Railway service from a container image,Prepare a new Railway service from a container image,railway_tools_service_create_from_image,1,0.8046875,1,True,True,True,True
+family_v006,capability_family,1,Change the settings of an existing Railway service,Change the settings of an existing Railway service,railway_tools_service_update,1,0.70703125,1,True,True,True,True
+family_v007,capability_family,1,Review and update a leave application,update a leave application,carrot_mcp_server_api_update_leave_application,1,0.86328125,4,True,True,True,True
+family_v008,capability_family,1,Record project hours and show the resulting summary,Record project hours,carrot_mcp_server_api_log_hours_entry,1,0.7890625,2,True,True,True,True
+family_v009,capability_family,1,Move an Azure work item to a new owner,Move an Azure work item to a new owner,project_management_tools_assign_work_item,1,0.7578125,6,True,True,True,True
+family_v010,capability_family,1,Add a progress comment to an Azure work item,Add a progress comment to an Azure work item,project_management_tools_add_work_item_comment,1,0.80078125,2,True,True,True,True
+family_v011,capability_family,1,Create a team for the infrastructure project,Create a team for the infrastructure project,project_management_tools_create_team,1,0.78515625,1,True,True,True,True
+family_v012,capability_family,1,Copy a Word document into the archive collection,Copy a Word document into the archive collection,office_word_mcp_server_api_copy_document,1,0.7578125,1,True,True,True,True
+family_v013,capability_family,1,Make a table of findings in the report,Make a table of findings in the report,office_word_mcp_server_api_add_table,1,0.609375,1,True,True,True,True
+family_v014,capability_family,1,Forward the incident email to the on-call address,Forward the incident email to the on call address,outlook_mail_management_forward_email,1,0.66015625,2,True,True,True,True
+family_v015,capability_family,1,Reply to the customer message in Outlook,Reply to the customer message in Outlook,outlook_mail_management_reply_to_email,1,0.7890625,3,True,True,True,True
+family_v016,capability_family,1,Create a text note in the team SharePoint library,Create a text note in the team SharePoint library,sharepoint_tools_create_txt_file_in_sharepoint,1,0.76953125,1,True,True,True,True
+family_v017,capability_family,1,Read the schema before selecting rows from the database,Read the schema before selecting rows from the database,supabase_mcp_select_database_table_data,2,0.5625,1,True,True,True,False
+family_v018,capability_family,1,Update rows in the customer table,Update rows in the customer table,supabase_mcp_update_database_table_data,1,0.64453125,1,True,True,True,True
+family_v019,capability_family,1,Create a sprint and inspect its capacity,Create a sprint,project_management_tools_create_sprint,1,0.8046875,1,True,True,True,True
+family_v020,capability_family,1,Remove a project volume after checking its details,Remove a project volume after checking its details,railway_tools_volume_delete,1,0.67578125,6,True,True,True,True
+compound_v001,compound,1,Find repositories about graph databases and open the most promising one,Find repositories about graph databases,github_mcp_server_search_repositories,1,0.66015625,4,True,True,True,True
+compound_v001,compound,1,Find repositories about graph databases and open the most promising one,Find repositories about graph databases,github_mcp_server_get_file_contents,26,0.54296875,4,False,False,False,False
+compound_v002,compound,1,Check Railway environments and restart the staging service,Check Railway environments,railway_tools_project_environments,1,0.78515625,1,True,True,True,True
+compound_v002,compound,1,Check Railway environments and restart the staging service,restart the staging service,railway_tools_service_restart,1,0.671875,1,True,True,True,True
+compound_v003,compound,1,Create a Word memo and turn it into a PDF,Create a Word memo,office_word_mcp_server_api_create_word_document,2,0.671875,6,True,True,True,True
+compound_v003,compound,1,Create a Word memo and turn it into a PDF,turn it into a PDF,office_word_mcp_server_api_convert_to_pdf,1,0.71484375,1,True,True,True,True
+compound_v004,compound,1,Search Outlook for the invoice and forward it to finance,Search Outlook for the invoice,outlook_mail_management_search_outlook_mail,1,0.75390625,1,True,True,True,True
+compound_v004,compound,1,Search Outlook for the invoice and forward it to finance,forward it to finance,outlook_mail_management_forward_email,2,0.546875,1,True,True,True,False
+compound_v005,compound,1,List SharePoint sites and create a note in the selected library,List SharePoint sites,sharepoint_tools_get_sharepoint_sites,1,0.921875,1,True,True,True,True
+compound_v005,compound,1,List SharePoint sites and create a note in the selected library,List SharePoint sites,sharepoint_tools_create_txt_file_in_sharepoint,3,0.734375,1,True,True,True,True
+compound_v006,compound,1,Check database health and retrieve the schema for the orders table,Check database health,supabase_mcp_check_database_health,1,0.75390625,1,True,True,True,True
+compound_v006,compound,1,Check database health and retrieve the schema for the orders table,retrieve the schema for the orders table,supabase_mcp_get_table_schema,1,0.71484375,1,True,True,True,True
+compound_v007,compound,1,Create an Azure team and list its members,Create an Azure team,project_management_tools_create_team,1,0.85546875,1,True,True,True,True
+compound_v007,compound,1,Create an Azure team and list its members,list its members,project_management_tools_list_team_members,1,0.62890625,2,True,True,True,True
+compound_v008,compound,1,Log time against the migration project and review the hours summary,Log time against the migration project,carrot_mcp_server_api_log_hours_entry,1,0.6484375,1,True,True,True,True
+compound_v008,compound,1,Log time against the migration project and review the hours summary,review the hours summary,carrot_mcp_server_api_work_hours_summary,1,0.765625,3,True,True,True,True
+compound_v009,compound,1,Find the latest support email and reply with an update,Find the latest support email,outlook_mail_management_search_outlook_mail,6,0.59375,11,False,True,True,True
+compound_v009,compound,1,Find the latest support email and reply with an update,reply with an update,outlook_mail_management_reply_to_email,1,0.6484375,2,True,True,True,True
+compound_v010,compound,1,Create a GitHub branch and push the prepared files,Create a GitHub branch,github_mcp_server_create_branch,1,0.8671875,1,True,True,True,True
+compound_v010,compound,1,Create a GitHub branch and push the prepared files,push the prepared files,github_mcp_server_push_files,1,0.6015625,1,True,True,True,True
+compound_v011,compound,1,List Railway volumes and update the backup volume,update the backup volume,railway_tools_volume_list,4,0.51953125,1,True,True,True,False
+compound_v011,compound,1,List Railway volumes and update the backup volume,update the backup volume,railway_tools_volume_update,1,0.6953125,1,True,True,True,True
+compound_v012,compound,1,List Azure projects and open the board for one project,List Azure projects,project_management_tools_list_projects,1,0.875,1,True,True,True,True
+compound_v012,compound,1,List Azure projects and open the board for one project,open the board for one project,project_management_tools_view_board,2,0.61328125,4,True,True,True,True
+compound_v013,compound,1,Create a leave request and submit it for approval,Create a leave request,carrot_mcp_server_api_create_leave_application,1,0.80078125,4,True,True,True,True
+compound_v013,compound,1,Create a leave request and submit it for approval,submit it for approval,carrot_mcp_server_api_submit_leave_application,1,0.6640625,1,True,True,True,True
+compound_v014,compound,1,Read a report's text and replace its draft wording,Read a report 's text,office_word_mcp_server_api_get_document_text,2,0.55078125,3,True,True,True,True
+compound_v014,compound,1,Read a report's text and replace its draft wording,replace its draft wording,office_word_mcp_server_api_search_replace,1,0.58203125,3,True,True,True,True
+compound_v015,compound,1,Send a Gmail message and then inspect the inbox for the reply,Send a Gmail message,gmail_tools_send_google_email,1,0.796875,1,True,True,True,True
+compound_v015,compound,1,Send a Gmail message and then inspect the inbox for the reply,then inspect the inbox for the reply,gmail_tools_get_google_emails,5,0.54296875,2,False,False,True,False
+compound_v016,compound,1,Create a Railway project and deploy a service from a repository,Create a Railway project,railway_tools_project_create,1,0.81640625,6,True,True,True,True
+compound_v016,compound,1,Create a Railway project and deploy a service from a repository,deploy a service from a repository,railway_tools_service_create_from_repo,1,0.7734375,1,True,True,True,True
+compound_v017,compound,1,Find the sprint details and export its work to SharePoint,Find the sprint details,project_management_tools_get_sprint,1,0.8359375,4,True,True,True,True
+compound_v017,compound,1,Find the sprint details and export its work to SharePoint,export its work to SharePoint,project_management_tools_export_sprint_to_sharepoint,2,0.7578125,4,True,True,True,True
+compound_v018,compound,1,Query the customer data and update a matching row,Query the customer data,supabase_mcp_select_database_table_data,1,0.59375,1,True,True,True,True
+compound_v018,compound,1,Query the customer data and update a matching row,update a matching row,supabase_mcp_update_database_table_data,1,0.609375,1,True,True,True,True
+compound_v019,compound,1,Search my files and update the selected file,Search my files,quest_studio_file_storage_query_files,1,0.75390625,6,True,True,True,True
+compound_v019,compound,1,Search my files and update the selected file,update the selected file,quest_studio_file_storage_update_file,1,0.6328125,1,True,True,True,True
+compound_v020,compound,1,Get the project team and assign its work item,Get the project team,project_management_tools_get_team,2,0.734375,5,True,True,True,True
+compound_v020,compound,1,Get the project team and assign its work item,assign its work item,project_management_tools_assign_work_item,1,0.7265625,8,True,True,True,True
+dependency_v001,hidden_dependency,1,Send the deployment notes to the release coordinator,Send the deployment notes to the release coordinator,outlook_mail_management_send_email,65,0.3828125,4,False,False,False,False
+dependency_v002,hidden_dependency,1,Reply to the person who asked about the contract,Reply to the person who asked about the contract,outlook_mail_management_reply_to_email,2,0.51171875,1,True,True,True,False
+dependency_v003,hidden_dependency,1,Forward the security alert to the incident lead,Forward the security alert to the incident lead,outlook_mail_management_forward_email,2,0.4765625,2,True,True,True,True
+dependency_v004,hidden_dependency,1,Create the report document with the findings section,Create the report document with the findings section,office_word_mcp_server_api_create_word_document,7,0.435546875,1,False,False,True,False
+dependency_v005,hidden_dependency,1,Add the chart to the existing Word report,Add the chart to the existing Word report,office_word_mcp_server_api_add_picture,1,0.6015625,5,True,True,True,True
+dependency_v006,hidden_dependency,1,Turn the completed proposal into a PDF,Turn the completed proposal into a PDF,office_word_mcp_server_api_convert_to_pdf,1,0.6640625,1,True,True,True,True
+dependency_v007,hidden_dependency,1,Open a pull request for the authentication fix,Open a pull request for the authentication fix,github_mcp_server_create_pull_request,1,0.69921875,5,True,True,True,True
+dependency_v008,hidden_dependency,1,Update the configuration file in the selected repository,Update the configuration file in the selected repository,github_mcp_server_create_or_update_file,1,0.60546875,1,True,True,True,True
+dependency_v009,hidden_dependency,1,Deploy the service from the team's repository,Deploy the service from the team 's repository,railway_tools_service_create_from_repo,1,0.7578125,1,True,True,True,True
+dependency_v010,hidden_dependency,1,Restart the service after checking its configuration,Restart the service after checking its configuration,railway_tools_service_restart,1,0.64453125,2,True,True,True,True
+dependency_v011,hidden_dependency,1,Submit the leave request I just prepared,Submit the leave request I just prepared,carrot_mcp_server_api_submit_leave_application,1,0.76953125,4,True,True,True,True
+dependency_v012,hidden_dependency,1,Update the employee record for the new role,Update the employee record for the new role,carrot_mcp_server_api_update_employee,1,0.64453125,1,True,True,True,True
+dependency_v013,hidden_dependency,1,Assign the bug to its new owner,Assign the bug to its new owner,project_management_tools_assign_work_item,1,0.55859375,1,True,True,True,True
+dependency_v014,hidden_dependency,1,Mark the migration ticket as finished,Mark the migration ticket as finished,project_management_tools_update_task_status,1,0.50390625,1,True,True,True,True
+dependency_v015,hidden_dependency,1,Create the note in the department's SharePoint library,Create the note in the department 's SharePoint library,sharepoint_tools_create_txt_file_in_sharepoint,1,0.62109375,1,True,True,True,True
+dependency_v016,hidden_dependency,1,Run the revenue query in the reporting database,Run the revenue query in the reporting database,supabase_mcp_select_database_table_data,2,0.54296875,2,True,True,True,True
+dependency_v017,hidden_dependency,1,Update the customer row after checking its table definition,Update the customer row after checking its table definition,supabase_mcp_update_database_table_data,1,0.6015625,1,True,True,True,True
+dependency_v018,hidden_dependency,1,Put the revised attachment into the file store,Put the revised attachment into the file store,quest_studio_file_storage_update_file,1,0.60546875,1,True,True,True,True
+dependency_v019,hidden_dependency,1,Delete the obsolete document from storage,Delete the obsolete document from storage,quest_studio_file_storage_delete_file,2,0.61328125,2,True,True,True,True
+dependency_v020,hidden_dependency,1,Add a volume for the newly created database service,Add a volume for the newly created database service,railway_tools_volume_create,1,0.76953125,1,True,True,True,True
+conversation_v001,multi_turn,1,Review the open security pull requests,Review the open security pull requests,github_mcp_server_list_pull_requests,1,0.71875,10,True,True,True,True
+conversation_v001,multi_turn,2,Merge the approved one,Merge the approved one,github_mcp_server_merge_pull_request,2,0.5703125,2,True,True,True,True
+conversation_v002,multi_turn,1,Find the architecture document in my files,Find the architecture document in my files,quest_studio_file_storage_query_files,7,0.54296875,7,False,True,True,True
+conversation_v002,multi_turn,2,Read its contents,Read its contents,quest_studio_file_storage_get_file_content,2,0.51171875,13,True,True,True,True
+conversation_v003,multi_turn,1,List the current Railway projects,List the current Railway projects,railway_tools_project_list,1,0.9453125,4,True,True,True,True
+conversation_v003,multi_turn,2,Show the services in the selected project,Show the services in the selected project,railway_tools_service_list,2,0.7265625,1,True,True,True,True
+conversation_v004,multi_turn,1,Find the team's latest email,Find the team 's latest email,outlook_mail_management_search_outlook_mail,5,0.640625,10,False,True,True,True
+conversation_v004,multi_turn,2,Forward it to the customer contact,Forward it to the customer contact,outlook_mail_management_forward_email,2,0.6015625,2,True,True,True,True
+conversation_v005,multi_turn,1,Open the Word template list,Open the Word template list,office_word_mcp_server_api_list_files,1,0.6640625,1,True,True,True,True
+conversation_v005,multi_turn,2,Copy the chosen template,Copy the chosen template,office_word_mcp_server_api_copy_document,1,0.53125,1,True,True,True,True
+conversation_v006,multi_turn,1,Check the orders database connection,Check the orders database connection,supabase_mcp_check_database_health,1,0.68359375,1,True,True,True,True
+conversation_v006,multi_turn,2,Show the schema for its invoices table,Show the schema for its invoices table,supabase_mcp_get_table_schema,1,0.7265625,2,True,True,True,True
+conversation_v007,multi_turn,1,List teams in the product project,List teams in the product project,project_management_tools_list_teams,1,0.73046875,2,True,True,True,True
+conversation_v007,multi_turn,2,Show the members of the release team,Show the members of the release team,project_management_tools_list_team_members,1,0.69921875,1,True,True,True,True
+conversation_v008,multi_turn,1,Open the current sprint,Open the current sprint,project_management_tools_get_sprint,2,0.67578125,7,True,True,True,True
+conversation_v008,multi_turn,2,Show its capacity summary,Show its capacity summary,project_management_tools_get_user_capacity,2,0.6015625,1,True,True,True,True
+conversation_v009,multi_turn,1,Create the draft Word report,Create the draft Word report,office_word_mcp_server_api_create_word_document,1,0.67578125,1,True,True,True,True
+conversation_v009,multi_turn,2,Add a summary table to it,Add a summary table to it,office_word_mcp_server_api_add_table,1,0.56640625,1,True,True,True,True
+conversation_v010,multi_turn,1,Look up the feature repository,Look up the feature repository,github_mcp_server_search_repositories,1,0.609375,15,True,True,True,True
+conversation_v010,multi_turn,2,Show the latest commit,Show the latest commit,github_mcp_server_get_commit,1,0.7734375,2,True,True,True,True
+conversation_v011,multi_turn,1,List available leave applications,List available leave applications,carrot_mcp_server_api_list_leave_application,1,0.87890625,4,True,True,True,True
+conversation_v011,multi_turn,2,Submit the selected request,Submit the selected request,carrot_mcp_server_api_submit_leave_application,1,0.44921875,4,True,True,True,True
+conversation_v012,multi_turn,1,Find the employee record,Find the employee record,carrot_mcp_server_api_get_employee,1,0.72265625,2,True,True,True,True
+conversation_v012,multi_turn,2,Update the department field,Update the department field,carrot_mcp_server_api_update_employee,1,0.5390625,2,True,True,True,True
+conversation_v013,multi_turn,1,List the files in storage,List the files in storage,quest_studio_file_storage_get_files,1,0.6953125,1,True,True,True,True
+conversation_v013,multi_turn,2,Remove the obsolete export,Remove the obsolete export,quest_studio_file_storage_delete_file,6,0.4609375,7,False,True,True,True
+conversation_v014,multi_turn,1,Check the worker service details,Check the worker service details,railway_tools_service_info,1,0.65625,3,True,True,True,True
+conversation_v014,multi_turn,2,Change its resource configuration,Change its resource configuration,railway_tools_service_update,1,0.515625,1,True,True,True,True
+conversation_v015,multi_turn,1,Find the design message,Find the design message,gmail_tools_get_google_emails,20,0.451171875,1,False,False,False,False
+conversation_v015,multi_turn,2,Reply with the review outcome,Reply with the review outcome,gmail_tools_reply_google_email,1,0.58984375,2,True,True,True,True
+conversation_v016,multi_turn,1,List the SharePoint documents,List the SharePoint documents,sharepoint_tools_get_sharepoint_documents,1,0.91015625,1,True,True,True,True
+conversation_v016,multi_turn,2,Create a text note beside them,Create a text note beside them,sharepoint_tools_create_txt_file_in_sharepoint,3,0.515625,2,True,True,True,False
+conversation_v017,multi_turn,1,Find the sprint work items,Find the sprint work items,project_management_tools_list_work_items,3,0.73828125,14,True,True,True,True
+conversation_v017,multi_turn,2,Add a comment to the selected item,Add a comment to the selected item,project_management_tools_add_work_item_comment,1,0.6484375,1,True,True,True,True
+conversation_v018,multi_turn,1,Create a new project volume,Create a new project volume,railway_tools_volume_create,1,0.67578125,1,True,True,True,True
+conversation_v018,multi_turn,2,Show its current properties,Show its current properties,railway_tools_volume_list,18,0.439453125,2,True,True,True,False
+conversation_v019,multi_turn,1,Search the repository history,Search the repository history,github_mcp_server_list_commits,1,0.72265625,8,True,True,True,True
+conversation_v019,multi_turn,2,Read the commit that introduced the change,Read the commit that introduced the change,github_mcp_server_get_commit,1,0.64453125,2,True,True,True,True
+conversation_v020,multi_turn,1,Check the data table definition,Check the data table definition,supabase_mcp_get_table_schema,1,0.5625,8,True,True,True,True
+conversation_v020,multi_turn,2,Select the matching customer rows,Select the matching customer rows,supabase_mcp_select_database_table_data,1,0.5390625,1,True,True,True,True

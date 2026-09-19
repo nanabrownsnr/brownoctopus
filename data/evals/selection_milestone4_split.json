@@ -1,0 +1,20 @@
+{
+  "split_version": "selection_milestone4_stratified_v1",
+  "dataset": "data/evals/octopus_capability_benchmark.json",
+  "development_rule": "First six tasks per category in frozen dataset order",
+  "held_out_rule": "Final four tasks per category in frozen dataset order",
+  "development_task_ids": [
+    "single_001", "single_002", "single_003", "single_004", "single_005", "single_006",
+    "family_001", "family_002", "family_003", "family_004", "family_005", "family_006",
+    "compound_001", "compound_002", "compound_003", "compound_004", "compound_005", "compound_006",
+    "dependency_001", "dependency_002", "dependency_003", "dependency_004", "dependency_005", "dependency_006",
+    "conversation_001", "conversation_002", "conversation_003", "conversation_004", "conversation_005", "conversation_006"
+  ],
+  "held_out_task_ids": [
+    "single_007", "single_008", "single_009", "single_010",
+    "family_007", "family_008", "family_009", "family_010",
+    "compound_007", "compound_008", "compound_009", "compound_010",
+    "dependency_007", "dependency_008", "dependency_009", "dependency_010",
+    "conversation_007", "conversation_008", "conversation_009", "conversation_010"
+  ]
+}

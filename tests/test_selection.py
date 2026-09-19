@@ -1,4 +1,4 @@
-from octopus.selection import select_bounded_max_gap
+from octopus.selection import select_bounded_max_gap, select_min4_bounded_max_gap
 
 
 def test_selects_tools_before_largest_gap():
@@ -121,3 +121,34 @@ def test_prefers_stronger_later_gap_over_earlier_gap():
         "create_leave",
         "submit_leave",
     ]
+
+
+def _ranking_with_gap_after(cutoff: int, count: int = 17):
+    return [
+        {
+            "name": f"tool_{index}",
+            "score": (0.90 - index * 0.001) if index < cutoff else (0.50 - index * 0.001),
+        }
+        for index in range(count)
+    ]
+
+
+def test_v3_floor_turns_max_gap_k_1_through_4_into_four():
+    for max_gap_k in (1, 2, 3, 4):
+        selected = select_min4_bounded_max_gap(_ranking_with_gap_after(max_gap_k))
+        assert len(selected) == 4
+
+
+def test_v3_preserves_max_gap_expansions_above_four():
+    for max_gap_k in (5, 7, 16):
+        selected = select_min4_bounded_max_gap(_ranking_with_gap_after(max_gap_k))
+        assert len(selected) == max_gap_k
+
+
+def test_v3_returns_available_tools_when_fewer_than_four_exist():
+    ranked = _ranking_with_gap_after(1, count=3)
+    assert len(select_min4_bounded_max_gap(ranked)) == 3
+
+
+def test_v3_empty_ranking_returns_empty():
+    assert select_min4_bounded_max_gap([]) == []

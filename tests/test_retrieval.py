@@ -338,6 +338,7 @@ def test_retrieval_uses_bounded_max_gap(
         "tool_1",
         "tool_2",
         "tool_3",
+        "tool_4",
     ]
 
 
@@ -385,8 +386,10 @@ def test_retrieval_selects_per_intent_then_merges(
     assert [tool["name"] for tool in selected] == [
         "github_search",
         "web_search",
+        "railway_info",
         "send_email",
         "find_email",
+        "search_mail",
     ]
 
 
@@ -432,5 +435,7 @@ def test_retrieval_deduplicates_tools_across_intents(
     assert [tool["name"] for tool in selected] == [
         "web_search",
         "github_search",
+        "unrelated_1",
         "company_search",
+        "unrelated_2",
     ]

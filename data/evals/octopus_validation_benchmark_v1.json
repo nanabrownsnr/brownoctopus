@@ -1,0 +1,2387 @@
+{
+  "dataset_version": "octopus_capability_validation_v1",
+  "description": "Independently authored validation benchmark; labels frozen before retrieval evaluation.",
+  "tool_universe": "data/indexes/default/tools.json",
+  "authoring_protocol": "Queries and labels authored from canonical tool descriptions without inspecting validation rankings or selector outputs.",
+  "review_status": "manually authored validation set",
+  "tasks": [
+    {
+      "id": "single_v001",
+      "category": "single_capability",
+      "query": "Show every environment configured for my Railway workspace",
+      "required_tools": [
+        "railway_tools_project_environments"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Show every environment configured for my Railway workspace",
+          "required_tools": [
+            "railway_tools_project_environments"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v002",
+      "category": "single_capability",
+      "query": "Restart the payments service in its active environment",
+      "required_tools": [
+        "railway_tools_service_restart"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Restart the payments service in its active environment",
+          "required_tools": [
+            "railway_tools_service_restart"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v003",
+      "category": "single_capability",
+      "query": "How much disk space is my account using?",
+      "required_tools": [
+        "quest_studio_file_storage_get_storage_usage"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "How much disk space is my account using?",
+          "required_tools": [
+            "quest_studio_file_storage_get_storage_usage"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v004",
+      "category": "single_capability",
+      "query": "Find the raw contents of the quarterly plan file",
+      "required_tools": [
+        "quest_studio_file_storage_get_file_content"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Find the raw contents of the quarterly plan file",
+          "required_tools": [
+            "quest_studio_file_storage_get_file_content"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v005",
+      "category": "single_capability",
+      "query": "Look up repositories implementing event sourcing",
+      "required_tools": [
+        "github_mcp_server_search_repositories"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Look up repositories implementing event sourcing",
+          "required_tools": [
+            "github_mcp_server_search_repositories"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v006",
+      "category": "single_capability",
+      "query": "Show the commits on the release branch",
+      "required_tools": [
+        "github_mcp_server_list_commits"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Show the commits on the release branch",
+          "required_tools": [
+            "github_mcp_server_list_commits"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v007",
+      "category": "single_capability",
+      "query": "Tell me who is on the platform team",
+      "required_tools": [
+        "project_management_tools_list_team_members"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Tell me who is on the platform team",
+          "required_tools": [
+            "project_management_tools_list_team_members"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v008",
+      "category": "single_capability",
+      "query": "Display the current Azure board for the mobile project",
+      "required_tools": [
+        "project_management_tools_view_board"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Display the current Azure board for the mobile project",
+          "required_tools": [
+            "project_management_tools_view_board"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v009",
+      "category": "single_capability",
+      "query": "List the people in our organisation",
+      "required_tools": [
+        "carrot_mcp_server_api_list_employees"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "List the people in our organisation",
+          "required_tools": [
+            "carrot_mcp_server_api_list_employees"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v010",
+      "category": "single_capability",
+      "query": "Show the HR summary for this month",
+      "required_tools": [
+        "carrot_mcp_server_api_hr_dashboard_summary"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Show the HR summary for this month",
+          "required_tools": [
+            "carrot_mcp_server_api_hr_dashboard_summary"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v011",
+      "category": "single_capability",
+      "query": "Search my inbox for messages about the renewal",
+      "required_tools": [
+        "outlook_mail_management_search_outlook_mail"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Search my inbox for messages about the renewal",
+          "required_tools": [
+            "outlook_mail_management_search_outlook_mail"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v012",
+      "category": "single_capability",
+      "query": "Remove the selected Outlook message",
+      "required_tools": [
+        "outlook_mail_management_delete_email_message"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Remove the selected Outlook message",
+          "required_tools": [
+            "outlook_mail_management_delete_email_message"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v013",
+      "category": "single_capability",
+      "query": "List the sites I can access in SharePoint",
+      "required_tools": [
+        "sharepoint_tools_get_sharepoint_sites"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "List the sites I can access in SharePoint",
+          "required_tools": [
+            "sharepoint_tools_get_sharepoint_sites"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v014",
+      "category": "single_capability",
+      "query": "Send a note through Gmail to the design group",
+      "required_tools": [
+        "gmail_tools_send_google_email"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Send a note through Gmail to the design group",
+          "required_tools": [
+            "gmail_tools_send_google_email"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v015",
+      "category": "single_capability",
+      "query": "Find the headings in the contract document",
+      "required_tools": [
+        "office_word_mcp_server_api_get_document_outline"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Find the headings in the contract document",
+          "required_tools": [
+            "office_word_mcp_server_api_get_document_outline"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v016",
+      "category": "single_capability",
+      "query": "Replace the old company name throughout the document",
+      "required_tools": [
+        "office_word_mcp_server_api_search_replace"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Replace the old company name throughout the document",
+          "required_tools": [
+            "office_word_mcp_server_api_search_replace"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v017",
+      "category": "single_capability",
+      "query": "Check whether the analytics database is reachable",
+      "required_tools": [
+        "supabase_mcp_check_database_health"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Check whether the analytics database is reachable",
+          "required_tools": [
+            "supabase_mcp_check_database_health"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v018",
+      "category": "single_capability",
+      "query": "List the tables in the reporting project",
+      "required_tools": [
+        "supabase_mcp_get_database_tables"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "List the tables in the reporting project",
+          "required_tools": [
+            "supabase_mcp_get_database_tables"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v019",
+      "category": "single_capability",
+      "query": "Create a persistent volume for the worker service",
+      "required_tools": [
+        "railway_tools_volume_create"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Create a persistent volume for the worker service",
+          "required_tools": [
+            "railway_tools_volume_create"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "single_v020",
+      "category": "single_capability",
+      "query": "Show the messages in my Gmail inbox",
+      "required_tools": [
+        "gmail_tools_get_google_emails"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Show the messages in my Gmail inbox",
+          "required_tools": [
+            "gmail_tools_get_google_emails"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "family_v001",
+      "category": "capability_family",
+      "query": "Draft a Word memo with a title and explanatory paragraphs",
+      "required_tools": [
+        "office_word_mcp_server_api_create_word_document"
+      ],
+      "supporting_tools": [
+        "office_word_mcp_server_api_add_heading",
+        "office_word_mcp_server_api_add_paragraph"
+      ],
+      "turns": [
+        {
+          "query": "Draft a Word memo with a title and explanatory paragraphs",
+          "required_tools": [
+            "office_word_mcp_server_api_create_word_document"
+          ],
+          "supporting_tools": [
+            "office_word_mcp_server_api_add_heading",
+            "office_word_mcp_server_api_add_paragraph"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v002",
+      "category": "capability_family",
+      "query": "Inspect a Word file before exporting it as a PDF",
+      "required_tools": [
+        "office_word_mcp_server_api_convert_to_pdf"
+      ],
+      "supporting_tools": [
+        "office_word_mcp_server_api_get_document_info",
+        "office_word_mcp_server_api_get_document_text"
+      ],
+      "turns": [
+        {
+          "query": "Inspect a Word file before exporting it as a PDF",
+          "required_tools": [
+            "office_word_mcp_server_api_convert_to_pdf"
+          ],
+          "supporting_tools": [
+            "office_word_mcp_server_api_get_document_info",
+            "office_word_mcp_server_api_get_document_text"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v003",
+      "category": "capability_family",
+      "query": "Open a pull request for the changes on my feature branch",
+      "required_tools": [
+        "github_mcp_server_create_pull_request"
+      ],
+      "supporting_tools": [
+        "github_mcp_server_list_branches",
+        "github_mcp_server_get_file_contents"
+      ],
+      "turns": [
+        {
+          "query": "Open a pull request for the changes on my feature branch",
+          "required_tools": [
+            "github_mcp_server_create_pull_request"
+          ],
+          "supporting_tools": [
+            "github_mcp_server_list_branches",
+            "github_mcp_server_get_file_contents"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v004",
+      "category": "capability_family",
+      "query": "Remove an obsolete GitHub branch and its files",
+      "required_tools": [
+        "github_mcp_server_delete_file"
+      ],
+      "supporting_tools": [
+        "github_mcp_server_list_branches",
+        "github_mcp_server_get_me"
+      ],
+      "turns": [
+        {
+          "query": "Remove an obsolete GitHub branch and its files",
+          "required_tools": [
+            "github_mcp_server_delete_file"
+          ],
+          "supporting_tools": [
+            "github_mcp_server_list_branches",
+            "github_mcp_server_get_me"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v005",
+      "category": "capability_family",
+      "query": "Prepare a new Railway service from a container image",
+      "required_tools": [
+        "railway_tools_service_create_from_image"
+      ],
+      "supporting_tools": [
+        "railway_tools_project_list",
+        "railway_tools_database_list_types"
+      ],
+      "turns": [
+        {
+          "query": "Prepare a new Railway service from a container image",
+          "required_tools": [
+            "railway_tools_service_create_from_image"
+          ],
+          "supporting_tools": [
+            "railway_tools_project_list",
+            "railway_tools_database_list_types"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v006",
+      "category": "capability_family",
+      "query": "Change the settings of an existing Railway service",
+      "required_tools": [
+        "railway_tools_service_update"
+      ],
+      "supporting_tools": [
+        "railway_tools_service_info",
+        "railway_tools_service_list"
+      ],
+      "turns": [
+        {
+          "query": "Change the settings of an existing Railway service",
+          "required_tools": [
+            "railway_tools_service_update"
+          ],
+          "supporting_tools": [
+            "railway_tools_service_info",
+            "railway_tools_service_list"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v007",
+      "category": "capability_family",
+      "query": "Review and update a leave application",
+      "required_tools": [
+        "carrot_mcp_server_api_update_leave_application"
+      ],
+      "supporting_tools": [
+        "carrot_mcp_server_api_list_leave_application",
+        "carrot_mcp_server_api_get_employee"
+      ],
+      "turns": [
+        {
+          "query": "Review and update a leave application",
+          "required_tools": [
+            "carrot_mcp_server_api_update_leave_application"
+          ],
+          "supporting_tools": [
+            "carrot_mcp_server_api_list_leave_application",
+            "carrot_mcp_server_api_get_employee"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v008",
+      "category": "capability_family",
+      "query": "Record project hours and show the resulting summary",
+      "required_tools": [
+        "carrot_mcp_server_api_log_hours_entry"
+      ],
+      "supporting_tools": [
+        "carrot_mcp_server_api_work_hours_summary"
+      ],
+      "turns": [
+        {
+          "query": "Record project hours and show the resulting summary",
+          "required_tools": [
+            "carrot_mcp_server_api_log_hours_entry"
+          ],
+          "supporting_tools": [
+            "carrot_mcp_server_api_work_hours_summary"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v009",
+      "category": "capability_family",
+      "query": "Move an Azure work item to a new owner",
+      "required_tools": [
+        "project_management_tools_assign_work_item"
+      ],
+      "supporting_tools": [
+        "project_management_tools_get_work_item",
+        "project_management_tools_list_users"
+      ],
+      "turns": [
+        {
+          "query": "Move an Azure work item to a new owner",
+          "required_tools": [
+            "project_management_tools_assign_work_item"
+          ],
+          "supporting_tools": [
+            "project_management_tools_get_work_item",
+            "project_management_tools_list_users"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v010",
+      "category": "capability_family",
+      "query": "Add a progress comment to an Azure work item",
+      "required_tools": [
+        "project_management_tools_add_work_item_comment"
+      ],
+      "supporting_tools": [
+        "project_management_tools_get_work_item_comments",
+        "project_management_tools_get_work_item"
+      ],
+      "turns": [
+        {
+          "query": "Add a progress comment to an Azure work item",
+          "required_tools": [
+            "project_management_tools_add_work_item_comment"
+          ],
+          "supporting_tools": [
+            "project_management_tools_get_work_item_comments",
+            "project_management_tools_get_work_item"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v011",
+      "category": "capability_family",
+      "query": "Create a team for the infrastructure project",
+      "required_tools": [
+        "project_management_tools_create_team"
+      ],
+      "supporting_tools": [
+        "project_management_tools_list_projects",
+        "project_management_tools_list_teams"
+      ],
+      "turns": [
+        {
+          "query": "Create a team for the infrastructure project",
+          "required_tools": [
+            "project_management_tools_create_team"
+          ],
+          "supporting_tools": [
+            "project_management_tools_list_projects",
+            "project_management_tools_list_teams"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v012",
+      "category": "capability_family",
+      "query": "Copy a Word document into the archive collection",
+      "required_tools": [
+        "office_word_mcp_server_api_copy_document"
+      ],
+      "supporting_tools": [
+        "office_word_mcp_server_api_list_files",
+        "office_word_mcp_server_api_get_document_info"
+      ],
+      "turns": [
+        {
+          "query": "Copy a Word document into the archive collection",
+          "required_tools": [
+            "office_word_mcp_server_api_copy_document"
+          ],
+          "supporting_tools": [
+            "office_word_mcp_server_api_list_files",
+            "office_word_mcp_server_api_get_document_info"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v013",
+      "category": "capability_family",
+      "query": "Make a table of findings in the report",
+      "required_tools": [
+        "office_word_mcp_server_api_add_table"
+      ],
+      "supporting_tools": [
+        "office_word_mcp_server_api_get_document_info",
+        "office_word_mcp_server_api_add_paragraph"
+      ],
+      "turns": [
+        {
+          "query": "Make a table of findings in the report",
+          "required_tools": [
+            "office_word_mcp_server_api_add_table"
+          ],
+          "supporting_tools": [
+            "office_word_mcp_server_api_get_document_info",
+            "office_word_mcp_server_api_add_paragraph"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v014",
+      "category": "capability_family",
+      "query": "Forward the incident email to the on-call address",
+      "required_tools": [
+        "outlook_mail_management_forward_email"
+      ],
+      "supporting_tools": [
+        "outlook_mail_management_get_email_messages",
+        "outlook_mail_management_find_email_address"
+      ],
+      "turns": [
+        {
+          "query": "Forward the incident email to the on-call address",
+          "required_tools": [
+            "outlook_mail_management_forward_email"
+          ],
+          "supporting_tools": [
+            "outlook_mail_management_get_email_messages",
+            "outlook_mail_management_find_email_address"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v015",
+      "category": "capability_family",
+      "query": "Reply to the customer message in Outlook",
+      "required_tools": [
+        "outlook_mail_management_reply_to_email"
+      ],
+      "supporting_tools": [
+        "outlook_mail_management_search_outlook_mail",
+        "outlook_mail_management_get_email_messages"
+      ],
+      "turns": [
+        {
+          "query": "Reply to the customer message in Outlook",
+          "required_tools": [
+            "outlook_mail_management_reply_to_email"
+          ],
+          "supporting_tools": [
+            "outlook_mail_management_search_outlook_mail",
+            "outlook_mail_management_get_email_messages"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v016",
+      "category": "capability_family",
+      "query": "Create a text note in the team SharePoint library",
+      "required_tools": [
+        "sharepoint_tools_create_txt_file_in_sharepoint"
+      ],
+      "supporting_tools": [
+        "sharepoint_tools_get_sharepoint_sites",
+        "sharepoint_tools_get_sharepoint_documents"
+      ],
+      "turns": [
+        {
+          "query": "Create a text note in the team SharePoint library",
+          "required_tools": [
+            "sharepoint_tools_create_txt_file_in_sharepoint"
+          ],
+          "supporting_tools": [
+            "sharepoint_tools_get_sharepoint_sites",
+            "sharepoint_tools_get_sharepoint_documents"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v017",
+      "category": "capability_family",
+      "query": "Read the schema before selecting rows from the database",
+      "required_tools": [
+        "supabase_mcp_select_database_table_data"
+      ],
+      "supporting_tools": [
+        "supabase_mcp_get_table_schema",
+        "supabase_mcp_get_database_tables"
+      ],
+      "turns": [
+        {
+          "query": "Read the schema before selecting rows from the database",
+          "required_tools": [
+            "supabase_mcp_select_database_table_data"
+          ],
+          "supporting_tools": [
+            "supabase_mcp_get_table_schema",
+            "supabase_mcp_get_database_tables"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v018",
+      "category": "capability_family",
+      "query": "Update rows in the customer table",
+      "required_tools": [
+        "supabase_mcp_update_database_table_data"
+      ],
+      "supporting_tools": [
+        "supabase_mcp_get_table_schema",
+        "supabase_mcp_check_database_health"
+      ],
+      "turns": [
+        {
+          "query": "Update rows in the customer table",
+          "required_tools": [
+            "supabase_mcp_update_database_table_data"
+          ],
+          "supporting_tools": [
+            "supabase_mcp_get_table_schema",
+            "supabase_mcp_check_database_health"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v019",
+      "category": "capability_family",
+      "query": "Create a sprint and inspect its capacity",
+      "required_tools": [
+        "project_management_tools_create_sprint"
+      ],
+      "supporting_tools": [
+        "project_management_tools_get_user_capacity",
+        "project_management_tools_list_sprints"
+      ],
+      "turns": [
+        {
+          "query": "Create a sprint and inspect its capacity",
+          "required_tools": [
+            "project_management_tools_create_sprint"
+          ],
+          "supporting_tools": [
+            "project_management_tools_get_user_capacity",
+            "project_management_tools_list_sprints"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family_v020",
+      "category": "capability_family",
+      "query": "Remove a project volume after checking its details",
+      "required_tools": [
+        "railway_tools_volume_delete"
+      ],
+      "supporting_tools": [
+        "railway_tools_volume_list",
+        "railway_tools_volume_update"
+      ],
+      "turns": [
+        {
+          "query": "Remove a project volume after checking its details",
+          "required_tools": [
+            "railway_tools_volume_delete"
+          ],
+          "supporting_tools": [
+            "railway_tools_volume_list",
+            "railway_tools_volume_update"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v001",
+      "category": "compound",
+      "query": "Find repositories about graph databases and open the most promising one",
+      "required_tools": [
+        "github_mcp_server_search_repositories",
+        "github_mcp_server_get_file_contents"
+      ],
+      "supporting_tools": [
+        "github_mcp_server_get_me"
+      ],
+      "turns": [
+        {
+          "query": "Find repositories about graph databases and open the most promising one",
+          "required_tools": [
+            "github_mcp_server_search_repositories",
+            "github_mcp_server_get_file_contents"
+          ],
+          "supporting_tools": [
+            "github_mcp_server_get_me"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v002",
+      "category": "compound",
+      "query": "Check Railway environments and restart the staging service",
+      "required_tools": [
+        "railway_tools_project_environments",
+        "railway_tools_service_restart"
+      ],
+      "supporting_tools": [
+        "railway_tools_service_info",
+        "railway_tools_service_list"
+      ],
+      "turns": [
+        {
+          "query": "Check Railway environments and restart the staging service",
+          "required_tools": [
+            "railway_tools_project_environments",
+            "railway_tools_service_restart"
+          ],
+          "supporting_tools": [
+            "railway_tools_service_info",
+            "railway_tools_service_list"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v003",
+      "category": "compound",
+      "query": "Create a Word memo and turn it into a PDF",
+      "required_tools": [
+        "office_word_mcp_server_api_create_word_document",
+        "office_word_mcp_server_api_convert_to_pdf"
+      ],
+      "supporting_tools": [
+        "office_word_mcp_server_api_add_heading",
+        "office_word_mcp_server_api_add_paragraph"
+      ],
+      "turns": [
+        {
+          "query": "Create a Word memo and turn it into a PDF",
+          "required_tools": [
+            "office_word_mcp_server_api_create_word_document",
+            "office_word_mcp_server_api_convert_to_pdf"
+          ],
+          "supporting_tools": [
+            "office_word_mcp_server_api_add_heading",
+            "office_word_mcp_server_api_add_paragraph"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v004",
+      "category": "compound",
+      "query": "Search Outlook for the invoice and forward it to finance",
+      "required_tools": [
+        "outlook_mail_management_search_outlook_mail",
+        "outlook_mail_management_forward_email"
+      ],
+      "supporting_tools": [
+        "outlook_mail_management_find_email_address"
+      ],
+      "turns": [
+        {
+          "query": "Search Outlook for the invoice and forward it to finance",
+          "required_tools": [
+            "outlook_mail_management_search_outlook_mail",
+            "outlook_mail_management_forward_email"
+          ],
+          "supporting_tools": [
+            "outlook_mail_management_find_email_address"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v005",
+      "category": "compound",
+      "query": "List SharePoint sites and create a note in the selected library",
+      "required_tools": [
+        "sharepoint_tools_get_sharepoint_sites",
+        "sharepoint_tools_create_txt_file_in_sharepoint"
+      ],
+      "supporting_tools": [
+        "sharepoint_tools_get_sharepoint_documents"
+      ],
+      "turns": [
+        {
+          "query": "List SharePoint sites and create a note in the selected library",
+          "required_tools": [
+            "sharepoint_tools_get_sharepoint_sites",
+            "sharepoint_tools_create_txt_file_in_sharepoint"
+          ],
+          "supporting_tools": [
+            "sharepoint_tools_get_sharepoint_documents"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v006",
+      "category": "compound",
+      "query": "Check database health and retrieve the schema for the orders table",
+      "required_tools": [
+        "supabase_mcp_check_database_health",
+        "supabase_mcp_get_table_schema"
+      ],
+      "supporting_tools": [
+        "supabase_mcp_get_database_tables"
+      ],
+      "turns": [
+        {
+          "query": "Check database health and retrieve the schema for the orders table",
+          "required_tools": [
+            "supabase_mcp_check_database_health",
+            "supabase_mcp_get_table_schema"
+          ],
+          "supporting_tools": [
+            "supabase_mcp_get_database_tables"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v007",
+      "category": "compound",
+      "query": "Create an Azure team and list its members",
+      "required_tools": [
+        "project_management_tools_create_team",
+        "project_management_tools_list_team_members"
+      ],
+      "supporting_tools": [
+        "project_management_tools_list_teams"
+      ],
+      "turns": [
+        {
+          "query": "Create an Azure team and list its members",
+          "required_tools": [
+            "project_management_tools_create_team",
+            "project_management_tools_list_team_members"
+          ],
+          "supporting_tools": [
+            "project_management_tools_list_teams"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v008",
+      "category": "compound",
+      "query": "Log time against the migration project and review the hours summary",
+      "required_tools": [
+        "carrot_mcp_server_api_log_hours_entry",
+        "carrot_mcp_server_api_work_hours_summary"
+      ],
+      "supporting_tools": [
+        "carrot_mcp_server_api_list_employees"
+      ],
+      "turns": [
+        {
+          "query": "Log time against the migration project and review the hours summary",
+          "required_tools": [
+            "carrot_mcp_server_api_log_hours_entry",
+            "carrot_mcp_server_api_work_hours_summary"
+          ],
+          "supporting_tools": [
+            "carrot_mcp_server_api_list_employees"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v009",
+      "category": "compound",
+      "query": "Find the latest support email and reply with an update",
+      "required_tools": [
+        "outlook_mail_management_search_outlook_mail",
+        "outlook_mail_management_reply_to_email"
+      ],
+      "supporting_tools": [
+        "outlook_mail_management_get_email_messages"
+      ],
+      "turns": [
+        {
+          "query": "Find the latest support email and reply with an update",
+          "required_tools": [
+            "outlook_mail_management_search_outlook_mail",
+            "outlook_mail_management_reply_to_email"
+          ],
+          "supporting_tools": [
+            "outlook_mail_management_get_email_messages"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v010",
+      "category": "compound",
+      "query": "Create a GitHub branch and push the prepared files",
+      "required_tools": [
+        "github_mcp_server_create_branch",
+        "github_mcp_server_push_files"
+      ],
+      "supporting_tools": [
+        "github_mcp_server_get_me",
+        "github_mcp_server_list_branches"
+      ],
+      "turns": [
+        {
+          "query": "Create a GitHub branch and push the prepared files",
+          "required_tools": [
+            "github_mcp_server_create_branch",
+            "github_mcp_server_push_files"
+          ],
+          "supporting_tools": [
+            "github_mcp_server_get_me",
+            "github_mcp_server_list_branches"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v011",
+      "category": "compound",
+      "query": "List Railway volumes and update the backup volume",
+      "required_tools": [
+        "railway_tools_volume_list",
+        "railway_tools_volume_update"
+      ],
+      "supporting_tools": [
+        "railway_tools_project_list"
+      ],
+      "turns": [
+        {
+          "query": "List Railway volumes and update the backup volume",
+          "required_tools": [
+            "railway_tools_volume_list",
+            "railway_tools_volume_update"
+          ],
+          "supporting_tools": [
+            "railway_tools_project_list"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v012",
+      "category": "compound",
+      "query": "List Azure projects and open the board for one project",
+      "required_tools": [
+        "project_management_tools_list_projects",
+        "project_management_tools_view_board"
+      ],
+      "supporting_tools": [
+        "project_management_tools_get_project"
+      ],
+      "turns": [
+        {
+          "query": "List Azure projects and open the board for one project",
+          "required_tools": [
+            "project_management_tools_list_projects",
+            "project_management_tools_view_board"
+          ],
+          "supporting_tools": [
+            "project_management_tools_get_project"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v013",
+      "category": "compound",
+      "query": "Create a leave request and submit it for approval",
+      "required_tools": [
+        "carrot_mcp_server_api_create_leave_application",
+        "carrot_mcp_server_api_submit_leave_application"
+      ],
+      "supporting_tools": [
+        "carrot_mcp_server_api_list_leave_application"
+      ],
+      "turns": [
+        {
+          "query": "Create a leave request and submit it for approval",
+          "required_tools": [
+            "carrot_mcp_server_api_create_leave_application",
+            "carrot_mcp_server_api_submit_leave_application"
+          ],
+          "supporting_tools": [
+            "carrot_mcp_server_api_list_leave_application"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v014",
+      "category": "compound",
+      "query": "Read a report's text and replace its draft wording",
+      "required_tools": [
+        "office_word_mcp_server_api_get_document_text",
+        "office_word_mcp_server_api_search_replace"
+      ],
+      "supporting_tools": [
+        "office_word_mcp_server_api_get_document_info"
+      ],
+      "turns": [
+        {
+          "query": "Read a report's text and replace its draft wording",
+          "required_tools": [
+            "office_word_mcp_server_api_get_document_text",
+            "office_word_mcp_server_api_search_replace"
+          ],
+          "supporting_tools": [
+            "office_word_mcp_server_api_get_document_info"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v015",
+      "category": "compound",
+      "query": "Send a Gmail message and then inspect the inbox for the reply",
+      "required_tools": [
+        "gmail_tools_send_google_email",
+        "gmail_tools_get_google_emails"
+      ],
+      "supporting_tools": [
+        "gmail_tools_reply_google_email"
+      ],
+      "turns": [
+        {
+          "query": "Send a Gmail message and then inspect the inbox for the reply",
+          "required_tools": [
+            "gmail_tools_send_google_email",
+            "gmail_tools_get_google_emails"
+          ],
+          "supporting_tools": [
+            "gmail_tools_reply_google_email"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v016",
+      "category": "compound",
+      "query": "Create a Railway project and deploy a service from a repository",
+      "required_tools": [
+        "railway_tools_project_create",
+        "railway_tools_service_create_from_repo"
+      ],
+      "supporting_tools": [
+        "railway_tools_project_list"
+      ],
+      "turns": [
+        {
+          "query": "Create a Railway project and deploy a service from a repository",
+          "required_tools": [
+            "railway_tools_project_create",
+            "railway_tools_service_create_from_repo"
+          ],
+          "supporting_tools": [
+            "railway_tools_project_list"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v017",
+      "category": "compound",
+      "query": "Find the sprint details and export its work to SharePoint",
+      "required_tools": [
+        "project_management_tools_get_sprint",
+        "project_management_tools_export_sprint_to_sharepoint"
+      ],
+      "supporting_tools": [
+        "project_management_tools_list_sprints",
+        "sharepoint_tools_get_sharepoint_sites"
+      ],
+      "turns": [
+        {
+          "query": "Find the sprint details and export its work to SharePoint",
+          "required_tools": [
+            "project_management_tools_get_sprint",
+            "project_management_tools_export_sprint_to_sharepoint"
+          ],
+          "supporting_tools": [
+            "project_management_tools_list_sprints",
+            "sharepoint_tools_get_sharepoint_sites"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v018",
+      "category": "compound",
+      "query": "Query the customer data and update a matching row",
+      "required_tools": [
+        "supabase_mcp_select_database_table_data",
+        "supabase_mcp_update_database_table_data"
+      ],
+      "supporting_tools": [
+        "supabase_mcp_get_table_schema",
+        "supabase_mcp_check_database_health"
+      ],
+      "turns": [
+        {
+          "query": "Query the customer data and update a matching row",
+          "required_tools": [
+            "supabase_mcp_select_database_table_data",
+            "supabase_mcp_update_database_table_data"
+          ],
+          "supporting_tools": [
+            "supabase_mcp_get_table_schema",
+            "supabase_mcp_check_database_health"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v019",
+      "category": "compound",
+      "query": "Search my files and update the selected file",
+      "required_tools": [
+        "quest_studio_file_storage_query_files",
+        "quest_studio_file_storage_update_file"
+      ],
+      "supporting_tools": [
+        "quest_studio_file_storage_get_files",
+        "quest_studio_file_storage_get_file"
+      ],
+      "turns": [
+        {
+          "query": "Search my files and update the selected file",
+          "required_tools": [
+            "quest_studio_file_storage_query_files",
+            "quest_studio_file_storage_update_file"
+          ],
+          "supporting_tools": [
+            "quest_studio_file_storage_get_files",
+            "quest_studio_file_storage_get_file"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compound_v020",
+      "category": "compound",
+      "query": "Get the project team and assign its work item",
+      "required_tools": [
+        "project_management_tools_get_team",
+        "project_management_tools_assign_work_item"
+      ],
+      "supporting_tools": [
+        "project_management_tools_list_team_members",
+        "project_management_tools_get_work_item"
+      ],
+      "turns": [
+        {
+          "query": "Get the project team and assign its work item",
+          "required_tools": [
+            "project_management_tools_get_team",
+            "project_management_tools_assign_work_item"
+          ],
+          "supporting_tools": [
+            "project_management_tools_list_team_members",
+            "project_management_tools_get_work_item"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v001",
+      "category": "hidden_dependency",
+      "query": "Send the deployment notes to the release coordinator",
+      "required_tools": [
+        "outlook_mail_management_send_email"
+      ],
+      "supporting_tools": [
+        "outlook_mail_management_find_email_address"
+      ],
+      "turns": [
+        {
+          "query": "Send the deployment notes to the release coordinator",
+          "required_tools": [
+            "outlook_mail_management_send_email"
+          ],
+          "supporting_tools": [
+            "outlook_mail_management_find_email_address"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v002",
+      "category": "hidden_dependency",
+      "query": "Reply to the person who asked about the contract",
+      "required_tools": [
+        "outlook_mail_management_reply_to_email"
+      ],
+      "supporting_tools": [
+        "outlook_mail_management_get_email_messages"
+      ],
+      "turns": [
+        {
+          "query": "Reply to the person who asked about the contract",
+          "required_tools": [
+            "outlook_mail_management_reply_to_email"
+          ],
+          "supporting_tools": [
+            "outlook_mail_management_get_email_messages"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v003",
+      "category": "hidden_dependency",
+      "query": "Forward the security alert to the incident lead",
+      "required_tools": [
+        "outlook_mail_management_forward_email"
+      ],
+      "supporting_tools": [
+        "outlook_mail_management_find_email_address"
+      ],
+      "turns": [
+        {
+          "query": "Forward the security alert to the incident lead",
+          "required_tools": [
+            "outlook_mail_management_forward_email"
+          ],
+          "supporting_tools": [
+            "outlook_mail_management_find_email_address"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v004",
+      "category": "hidden_dependency",
+      "query": "Create the report document with the findings section",
+      "required_tools": [
+        "office_word_mcp_server_api_create_word_document"
+      ],
+      "supporting_tools": [
+        "office_word_mcp_server_api_add_heading",
+        "office_word_mcp_server_api_add_paragraph"
+      ],
+      "turns": [
+        {
+          "query": "Create the report document with the findings section",
+          "required_tools": [
+            "office_word_mcp_server_api_create_word_document"
+          ],
+          "supporting_tools": [
+            "office_word_mcp_server_api_add_heading",
+            "office_word_mcp_server_api_add_paragraph"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v005",
+      "category": "hidden_dependency",
+      "query": "Add the chart to the existing Word report",
+      "required_tools": [
+        "office_word_mcp_server_api_add_picture"
+      ],
+      "supporting_tools": [
+        "office_word_mcp_server_api_get_document_info"
+      ],
+      "turns": [
+        {
+          "query": "Add the chart to the existing Word report",
+          "required_tools": [
+            "office_word_mcp_server_api_add_picture"
+          ],
+          "supporting_tools": [
+            "office_word_mcp_server_api_get_document_info"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v006",
+      "category": "hidden_dependency",
+      "query": "Turn the completed proposal into a PDF",
+      "required_tools": [
+        "office_word_mcp_server_api_convert_to_pdf"
+      ],
+      "supporting_tools": [
+        "office_word_mcp_server_api_get_document_text"
+      ],
+      "turns": [
+        {
+          "query": "Turn the completed proposal into a PDF",
+          "required_tools": [
+            "office_word_mcp_server_api_convert_to_pdf"
+          ],
+          "supporting_tools": [
+            "office_word_mcp_server_api_get_document_text"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v007",
+      "category": "hidden_dependency",
+      "query": "Open a pull request for the authentication fix",
+      "required_tools": [
+        "github_mcp_server_create_pull_request"
+      ],
+      "supporting_tools": [
+        "github_mcp_server_list_branches",
+        "github_mcp_server_get_file_contents"
+      ],
+      "turns": [
+        {
+          "query": "Open a pull request for the authentication fix",
+          "required_tools": [
+            "github_mcp_server_create_pull_request"
+          ],
+          "supporting_tools": [
+            "github_mcp_server_list_branches",
+            "github_mcp_server_get_file_contents"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v008",
+      "category": "hidden_dependency",
+      "query": "Update the configuration file in the selected repository",
+      "required_tools": [
+        "github_mcp_server_create_or_update_file"
+      ],
+      "supporting_tools": [
+        "github_mcp_server_get_file_contents"
+      ],
+      "turns": [
+        {
+          "query": "Update the configuration file in the selected repository",
+          "required_tools": [
+            "github_mcp_server_create_or_update_file"
+          ],
+          "supporting_tools": [
+            "github_mcp_server_get_file_contents"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v009",
+      "category": "hidden_dependency",
+      "query": "Deploy the service from the team's repository",
+      "required_tools": [
+        "railway_tools_service_create_from_repo"
+      ],
+      "supporting_tools": [
+        "railway_tools_project_list",
+        "railway_tools_service_list"
+      ],
+      "turns": [
+        {
+          "query": "Deploy the service from the team's repository",
+          "required_tools": [
+            "railway_tools_service_create_from_repo"
+          ],
+          "supporting_tools": [
+            "railway_tools_project_list",
+            "railway_tools_service_list"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v010",
+      "category": "hidden_dependency",
+      "query": "Restart the service after checking its configuration",
+      "required_tools": [
+        "railway_tools_service_restart"
+      ],
+      "supporting_tools": [
+        "railway_tools_service_info"
+      ],
+      "turns": [
+        {
+          "query": "Restart the service after checking its configuration",
+          "required_tools": [
+            "railway_tools_service_restart"
+          ],
+          "supporting_tools": [
+            "railway_tools_service_info"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v011",
+      "category": "hidden_dependency",
+      "query": "Submit the leave request I just prepared",
+      "required_tools": [
+        "carrot_mcp_server_api_submit_leave_application"
+      ],
+      "supporting_tools": [
+        "carrot_mcp_server_api_create_leave_application"
+      ],
+      "turns": [
+        {
+          "query": "Submit the leave request I just prepared",
+          "required_tools": [
+            "carrot_mcp_server_api_submit_leave_application"
+          ],
+          "supporting_tools": [
+            "carrot_mcp_server_api_create_leave_application"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v012",
+      "category": "hidden_dependency",
+      "query": "Update the employee record for the new role",
+      "required_tools": [
+        "carrot_mcp_server_api_update_employee"
+      ],
+      "supporting_tools": [
+        "carrot_mcp_server_api_get_employee"
+      ],
+      "turns": [
+        {
+          "query": "Update the employee record for the new role",
+          "required_tools": [
+            "carrot_mcp_server_api_update_employee"
+          ],
+          "supporting_tools": [
+            "carrot_mcp_server_api_get_employee"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v013",
+      "category": "hidden_dependency",
+      "query": "Assign the bug to its new owner",
+      "required_tools": [
+        "project_management_tools_assign_work_item"
+      ],
+      "supporting_tools": [
+        "project_management_tools_get_work_item",
+        "project_management_tools_list_users"
+      ],
+      "turns": [
+        {
+          "query": "Assign the bug to its new owner",
+          "required_tools": [
+            "project_management_tools_assign_work_item"
+          ],
+          "supporting_tools": [
+            "project_management_tools_get_work_item",
+            "project_management_tools_list_users"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v014",
+      "category": "hidden_dependency",
+      "query": "Mark the migration ticket as finished",
+      "required_tools": [
+        "project_management_tools_update_task_status"
+      ],
+      "supporting_tools": [
+        "project_management_tools_get_work_item"
+      ],
+      "turns": [
+        {
+          "query": "Mark the migration ticket as finished",
+          "required_tools": [
+            "project_management_tools_update_task_status"
+          ],
+          "supporting_tools": [
+            "project_management_tools_get_work_item"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v015",
+      "category": "hidden_dependency",
+      "query": "Create the note in the department's SharePoint library",
+      "required_tools": [
+        "sharepoint_tools_create_txt_file_in_sharepoint"
+      ],
+      "supporting_tools": [
+        "sharepoint_tools_get_sharepoint_sites",
+        "sharepoint_tools_get_sharepoint_documents"
+      ],
+      "turns": [
+        {
+          "query": "Create the note in the department's SharePoint library",
+          "required_tools": [
+            "sharepoint_tools_create_txt_file_in_sharepoint"
+          ],
+          "supporting_tools": [
+            "sharepoint_tools_get_sharepoint_sites",
+            "sharepoint_tools_get_sharepoint_documents"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v016",
+      "category": "hidden_dependency",
+      "query": "Run the revenue query in the reporting database",
+      "required_tools": [
+        "supabase_mcp_select_database_table_data"
+      ],
+      "supporting_tools": [
+        "supabase_mcp_check_database_health",
+        "supabase_mcp_get_table_schema"
+      ],
+      "turns": [
+        {
+          "query": "Run the revenue query in the reporting database",
+          "required_tools": [
+            "supabase_mcp_select_database_table_data"
+          ],
+          "supporting_tools": [
+            "supabase_mcp_check_database_health",
+            "supabase_mcp_get_table_schema"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v017",
+      "category": "hidden_dependency",
+      "query": "Update the customer row after checking its table definition",
+      "required_tools": [
+        "supabase_mcp_update_database_table_data"
+      ],
+      "supporting_tools": [
+        "supabase_mcp_get_table_schema"
+      ],
+      "turns": [
+        {
+          "query": "Update the customer row after checking its table definition",
+          "required_tools": [
+            "supabase_mcp_update_database_table_data"
+          ],
+          "supporting_tools": [
+            "supabase_mcp_get_table_schema"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v018",
+      "category": "hidden_dependency",
+      "query": "Put the revised attachment into the file store",
+      "required_tools": [
+        "quest_studio_file_storage_update_file"
+      ],
+      "supporting_tools": [
+        "quest_studio_file_storage_get_file"
+      ],
+      "turns": [
+        {
+          "query": "Put the revised attachment into the file store",
+          "required_tools": [
+            "quest_studio_file_storage_update_file"
+          ],
+          "supporting_tools": [
+            "quest_studio_file_storage_get_file"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v019",
+      "category": "hidden_dependency",
+      "query": "Delete the obsolete document from storage",
+      "required_tools": [
+        "quest_studio_file_storage_delete_file"
+      ],
+      "supporting_tools": [
+        "quest_studio_file_storage_get_files"
+      ],
+      "turns": [
+        {
+          "query": "Delete the obsolete document from storage",
+          "required_tools": [
+            "quest_studio_file_storage_delete_file"
+          ],
+          "supporting_tools": [
+            "quest_studio_file_storage_get_files"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dependency_v020",
+      "category": "hidden_dependency",
+      "query": "Add a volume for the newly created database service",
+      "required_tools": [
+        "railway_tools_volume_create"
+      ],
+      "supporting_tools": [
+        "railway_tools_service_info",
+        "railway_tools_project_list"
+      ],
+      "turns": [
+        {
+          "query": "Add a volume for the newly created database service",
+          "required_tools": [
+            "railway_tools_volume_create"
+          ],
+          "supporting_tools": [
+            "railway_tools_service_info",
+            "railway_tools_project_list"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v001",
+      "category": "multi_turn",
+      "query": "Review the open security pull requests Then Merge the approved one",
+      "required_tools": [
+        "github_mcp_server_list_pull_requests",
+        "github_mcp_server_merge_pull_request"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Review the open security pull requests",
+          "required_tools": [
+            "github_mcp_server_list_pull_requests"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Merge the approved one",
+          "required_tools": [
+            "github_mcp_server_merge_pull_request"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "conversation_v002",
+      "category": "multi_turn",
+      "query": "Find the architecture document in my files Then Read its contents",
+      "required_tools": [
+        "quest_studio_file_storage_query_files",
+        "quest_studio_file_storage_get_file_content"
+      ],
+      "supporting_tools": [
+        "quest_studio_file_storage_get_file"
+      ],
+      "turns": [
+        {
+          "query": "Find the architecture document in my files",
+          "required_tools": [
+            "quest_studio_file_storage_query_files"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Read its contents",
+          "required_tools": [
+            "quest_studio_file_storage_get_file_content"
+          ],
+          "supporting_tools": [
+            "quest_studio_file_storage_get_file"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v003",
+      "category": "multi_turn",
+      "query": "List the current Railway projects Then Show the services in the selected project",
+      "required_tools": [
+        "railway_tools_project_list",
+        "railway_tools_service_list"
+      ],
+      "supporting_tools": [
+        "railway_tools_project_info"
+      ],
+      "turns": [
+        {
+          "query": "List the current Railway projects",
+          "required_tools": [
+            "railway_tools_project_list"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Show the services in the selected project",
+          "required_tools": [
+            "railway_tools_service_list"
+          ],
+          "supporting_tools": [
+            "railway_tools_project_info"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v004",
+      "category": "multi_turn",
+      "query": "Find the team's latest email Then Forward it to the customer contact",
+      "required_tools": [
+        "outlook_mail_management_search_outlook_mail",
+        "outlook_mail_management_forward_email"
+      ],
+      "supporting_tools": [
+        "outlook_mail_management_find_email_address"
+      ],
+      "turns": [
+        {
+          "query": "Find the team's latest email",
+          "required_tools": [
+            "outlook_mail_management_search_outlook_mail"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Forward it to the customer contact",
+          "required_tools": [
+            "outlook_mail_management_forward_email"
+          ],
+          "supporting_tools": [
+            "outlook_mail_management_find_email_address"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v005",
+      "category": "multi_turn",
+      "query": "Open the Word template list Then Copy the chosen template",
+      "required_tools": [
+        "office_word_mcp_server_api_list_files",
+        "office_word_mcp_server_api_copy_document"
+      ],
+      "supporting_tools": [
+        "office_word_mcp_server_api_get_document_info"
+      ],
+      "turns": [
+        {
+          "query": "Open the Word template list",
+          "required_tools": [
+            "office_word_mcp_server_api_list_files"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Copy the chosen template",
+          "required_tools": [
+            "office_word_mcp_server_api_copy_document"
+          ],
+          "supporting_tools": [
+            "office_word_mcp_server_api_get_document_info"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v006",
+      "category": "multi_turn",
+      "query": "Check the orders database connection Then Show the schema for its invoices table",
+      "required_tools": [
+        "supabase_mcp_check_database_health",
+        "supabase_mcp_get_table_schema"
+      ],
+      "supporting_tools": [
+        "supabase_mcp_get_database_tables"
+      ],
+      "turns": [
+        {
+          "query": "Check the orders database connection",
+          "required_tools": [
+            "supabase_mcp_check_database_health"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Show the schema for its invoices table",
+          "required_tools": [
+            "supabase_mcp_get_table_schema"
+          ],
+          "supporting_tools": [
+            "supabase_mcp_get_database_tables"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v007",
+      "category": "multi_turn",
+      "query": "List teams in the product project Then Show the members of the release team",
+      "required_tools": [
+        "project_management_tools_list_teams",
+        "project_management_tools_list_team_members"
+      ],
+      "supporting_tools": [
+        "project_management_tools_get_team"
+      ],
+      "turns": [
+        {
+          "query": "List teams in the product project",
+          "required_tools": [
+            "project_management_tools_list_teams"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Show the members of the release team",
+          "required_tools": [
+            "project_management_tools_list_team_members"
+          ],
+          "supporting_tools": [
+            "project_management_tools_get_team"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v008",
+      "category": "multi_turn",
+      "query": "Open the current sprint Then Show its capacity summary",
+      "required_tools": [
+        "project_management_tools_get_sprint",
+        "project_management_tools_get_user_capacity"
+      ],
+      "supporting_tools": [
+        "project_management_tools_list_sprints"
+      ],
+      "turns": [
+        {
+          "query": "Open the current sprint",
+          "required_tools": [
+            "project_management_tools_get_sprint"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Show its capacity summary",
+          "required_tools": [
+            "project_management_tools_get_user_capacity"
+          ],
+          "supporting_tools": [
+            "project_management_tools_list_sprints"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v009",
+      "category": "multi_turn",
+      "query": "Create the draft Word report Then Add a summary table to it",
+      "required_tools": [
+        "office_word_mcp_server_api_create_word_document",
+        "office_word_mcp_server_api_add_table"
+      ],
+      "supporting_tools": [
+        "office_word_mcp_server_api_add_heading"
+      ],
+      "turns": [
+        {
+          "query": "Create the draft Word report",
+          "required_tools": [
+            "office_word_mcp_server_api_create_word_document"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Add a summary table to it",
+          "required_tools": [
+            "office_word_mcp_server_api_add_table"
+          ],
+          "supporting_tools": [
+            "office_word_mcp_server_api_add_heading"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v010",
+      "category": "multi_turn",
+      "query": "Look up the feature repository Then Show the latest commit",
+      "required_tools": [
+        "github_mcp_server_search_repositories",
+        "github_mcp_server_get_commit"
+      ],
+      "supporting_tools": [
+        "github_mcp_server_list_commits"
+      ],
+      "turns": [
+        {
+          "query": "Look up the feature repository",
+          "required_tools": [
+            "github_mcp_server_search_repositories"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Show the latest commit",
+          "required_tools": [
+            "github_mcp_server_get_commit"
+          ],
+          "supporting_tools": [
+            "github_mcp_server_list_commits"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v011",
+      "category": "multi_turn",
+      "query": "List available leave applications Then Submit the selected request",
+      "required_tools": [
+        "carrot_mcp_server_api_list_leave_application",
+        "carrot_mcp_server_api_submit_leave_application"
+      ],
+      "supporting_tools": [
+        "carrot_mcp_server_api_create_leave_application"
+      ],
+      "turns": [
+        {
+          "query": "List available leave applications",
+          "required_tools": [
+            "carrot_mcp_server_api_list_leave_application"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Submit the selected request",
+          "required_tools": [
+            "carrot_mcp_server_api_submit_leave_application"
+          ],
+          "supporting_tools": [
+            "carrot_mcp_server_api_create_leave_application"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v012",
+      "category": "multi_turn",
+      "query": "Find the employee record Then Update the department field",
+      "required_tools": [
+        "carrot_mcp_server_api_get_employee",
+        "carrot_mcp_server_api_update_employee"
+      ],
+      "supporting_tools": [],
+      "turns": [
+        {
+          "query": "Find the employee record",
+          "required_tools": [
+            "carrot_mcp_server_api_get_employee"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Update the department field",
+          "required_tools": [
+            "carrot_mcp_server_api_update_employee"
+          ],
+          "supporting_tools": []
+        }
+      ]
+    },
+    {
+      "id": "conversation_v013",
+      "category": "multi_turn",
+      "query": "List the files in storage Then Remove the obsolete export",
+      "required_tools": [
+        "quest_studio_file_storage_get_files",
+        "quest_studio_file_storage_delete_file"
+      ],
+      "supporting_tools": [
+        "quest_studio_file_storage_get_file"
+      ],
+      "turns": [
+        {
+          "query": "List the files in storage",
+          "required_tools": [
+            "quest_studio_file_storage_get_files"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Remove the obsolete export",
+          "required_tools": [
+            "quest_studio_file_storage_delete_file"
+          ],
+          "supporting_tools": [
+            "quest_studio_file_storage_get_file"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v014",
+      "category": "multi_turn",
+      "query": "Check the worker service details Then Change its resource configuration",
+      "required_tools": [
+        "railway_tools_service_info",
+        "railway_tools_service_update"
+      ],
+      "supporting_tools": [
+        "railway_tools_service_list"
+      ],
+      "turns": [
+        {
+          "query": "Check the worker service details",
+          "required_tools": [
+            "railway_tools_service_info"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Change its resource configuration",
+          "required_tools": [
+            "railway_tools_service_update"
+          ],
+          "supporting_tools": [
+            "railway_tools_service_list"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v015",
+      "category": "multi_turn",
+      "query": "Find the design message Then Reply with the review outcome",
+      "required_tools": [
+        "gmail_tools_get_google_emails",
+        "gmail_tools_reply_google_email"
+      ],
+      "supporting_tools": [
+        "gmail_tools_send_google_email"
+      ],
+      "turns": [
+        {
+          "query": "Find the design message",
+          "required_tools": [
+            "gmail_tools_get_google_emails"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Reply with the review outcome",
+          "required_tools": [
+            "gmail_tools_reply_google_email"
+          ],
+          "supporting_tools": [
+            "gmail_tools_send_google_email"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v016",
+      "category": "multi_turn",
+      "query": "List the SharePoint documents Then Create a text note beside them",
+      "required_tools": [
+        "sharepoint_tools_get_sharepoint_documents",
+        "sharepoint_tools_create_txt_file_in_sharepoint"
+      ],
+      "supporting_tools": [
+        "sharepoint_tools_get_sharepoint_sites"
+      ],
+      "turns": [
+        {
+          "query": "List the SharePoint documents",
+          "required_tools": [
+            "sharepoint_tools_get_sharepoint_documents"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Create a text note beside them",
+          "required_tools": [
+            "sharepoint_tools_create_txt_file_in_sharepoint"
+          ],
+          "supporting_tools": [
+            "sharepoint_tools_get_sharepoint_sites"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v017",
+      "category": "multi_turn",
+      "query": "Find the sprint work items Then Add a comment to the selected item",
+      "required_tools": [
+        "project_management_tools_list_work_items",
+        "project_management_tools_add_work_item_comment"
+      ],
+      "supporting_tools": [
+        "project_management_tools_get_work_item_comments"
+      ],
+      "turns": [
+        {
+          "query": "Find the sprint work items",
+          "required_tools": [
+            "project_management_tools_list_work_items"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Add a comment to the selected item",
+          "required_tools": [
+            "project_management_tools_add_work_item_comment"
+          ],
+          "supporting_tools": [
+            "project_management_tools_get_work_item_comments"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v018",
+      "category": "multi_turn",
+      "query": "Create a new project volume Then Show its current properties",
+      "required_tools": [
+        "railway_tools_volume_create",
+        "railway_tools_volume_list"
+      ],
+      "supporting_tools": [
+        "railway_tools_volume_update"
+      ],
+      "turns": [
+        {
+          "query": "Create a new project volume",
+          "required_tools": [
+            "railway_tools_volume_create"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Show its current properties",
+          "required_tools": [
+            "railway_tools_volume_list"
+          ],
+          "supporting_tools": [
+            "railway_tools_volume_update"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v019",
+      "category": "multi_turn",
+      "query": "Search the repository history Then Read the commit that introduced the change",
+      "required_tools": [
+        "github_mcp_server_list_commits",
+        "github_mcp_server_get_commit"
+      ],
+      "supporting_tools": [
+        "github_mcp_server_get_file_contents"
+      ],
+      "turns": [
+        {
+          "query": "Search the repository history",
+          "required_tools": [
+            "github_mcp_server_list_commits"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Read the commit that introduced the change",
+          "required_tools": [
+            "github_mcp_server_get_commit"
+          ],
+          "supporting_tools": [
+            "github_mcp_server_get_file_contents"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conversation_v020",
+      "category": "multi_turn",
+      "query": "Check the data table definition Then Select the matching customer rows",
+      "required_tools": [
+        "supabase_mcp_get_table_schema",
+        "supabase_mcp_select_database_table_data"
+      ],
+      "supporting_tools": [
+        "supabase_mcp_check_database_health"
+      ],
+      "turns": [
+        {
+          "query": "Check the data table definition",
+          "required_tools": [
+            "supabase_mcp_get_table_schema"
+          ],
+          "supporting_tools": []
+        },
+        {
+          "query": "Select the matching customer rows",
+          "required_tools": [
+            "supabase_mcp_select_database_table_data"
+          ],
+          "supporting_tools": [
+            "supabase_mcp_check_database_health"
+          ]
+        }
+      ]
+    }
+  ]
+}

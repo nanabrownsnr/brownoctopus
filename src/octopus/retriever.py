@@ -2,11 +2,12 @@ from sentence_transformers import SentenceTransformer, util
 
 from octopus.analyzer import analyze_intents
 from octopus.tool_registry import get_all_tools
-from octopus.selection import select_bounded_max_gap
+from octopus.selection import select_min4_bounded_max_gap
 
 
 MODEL_NAME = "Qwen/Qwen3-Embedding-0.6B"
 DEFAULT_PER_INTENT_K = 4
+RETRIEVAL_METHOD = "brown_octopus_v3"
 
 
 model: SentenceTransformer | None = None
@@ -36,7 +37,7 @@ def retrieve_tools(
     for intent in intents:
         ranked_tools = rank_tools(intent["text"])
 
-        intent_tools = select_bounded_max_gap(ranked_tools)
+        intent_tools = select_min4_bounded_max_gap(ranked_tools)
 
         for tool in intent_tools:
             tool_name = tool["name"]
