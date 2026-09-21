@@ -8,3 +8,8 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Generated external benchmark data and indexes
+data/external/tool-retrieval-benchmark/
+data/external/toolret-release/
+data/indexes/toolret_smoke/

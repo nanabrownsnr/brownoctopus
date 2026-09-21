@@ -487,6 +487,12 @@ Run the suite with:
 
 ```bash
 uv run pytest -v
+
+## ToolRet GPU smoke evaluation
+
+The evaluation-only ToolRet integration and GPU VM setup are documented in
+[`docs/toolret_gpu_vm.md`](docs/toolret_gpu_vm.md). Brown Octopus V3 production
+code and the default 122-tool index are not modified by this workflow.
 ```
 
 ---

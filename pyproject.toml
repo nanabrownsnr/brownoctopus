@@ -14,6 +14,11 @@ dependencies = [
     "spacy>=3.8.16",
 ]
 
+[project.optional-dependencies]
+toolret = [
+    "pyarrow>=18.0.0",
+]
+
 [project.scripts]
 octopus = "octopus:main"
 
