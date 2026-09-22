@@ -1,0 +1,44 @@
+Brown Octopus ToolRet smoke-test report
+Experiment: toolret_smoke_20260922T150658_265727Z
+Git commit: 8cf676febeddd9785d0a127c8e5c2ea199bbc580
+ToolRet code commit: c4181d914a227134705ecb6bab13fbd92ccd2938
+Condition: original query / without instruction; no full benchmark run was performed.
+Sample: apibank, craft-math-algebra, appbench (3 deterministic examples)
+Tool universe: 44453 tools; hash 68be4bad22f56952cb222cc063d505bfa8e2e06e3f1da56badea8f401951fd28
+Index: C:\Users\4th-ir\octopus\data\indexes\toolret_smoke; dimension 1024; build_ms 76408917.3535
+
+Method summary (macro-average over smoke examples)
+method | nDCG@10 | Recall@10 | Completeness@10 | mean tools | mean schema tokens | reduction vs ALL
+raw_qwen_top10 | 0.546636 | 0.833333 | 0.666667 | 10.00 | 1035.67 | 0.999774
+brown_octopus_v3 | 0.406136 | 0.500000 | 0.333333 | 13.33 | 1252.67 | 0.999727
+
+Validation checks
+{
+  "gold_labels_preserved": true,
+  "raw_qwen_exactly_10": true,
+  "v3_variable_k": true,
+  "state_reset": true,
+  "default_index_not_used": true
+}
+
+Per-query results
+apibank_query_0 [apibank/web]
+  query: Can you tell me about the historical events of April 21st?
+  gold: ['apibank_tool_33', 'apibank_tool_53']
+  raw_qwen_top10: ['toolbench_tool_2544', 'toolACE_tool_10958', 'apibank_tool_33', 'apigen_tool_883', 'toolbench_tool_2543', 'toolACE_tool_13271', 'toolACE_tool_13948', 'toolACE_tool_14425', 'toolACE_tool_15608', 'toolbench_tool_9709']
+  v3_natural: ['toolbench_tool_2544', 'apigen_tool_883', 'toolbench_tool_2543', 'toolACE_tool_10958', 'toolACE_tool_13948', 'apibank_tool_33', 'toolACE_tool_13271', 'toolACE_tool_15608', 'toolACE_tool_14425', 'toolbench_tool_9709', 'toolbench_tool_9708', 'toolACE_tool_8936', 'toolbench_tool_2609', 'toolACE_tool_12418', 'toolACE_tool_10959', 'toolACE_tool_8050']
+craft_Math_algebra_query_0 [craft-math-algebra/code]
+  query: Dave rode 30 miles at 10 miles per hour and 10 miles at 30 miles per hour. What was his average speed, in miles per hour, for the entire ride?
+  gold: ['craft_Math_algebra_tool_0']
+  raw_qwen_top10: ['toolink_tool_250', 'craft_Math_algebra_tool_203', 'toolink_tool_798', 'toolink_tool_880', 'toolink_tool_343', 'toolink_tool_1521', 'craft_Math_algebra_tool_0', 'toolink_tool_853', 'toolink_tool_313', 'toolink_tool_1451']
+  v3_natural: ['toolink_tool_1521', 'toolink_tool_1520', 'toolink_tool_15', 'toolink_tool_1468', 'toolink_tool_131', 'toolink_tool_510', 'toolink_tool_828', 'toolink_tool_1451', 'toolink_tool_798', 'toolACE_tool_10251', 'toolink_tool_1467', 'toolink_tool_610', 'toolink_tool_1746', 'toolink_tool_250', 'toolACE_tool_12234', 'toolink_tool_1228']
+appbench_query_0 [appbench/customized]
+  query: Please make a payment request of $108 to Diego, ensuring the transaction is private and using a credit card as the payment method.
+  gold: ['appbench_tool_20', 'appbench_tool_21']
+  raw_qwen_top10: ['appbench_tool_20', 'appbench_tool_21', 'taskbench_daily_tool_22', 'toolACE_tool_4196', 'ultraTool_tool_145', 'toolalpaca_tool_1679', 'toolACE_tool_14377', 'toolalpaca_tool_363', 'toolbench_tool_6122', 'toolalpaca_tool_1614']
+  v3_natural: ['appbench_tool_20', 'appbench_tool_21', 'toolACE_tool_4196', 'toolACE_tool_14377', 'taskbench_daily_tool_22', 'ultraTool_tool_425', 'ultraTool_tool_161', 'toolalpaca_tool_363']
+
+Official metric note: ToolRet's released evaluator uses pytrec_eval; Completeness@10 is the fraction of queries whose Recall@10 equals 1. Results here use the same definitions and do not pad Brown Octopus's natural list.
+Published ToolQP numbers are intentionally not reproduced in this smoke report; the full comparison is deferred until the smoke artifacts are reviewed.
+Raw immutable record: C:\Users\4th-ir\octopus\results\raw\toolret_smoke_20260922T150658_265727Z.json
+Sources: https://github.com/mangopy/tool-retrieval-benchmark and https://huggingface.co/datasets/mangopy/ToolRet-Queries and https://huggingface.co/datasets/mangopy/ToolRet-Tools

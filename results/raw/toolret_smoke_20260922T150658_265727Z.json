@@ -1,0 +1,442 @@
+{
+  "experiment_id": "toolret_smoke_20260922T150658_265727Z",
+  "timestamp": "20260922T150658_265727Z",
+  "git_commit": "8cf676febeddd9785d0a127c8e5c2ea199bbc580",
+  "v3_freeze_commit": "72b200937486ca7413e1bfbd0e2abc6c3787a3aa",
+  "toolret_upstream": {
+    "repository": "https://github.com/mangopy/tool-retrieval-benchmark",
+    "code_commit": "c4181d914a227134705ecb6bab13fbd92ccd2938",
+    "query_dataset": "mangopy/ToolRet-Queries main parquet shards",
+    "tool_dataset": "mangopy/ToolRet-Tools main parquet shards",
+    "source_hashes": {
+      "web": "57faceebd778b2cb74571dca0e71e8bc8078c11ba05dce0efc562e818d3950e6",
+      "code": "a5b1a8111a40128b1429fe53a490e627fd2832ebe2e641db5eeb695ecb4f0d9a",
+      "customized": "e3d0cf64f5d5321751401677c820c5e8c7df79bfd67a85c01e275fe573cbde41",
+      "apibank": "1e91b9c4f7e0b38946bf5c3272e15af73f0b446e4d546c52e09179b3a9709d3b",
+      "craft-math-algebra": "70993dcb4bc2b55f42994bed7f08b785d6af6baad941ee6973db26e2700b5df6",
+      "appbench": "e7efff5e12a7676df46ded343abfdd44cc3c4fbeacee3d6b89edec8a9022b5d7"
+    }
+  },
+  "condition": "without_instruction",
+  "sample": {
+    "datasets": [
+      "apibank",
+      "craft-math-algebra",
+      "appbench"
+    ],
+    "count": 3
+  },
+  "tool_universe": {
+    "count": 44453,
+    "hash": "68be4bad22f56952cb222cc063d505bfa8e2e06e3f1da56badea8f401951fd28",
+    "all_schema_tokens": 4591176
+  },
+  "index": {
+    "path": "C:\\Users\\4th-ir\\octopus\\data\\indexes\\toolret_smoke",
+    "metadata": {
+      "version": 1,
+      "benchmark": "ToolRet",
+      "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+      "embedding_dimension": 1024,
+      "tool_count": 44453,
+      "dataset_hash": "toolret_smoke_queries",
+      "tool_universe_hash": "68be4bad22f56952cb222cc063d505bfa8e2e06e3f1da56badea8f401951fd28",
+      "embedding_representation": "ToolRet doc name + description",
+      "build_time_ms": 76408917.3535,
+      "shard_size": 1000,
+      "batch_size": 8,
+      "shard_count": 45,
+      "device": "cpu",
+      "index_size_bytes": 116291672
+    },
+    "build_this_run": null
+  },
+  "methods": {
+    "raw_qwen_top10": {
+      "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+      "representation": "name + description",
+      "exact_k": 10
+    },
+    "brown_octopus_v3": {
+      "method": "frozen production V3",
+      "state_reset_between_examples": true
+    }
+  },
+  "machine": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "device": "cpu"
+  },
+  "results": [
+    {
+      "query_id": "apibank_query_0",
+      "dataset": "apibank",
+      "category": "web",
+      "query": "Can you tell me about the historical events of April 21st?",
+      "gold_tool_ids": [
+        "apibank_tool_33",
+        "apibank_tool_53"
+      ],
+      "raw_qwen_top10": {
+        "tool_ids": [
+          "toolbench_tool_2544",
+          "toolACE_tool_10958",
+          "apibank_tool_33",
+          "apigen_tool_883",
+          "toolbench_tool_2543",
+          "toolACE_tool_13271",
+          "toolACE_tool_13948",
+          "toolACE_tool_14425",
+          "toolACE_tool_15608",
+          "toolbench_tool_9709"
+        ],
+        "scores": {
+          "toolbench_tool_2544": 0.59765625,
+          "toolACE_tool_10958": 0.59375,
+          "apibank_tool_33": 0.58984375,
+          "apigen_tool_883": 0.58984375,
+          "toolbench_tool_2543": 0.5859375,
+          "toolACE_tool_13271": 0.5859375,
+          "toolACE_tool_13948": 0.58203125,
+          "toolACE_tool_14425": 0.58203125,
+          "toolACE_tool_15608": 0.57421875,
+          "toolbench_tool_9709": 0.5703125
+        },
+        "metrics": {
+          "ndcg@10": 0.3065735963827292,
+          "recall@10": 0.5,
+          "completeness@10": 0.0
+        },
+        "tool_count": 10,
+        "schema_tokens": 1123
+      },
+      "brown_octopus_v3": {
+        "tool_ids": [
+          "toolbench_tool_2544",
+          "apigen_tool_883",
+          "toolbench_tool_2543",
+          "toolACE_tool_10958",
+          "toolACE_tool_13948",
+          "apibank_tool_33",
+          "toolACE_tool_13271",
+          "toolACE_tool_15608",
+          "toolACE_tool_14425",
+          "toolbench_tool_9709",
+          "toolbench_tool_9708",
+          "toolACE_tool_8936",
+          "toolbench_tool_2609",
+          "toolACE_tool_12418",
+          "toolACE_tool_10959",
+          "toolACE_tool_8050"
+        ],
+        "metrics": {
+          "ndcg@10": 0.21840743681816419,
+          "recall@10": 0.5,
+          "completeness@10": 0.0
+        },
+        "tool_count": 16,
+        "schema_tokens": 1957,
+        "metadata": {
+          "newly_retrieved_tool_ids": [
+            "toolbench_tool_2544",
+            "apigen_tool_883",
+            "toolbench_tool_2543",
+            "toolACE_tool_10958",
+            "toolACE_tool_13948",
+            "apibank_tool_33",
+            "toolACE_tool_13271",
+            "toolACE_tool_15608",
+            "toolACE_tool_14425",
+            "toolbench_tool_9709",
+            "toolbench_tool_9708",
+            "toolACE_tool_8936",
+            "toolbench_tool_2609",
+            "toolACE_tool_12418",
+            "toolACE_tool_10959",
+            "toolACE_tool_8050"
+          ],
+          "active_state": {
+            "toolbench_tool_2544": 1,
+            "apigen_tool_883": 1,
+            "toolbench_tool_2543": 1,
+            "toolACE_tool_10958": 1,
+            "toolACE_tool_13948": 1,
+            "apibank_tool_33": 1,
+            "toolACE_tool_13271": 1,
+            "toolACE_tool_15608": 1,
+            "toolACE_tool_14425": 1,
+            "toolbench_tool_9709": 1,
+            "toolbench_tool_9708": 1,
+            "toolACE_tool_8936": 1,
+            "toolbench_tool_2609": 1,
+            "toolACE_tool_12418": 1,
+            "toolACE_tool_10959": 1,
+            "toolACE_tool_8050": 1
+          },
+          "selection": "min_4_bounded_max_gap",
+          "method": "brown_octopus_v3",
+          "min_tools": 4,
+          "max_tools": 16,
+          "min_gap_percent": 2.0,
+          "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+          "tool_representation": "name + description",
+          "intent_analyzer": "spaCy en_core_web_trf",
+          "index_version": 1,
+          "ttl": 8,
+          "active_cap": 30
+        },
+        "state_reset_before_query": true
+      }
+    },
+    {
+      "query_id": "craft_Math_algebra_query_0",
+      "dataset": "craft-math-algebra",
+      "category": "code",
+      "query": "Dave rode 30 miles at 10 miles per hour and 10 miles at 30 miles per hour. What was his average speed, in miles per hour, for the entire ride?",
+      "gold_tool_ids": [
+        "craft_Math_algebra_tool_0"
+      ],
+      "raw_qwen_top10": {
+        "tool_ids": [
+          "toolink_tool_250",
+          "craft_Math_algebra_tool_203",
+          "toolink_tool_798",
+          "toolink_tool_880",
+          "toolink_tool_343",
+          "toolink_tool_1521",
+          "craft_Math_algebra_tool_0",
+          "toolink_tool_853",
+          "toolink_tool_313",
+          "toolink_tool_1451"
+        ],
+        "scores": {
+          "toolink_tool_250": 0.73828125,
+          "craft_Math_algebra_tool_203": 0.63671875,
+          "toolink_tool_798": 0.6328125,
+          "toolink_tool_880": 0.6171875,
+          "toolink_tool_343": 0.61328125,
+          "toolink_tool_1521": 0.609375,
+          "craft_Math_algebra_tool_0": 0.6015625,
+          "toolink_tool_853": 0.59765625,
+          "toolink_tool_313": 0.59375,
+          "toolink_tool_1451": 0.58984375
+        },
+        "metrics": {
+          "ndcg@10": 0.3333333333333333,
+          "recall@10": 1.0,
+          "completeness@10": 1.0
+        },
+        "tool_count": 10,
+        "schema_tokens": 1014
+      },
+      "brown_octopus_v3": {
+        "tool_ids": [
+          "toolink_tool_1521",
+          "toolink_tool_1520",
+          "toolink_tool_15",
+          "toolink_tool_1468",
+          "toolink_tool_131",
+          "toolink_tool_510",
+          "toolink_tool_828",
+          "toolink_tool_1451",
+          "toolink_tool_798",
+          "toolACE_tool_10251",
+          "toolink_tool_1467",
+          "toolink_tool_610",
+          "toolink_tool_1746",
+          "toolink_tool_250",
+          "toolACE_tool_12234",
+          "toolink_tool_1228"
+        ],
+        "metrics": {
+          "ndcg@10": 0.0,
+          "recall@10": 0.0,
+          "completeness@10": 0.0
+        },
+        "tool_count": 16,
+        "schema_tokens": 1112,
+        "metadata": {
+          "newly_retrieved_tool_ids": [
+            "toolink_tool_1521",
+            "toolink_tool_1520",
+            "toolink_tool_15",
+            "toolink_tool_1468",
+            "toolink_tool_131",
+            "toolink_tool_510",
+            "toolink_tool_828",
+            "toolink_tool_1451",
+            "toolink_tool_798",
+            "toolACE_tool_10251",
+            "toolink_tool_1467",
+            "toolink_tool_610",
+            "toolink_tool_1746",
+            "toolink_tool_250",
+            "toolACE_tool_12234",
+            "toolink_tool_1228"
+          ],
+          "active_state": {
+            "toolink_tool_1521": 1,
+            "toolink_tool_1520": 1,
+            "toolink_tool_15": 1,
+            "toolink_tool_1468": 1,
+            "toolink_tool_131": 1,
+            "toolink_tool_510": 1,
+            "toolink_tool_828": 1,
+            "toolink_tool_1451": 1,
+            "toolink_tool_798": 1,
+            "toolACE_tool_10251": 1,
+            "toolink_tool_1467": 1,
+            "toolink_tool_610": 1,
+            "toolink_tool_1746": 1,
+            "toolink_tool_250": 1,
+            "toolACE_tool_12234": 1,
+            "toolink_tool_1228": 1
+          },
+          "selection": "min_4_bounded_max_gap",
+          "method": "brown_octopus_v3",
+          "min_tools": 4,
+          "max_tools": 16,
+          "min_gap_percent": 2.0,
+          "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+          "tool_representation": "name + description",
+          "intent_analyzer": "spaCy en_core_web_trf",
+          "index_version": 1,
+          "ttl": 8,
+          "active_cap": 30
+        },
+        "state_reset_before_query": true
+      }
+    },
+    {
+      "query_id": "appbench_query_0",
+      "dataset": "appbench",
+      "category": "customized",
+      "query": "Please make a payment request of $108 to Diego, ensuring the transaction is private and using a credit card as the payment method.",
+      "gold_tool_ids": [
+        "appbench_tool_20",
+        "appbench_tool_21"
+      ],
+      "raw_qwen_top10": {
+        "tool_ids": [
+          "appbench_tool_20",
+          "appbench_tool_21",
+          "taskbench_daily_tool_22",
+          "toolACE_tool_4196",
+          "ultraTool_tool_145",
+          "toolalpaca_tool_1679",
+          "toolACE_tool_14377",
+          "toolalpaca_tool_363",
+          "toolbench_tool_6122",
+          "toolalpaca_tool_1614"
+        ],
+        "scores": {
+          "appbench_tool_20": 0.75390625,
+          "appbench_tool_21": 0.67578125,
+          "taskbench_daily_tool_22": 0.66796875,
+          "toolACE_tool_4196": 0.6640625,
+          "ultraTool_tool_145": 0.6328125,
+          "toolalpaca_tool_1679": 0.6328125,
+          "toolACE_tool_14377": 0.6328125,
+          "toolalpaca_tool_363": 0.6328125,
+          "toolbench_tool_6122": 0.62890625,
+          "toolalpaca_tool_1614": 0.625
+        },
+        "metrics": {
+          "ndcg@10": 1.0,
+          "recall@10": 1.0,
+          "completeness@10": 1.0
+        },
+        "tool_count": 10,
+        "schema_tokens": 970
+      },
+      "brown_octopus_v3": {
+        "tool_ids": [
+          "appbench_tool_20",
+          "appbench_tool_21",
+          "toolACE_tool_4196",
+          "toolACE_tool_14377",
+          "taskbench_daily_tool_22",
+          "ultraTool_tool_425",
+          "ultraTool_tool_161",
+          "toolalpaca_tool_363"
+        ],
+        "metrics": {
+          "ndcg@10": 1.0,
+          "recall@10": 1.0,
+          "completeness@10": 1.0
+        },
+        "tool_count": 8,
+        "schema_tokens": 689,
+        "metadata": {
+          "newly_retrieved_tool_ids": [
+            "appbench_tool_20",
+            "appbench_tool_21",
+            "toolACE_tool_4196",
+            "toolACE_tool_14377",
+            "taskbench_daily_tool_22",
+            "ultraTool_tool_425",
+            "ultraTool_tool_161",
+            "toolalpaca_tool_363"
+          ],
+          "active_state": {
+            "appbench_tool_20": 1,
+            "appbench_tool_21": 1,
+            "toolACE_tool_4196": 1,
+            "toolACE_tool_14377": 1,
+            "taskbench_daily_tool_22": 1,
+            "ultraTool_tool_425": 1,
+            "ultraTool_tool_161": 1,
+            "toolalpaca_tool_363": 1
+          },
+          "selection": "min_4_bounded_max_gap",
+          "method": "brown_octopus_v3",
+          "min_tools": 4,
+          "max_tools": 16,
+          "min_gap_percent": 2.0,
+          "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+          "tool_representation": "name + description",
+          "intent_analyzer": "spaCy en_core_web_trf",
+          "index_version": 1,
+          "ttl": 8,
+          "active_cap": 30
+        },
+        "state_reset_before_query": true
+      }
+    }
+  ],
+  "summary": {
+    "raw_qwen_top10": {
+      "ndcg@10": 0.5466356432386875,
+      "recall@10": 0.8333333333333334,
+      "completeness@10": 0.6666666666666666,
+      "mean_exposed_tools": 10.0,
+      "min_exposed_tools": 10,
+      "max_exposed_tools": 10,
+      "mean_schema_tokens": 1035.6666666666667,
+      "schema_token_reduction_vs_all": 0.9997744223556957,
+      "selected_k_distribution": {
+        "10": 3
+      }
+    },
+    "brown_octopus_v3": {
+      "ndcg@10": 0.4061358122727214,
+      "recall@10": 0.5,
+      "completeness@10": 0.3333333333333333,
+      "mean_exposed_tools": 13.333333333333334,
+      "min_exposed_tools": 8,
+      "max_exposed_tools": 16,
+      "mean_schema_tokens": 1252.6666666666667,
+      "schema_token_reduction_vs_all": 0.99972715777686,
+      "selected_k_distribution": {
+        "8": 1,
+        "16": 2
+      }
+    }
+  },
+  "checks": {
+    "gold_labels_preserved": true,
+    "raw_qwen_exactly_10": true,
+    "v3_variable_k": true,
+    "state_reset": true,
+    "default_index_not_used": true
+  }
+}
