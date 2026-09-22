@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import argparse
 from pathlib import Path
 from urllib.request import urlopen
 
@@ -20,6 +21,14 @@ FILES = [
     "tools/code/tools-00000-of-00001.parquet",
     "tools/customized/tools-00000-of-00001.parquet",
 ]
+ALL_TASKS = (
+    "apibank", "apigen", "appbench", "autotools-food", "autotools-music", "autotools-weather",
+    "craft-math-algebra", "craft-tabmwp", "craft-vqa", "gorilla-huggingface", "gorilla-pytorch",
+    "gorilla-tensor", "gpt4tools", "gta", "metatool", "mnms", "restgpt-spotify", "restgpt-tmdb",
+    "reversechain", "rotbench", "t-eval-dialog", "t-eval-step", "taskbench-daily",
+    "taskbench-huggingface", "taskbench-multimedia", "tool-be-honest", "toolace", "toolalpaca",
+    "toolbench-sam", "toolbench", "toolemu", "tooleyes", "toolink", "toollens", "ultratool",
+)
 
 
 def sha256(path: Path) -> str:
@@ -31,9 +40,16 @@ def sha256(path: Path) -> str:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--full", action="store_true", help="Fetch every official ToolRet query shard")
+    args = parser.parse_args()
+    files = list(FILES)
+    if args.full:
+        files = [f"queries/{task}/queries-00000-of-00001.parquet" for task in ALL_TASKS]
+        files.extend(FILES[3:])
     OUT.mkdir(parents=True, exist_ok=True)
     hashes = {}
-    for relative in FILES:
+    for relative in files:
         path = OUT / relative
         path.parent.mkdir(parents=True, exist_ok=True)
         base = BASE_QUERIES if relative.startswith("queries/") else BASE_TOOLS

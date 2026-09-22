@@ -66,7 +66,7 @@ def load_toolret_tools(root: str | Path) -> tuple[list[dict[str, Any]], dict[str
 
 def load_toolret_queries(
     root: str | Path,
-    datasets: tuple[str, ...] = ("apibank", "craft-math-algebra", "appbench"),
+    datasets: tuple[str, ...] | None = ("apibank", "craft-math-algebra", "appbench"),
 ) -> tuple[list[ToolRetExample], dict[str, str]]:
     try:
         import pyarrow.parquet as parquet
@@ -74,6 +74,8 @@ def load_toolret_queries(
         raise RuntimeError("ToolRet loading requires pyarrow") from exc
 
     root = Path(root)
+    if datasets is None:
+        datasets = tuple(sorted(path.name for path in (root / "queries").iterdir() if path.is_dir()))
     examples: list[ToolRetExample] = []
     sources: dict[str, str] = {}
     for dataset in datasets:
