@@ -17,8 +17,8 @@ from evals.methods.octopus import OctopusMethod
 from evals.toolret.adapter import load_toolret_queries, load_toolret_tools, tool_embedding_text
 from evals.toolret.index import MODEL_NAME, canonical_hash
 from evals.toolret.metrics import evaluate_toolret_result
-from octopus import Octopus
-from octopus.index_store import load_embeddings, load_metadata, load_tools
+from brown_octopus import Octopus
+from brown_octopus.index_store import load_embeddings, load_metadata, load_tools
 
 
 ROOT = Path(__file__).resolve().parents[2]

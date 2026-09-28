@@ -1,9 +1,9 @@
 import asyncio
 
-from octopus.sources import load_mcp_urls
-from octopus.mcp_discovery import discover_universe
-from octopus.tool_registry import set_tools, get_all_tools
-from octopus.retriever import refresh_index, retrieve_tools
+from brown_octopus.sources import load_mcp_urls
+from brown_octopus.mcp_discovery import discover_universe
+from brown_octopus.tool_registry import set_tools, get_all_tools
+from brown_octopus.retriever import refresh_index, retrieve_tools
 
 
 QUERIES = [

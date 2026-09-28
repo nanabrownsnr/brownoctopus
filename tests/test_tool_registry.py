@@ -1,6 +1,6 @@
 import pytest
 
-from octopus.tool_registry import (
+from brown_octopus.tool_registry import (
     get_all_tools,
     get_tools,
     set_tools,

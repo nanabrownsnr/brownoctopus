@@ -1,4 +1,4 @@
-from octopus.analyzer import (
+from brown_octopus.analyzer import (
     analyze_intents,
     initialize_analyzer,
 )

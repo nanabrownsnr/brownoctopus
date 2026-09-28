@@ -10,7 +10,7 @@ import torch
 from sentence_transformers import SentenceTransformer
 
 from evals.toolret.adapter import tool_embedding_text
-from octopus.index_store import save_embeddings, save_metadata, save_tools
+from brown_octopus.index_store import save_embeddings, save_metadata, save_tools
 
 
 MODEL_NAME = "Qwen/Qwen3-Embedding-0.6B"

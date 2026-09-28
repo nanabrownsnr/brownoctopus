@@ -1,15 +1,25 @@
 [project]
-name = "octopus"
-version = "0.1.0"
-description = "Add your description here"
+name = "brown-octopus"
+version = "0.4.4"
+description = "Capability-context management for tool-using AI agents"
 readme = "README.md"
 authors = [
     { name = "nana brown", email = "nanabrownsnr@gmail.com" }
 ]
+license = { file = "LICENSE" }
+keywords = ["AI agents", "MCP", "tool retrieval", "capability context"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+]
+urls = { Repository = "https://github.com/nanabrownsnr/octopus" }
 requires-python = ">=3.13"
 dependencies = [
     "fastmcp>=4.0.3",
     "numpy>=2.5.3",
+    "packaging>=24.0",
     "sentence-transformers>=6.0.1",
     "spacy>=3.8.16",
 ]
@@ -18,9 +28,16 @@ dependencies = [
 toolret = [
     "pyarrow>=18.0.0",
 ]
+jev = [
+    "jev-reranker>=0.1.0",
+]
+service = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
+]
 
 [project.scripts]
-octopus = "octopus:main"
+brown-octopus = "brown_octopus.cli:main"
 
 [build-system]
 requires = ["uv_build>=0.12.6,<0.13.0"]
@@ -33,3 +50,6 @@ dev = [
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+markers = [
+    "external: requires a live external MCP service or network access",
+]

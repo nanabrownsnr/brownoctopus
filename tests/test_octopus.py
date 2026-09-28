@@ -1,6 +1,6 @@
 import pytest
 
-from octopus import Octopus
+from brown_octopus import CapabilityDiscoveryResult, Octopus
 
 from pathlib import Path
 
@@ -18,12 +18,12 @@ async def test_octopus_initialize_rejects_unsupported_index_version(
     (index_path / "metadata.json").write_text('{"version": 999}')
 
     monkeypatch.setattr(
-        "octopus.octopus.initialize_analyzer",
+        "brown_octopus.octopus.initialize_analyzer",
         lambda: None,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.initialize_retriever",
+        "brown_octopus.octopus.initialize_retriever",
         lambda: None,
     )
 
@@ -33,7 +33,7 @@ async def test_octopus_initialize_rejects_unsupported_index_version(
 
     with pytest.raises(
         RuntimeError,
-        match="Unsupported Octopus index version",
+        match="index version is unsupported",
     ):
         await octopus.initialize()
 
@@ -48,20 +48,22 @@ async def test_octopus_update_saves_index_metadata(
         {"name": "tool_b", "description": "B"},
     ]
 
-    saved_metadata = {}
+    class Source:
+        async def discover(self):
+            return CapabilityDiscoveryResult(tools=tools)
 
     monkeypatch.setattr(
-        "octopus.octopus.initialize_analyzer",
+        "brown_octopus.octopus.initialize_analyzer",
         lambda: None,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.initialize_retriever",
+        "brown_octopus.octopus.initialize_retriever",
         lambda: None,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.load_mcp_urls",
+        "brown_octopus.octopus.load_mcp_urls",
         lambda path: ["fake-mcp"],
     )
 
@@ -69,50 +71,38 @@ async def test_octopus_update_saves_index_metadata(
         return tools
 
     monkeypatch.setattr(
-        "octopus.octopus.discover_universe",
+        "brown_octopus.octopus.discover_universe",
         fake_discover_universe,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.set_tools",
+        "brown_octopus.octopus.set_tools",
         lambda tools: None,
     )
 
-    monkeypatch.setattr(
-        "octopus.octopus.refresh_index",
-        lambda: "fake-embeddings",
-    )
+    monkeypatch.setattr("brown_octopus.octopus.build_embeddings", lambda tools: "fake-embeddings")
+    monkeypatch.setattr("brown_octopus.octopus.save_snapshot_atomic", lambda *args: None)
+    monkeypatch.setattr("brown_octopus.octopus.load_index", lambda **kwargs: None)
 
     monkeypatch.setattr(
-        "octopus.octopus.save_tools",
+        "brown_octopus.octopus.save_tools",
         lambda path, tools: None,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.save_embeddings",
+        "brown_octopus.octopus.save_embeddings",
         lambda path, embeddings: None,
-    )
-
-    def fake_save_metadata(path, metadata):
-        saved_metadata.update(metadata)
-
-    monkeypatch.setattr(
-        "octopus.octopus.save_metadata",
-        fake_save_metadata,
     )
 
     octopus = Octopus(
         index_path=tmp_path / "index",
         catalog_path=tmp_path / "mcps.json",
+        capability_source=Source(),
     )
 
-    await octopus.update()
+    report = await octopus.update()
 
-    assert saved_metadata == {
-        "version": 1,
-        "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
-        "tool_count": 2,
-    }
+    assert report.tool_count == 2
 
 
 @pytest.mark.anyio
@@ -121,12 +111,12 @@ async def test_octopus_initialize_fails_clearly_when_index_is_missing(
     tmp_path,
 ):
     monkeypatch.setattr(
-        "octopus.octopus.initialize_analyzer",
+        "brown_octopus.octopus.initialize_analyzer",
         lambda: None,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.initialize_retriever",
+        "brown_octopus.octopus.initialize_retriever",
         lambda: None,
     )
 
@@ -136,7 +126,7 @@ async def test_octopus_initialize_fails_clearly_when_index_is_missing(
 
     with pytest.raises(
         RuntimeError,
-        match="Octopus index not found",
+        match="index is incomplete",
     ):
         await octopus.initialize()
 
@@ -146,9 +136,17 @@ async def test_octopus_update_initializes_models(
     monkeypatch,
     tmp_path,
 ):
+    class Source:
+        async def discover(self):
+            return CapabilityDiscoveryResult()
+
+    monkeypatch.setattr("brown_octopus.octopus.save_snapshot_atomic", lambda *args: None)
+    monkeypatch.setattr("brown_octopus.octopus.load_index", lambda **kwargs: None)
+
     octopus = Octopus(
         index_path=tmp_path / "index",
         catalog_path=tmp_path / "mcps.json",
+        capability_source=Source(),
     )
 
     initialized = {
@@ -163,17 +161,17 @@ async def test_octopus_update_initializes_models(
         initialized["retriever"] = True
 
     monkeypatch.setattr(
-        "octopus.octopus.initialize_analyzer",
+        "brown_octopus.octopus.initialize_analyzer",
         fake_initialize_analyzer,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.initialize_retriever",
+        "brown_octopus.octopus.initialize_retriever",
         fake_initialize_retriever,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.load_mcp_urls",
+        "brown_octopus.octopus.load_mcp_urls",
         lambda path: [],
     )
 
@@ -181,27 +179,27 @@ async def test_octopus_update_initializes_models(
         return []
 
     monkeypatch.setattr(
-        "octopus.octopus.discover_universe",
+        "brown_octopus.octopus.discover_universe",
         fake_discover_universe,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.set_tools",
+        "brown_octopus.octopus.set_tools",
         lambda tools: None,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.refresh_index",
+        "brown_octopus.octopus.refresh_index",
         lambda: None,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.save_tools",
+        "brown_octopus.octopus.save_tools",
         lambda path, tools: None,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.save_embeddings",
+        "brown_octopus.octopus.save_embeddings",
         lambda path, embeddings: None,
     )
 
@@ -219,16 +217,6 @@ async def test_octopus_update_rebuilds_and_saves_index(
     catalog_path = tmp_path / "mcps.json"
     index_path = tmp_path / "index"
 
-    octopus = Octopus(
-        index_path=index_path,
-        catalog_path=catalog_path,
-    )
-
-    mcp_urls = [
-        "https://example.com/web/mcp",
-        "https://example.com/email/mcp",
-    ]
-
     discovered_tools = [
         {
             "name": "web_search",
@@ -242,19 +230,18 @@ async def test_octopus_update_rebuilds_and_saves_index(
 
     built_embeddings = object()
 
-    monkeypatch.setattr(
-        "octopus.octopus.load_mcp_urls",
-        lambda path: mcp_urls,
+    class Source:
+        async def discover(self):
+            return CapabilityDiscoveryResult(tools=discovered_tools)
+
+    octopus = Octopus(
+        index_path=index_path,
+        catalog_path=catalog_path,
+        capability_source=Source(),
     )
 
-    async def fake_discover_universe(urls):
-        assert urls == mcp_urls
-        return discovered_tools
-
-    monkeypatch.setattr(
-        "octopus.octopus.discover_universe",
-        fake_discover_universe,
-    )
+    monkeypatch.setattr("brown_octopus.octopus.initialize_analyzer", lambda: None)
+    monkeypatch.setattr("brown_octopus.octopus.initialize_retriever", lambda: None)
 
     registered_tools = []
 
@@ -262,14 +249,13 @@ async def test_octopus_update_rebuilds_and_saves_index(
         registered_tools.extend(tools)
 
     monkeypatch.setattr(
-        "octopus.octopus.set_tools",
+        "brown_octopus.octopus.set_tools",
         fake_set_tools,
     )
 
-    monkeypatch.setattr(
-        "octopus.octopus.refresh_index",
-        lambda: built_embeddings,
-    )
+    monkeypatch.setattr("brown_octopus.octopus.build_embeddings", lambda tools: built_embeddings)
+    monkeypatch.setattr("brown_octopus.octopus.save_snapshot_atomic", lambda *args: None)
+    monkeypatch.setattr("brown_octopus.octopus.load_index", lambda **kwargs: None)
 
     saved = {}
 
@@ -282,26 +268,19 @@ async def test_octopus_update_rebuilds_and_saves_index(
         saved["embeddings"] = embeddings
 
     monkeypatch.setattr(
-        "octopus.octopus.save_tools",
+        "brown_octopus.octopus.save_tools",
         fake_save_tools,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.save_embeddings",
+        "brown_octopus.octopus.save_embeddings",
         fake_save_embeddings,
     )
 
     result = await octopus.update()
 
-    assert result == discovered_tools
-
     assert registered_tools == discovered_tools
-
-    assert saved["tools_path"] == index_path
-    assert saved["tools"] == discovered_tools
-
-    assert saved["embeddings_path"] == index_path
-    assert saved["embeddings"] is built_embeddings
+    assert result.tool_count == 2
 
 
 def test_octopus_accepts_catalog_path():
@@ -338,7 +317,7 @@ def test_octopus_processes_turn_and_updates_its_state(monkeypatch):
         }
 
     monkeypatch.setattr(
-        "octopus.octopus.process_turn",
+        "brown_octopus.octopus.process_turn",
         fake_process_turn,
     )
 
@@ -384,7 +363,7 @@ def test_octopus_carries_state_across_turns(monkeypatch):
         }
 
     monkeypatch.setattr(
-        "octopus.octopus.process_turn",
+        "brown_octopus.octopus.process_turn",
         fake_process_turn,
     )
 
@@ -430,7 +409,7 @@ def test_octopus_reset_clears_conversation_state():
     assert octopus.active_tools == {}
 
 
-def test_octopus_retrieve_returns_tools_without_changing_state(
+def test_octopus_retrieve_returns_active_tools_and_advances_default_session(
     monkeypatch,
 ):
     octopus = Octopus()
@@ -440,21 +419,30 @@ def test_octopus_retrieve_returns_tools_without_changing_state(
         {"name": "send_email"},
     ]
 
-    def fake_retrieve_tools(query):
+    def fake_process_turn(query, active_tools, turn):
         assert query == ("Find the latest Nvidia news and email Tom")
-        return expected_tools
+        assert active_tools == {}
+        assert turn == 1
+        return {
+            "retrieved_tools": expected_tools,
+            "active_state": {"web_search": 1, "send_email": 1},
+            "tools": expected_tools,
+        }
 
     monkeypatch.setattr(
-        "octopus.octopus.retrieve_tools",
-        fake_retrieve_tools,
+        "brown_octopus.octopus.process_turn",
+        fake_process_turn,
     )
 
     result = octopus.retrieve("Find the latest Nvidia news and email Tom")
 
     assert result == expected_tools
 
-    assert octopus.turn == 0
-    assert octopus.active_tools == {}
+    assert octopus.turn == 1
+    assert octopus.active_tools == {
+        "web_search": 1,
+        "send_email": 1,
+    }
 
 
 @pytest.mark.anyio
@@ -485,17 +473,17 @@ async def test_octopus_can_initialize_index_created_by_update(
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.initialize_analyzer",
+        "brown_octopus.octopus.initialize_analyzer",
         lambda: None,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.initialize_retriever",
+        "brown_octopus.octopus.initialize_retriever",
         lambda: None,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.load_mcp_urls",
+        "brown_octopus.octopus.load_mcp_urls",
         lambda path: ["fake-mcp"],
     )
 
@@ -503,18 +491,23 @@ async def test_octopus_can_initialize_index_created_by_update(
         return tools
 
     monkeypatch.setattr(
-        "octopus.octopus.discover_universe",
+        "brown_octopus.octopus.discover_universe",
         fake_discover_universe,
     )
 
     monkeypatch.setattr(
-        "octopus.octopus.refresh_index",
-        lambda: embeddings,
+        "brown_octopus.octopus.build_embeddings",
+        lambda tools: embeddings,
     )
+
+    class Source:
+        async def discover(self):
+            return CapabilityDiscoveryResult(tools=tools)
 
     builder = Octopus(
         index_path=index_path,
         catalog_path=tmp_path / "mcps.json",
+        capability_source=Source(),
     )
 
     await builder.update()

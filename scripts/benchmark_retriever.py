@@ -2,15 +2,15 @@ import asyncio
 from statistics import mean, median
 from time import perf_counter
 
-from octopus.analyzer import initialize_analyzer
-from octopus.mcp_discovery import discover_universe
-from octopus.pipeline import process_turn
-from octopus.retriever import (
+from brown_octopus.analyzer import initialize_analyzer
+from brown_octopus.mcp_discovery import discover_universe
+from brown_octopus.pipeline import process_turn
+from brown_octopus.retriever import (
     initialize_retriever,
     refresh_index,
 )
-from octopus.sources import load_mcp_urls
-from octopus.tool_registry import set_tools
+from brown_octopus.sources import load_mcp_urls
+from brown_octopus.tool_registry import set_tools
 
 
 TEST_CASES = [

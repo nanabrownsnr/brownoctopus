@@ -1,13 +1,13 @@
 from pathlib import Path
 
-from octopus.analyzer import initialize_analyzer
-from octopus.mcp_discovery import discover_universe
-from octopus.retriever import (
+from brown_octopus.analyzer import initialize_analyzer
+from brown_octopus.mcp_discovery import discover_universe
+from brown_octopus.retriever import (
     initialize_retriever,
     refresh_index,
 )
-from octopus.sources import load_mcp_urls
-from octopus.tool_registry import set_tools
+from brown_octopus.sources import load_mcp_urls
+from brown_octopus.tool_registry import set_tools
 
 
 DEFAULT_MCP_CATALOG = Path("data/mcps.json")

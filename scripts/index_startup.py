@@ -1,7 +1,7 @@
 import asyncio
 import time
 
-from octopus import Octopus
+from brown_octopus import Octopus
 
 
 async def main():

@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 from evals.datasets.internal import DATASET_PATH, load_tasks, validate_tasks
-from octopus.index_store import load_tools
+from brown_octopus.index_store import load_tools
 
 
 REPORT_DIR = Path("results/reports")

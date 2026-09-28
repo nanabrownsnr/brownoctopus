@@ -1,6 +1,6 @@
 import asyncio
 
-from octopus import Octopus
+from brown_octopus import Octopus
 
 
 async def main():

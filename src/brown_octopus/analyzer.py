@@ -2,6 +2,8 @@ import spacy
 from spacy.language import Language
 from spacy.tokens import Doc, Token
 
+from brown_octopus.model_store import register_managed_spacy_plugins, resolve_spacy_model
+
 
 SPACY_MODEL_NAME = "en_core_web_trf"
 OBJECT_DEPENDENCIES = {"dobj", "obj", "attr"}
@@ -9,12 +11,22 @@ OBJECT_DEPENDENCIES = {"dobj", "obj", "attr"}
 nlp: Language | None = None
 
 
+class DeterministicIntentAnalyzer:
+    """Interface adapter for the current deterministic spaCy analyzer."""
+
+    name = "spacy_deterministic"
+
+    def analyze(self, text: str) -> list[dict]:
+        return analyze_intents(text)
+
+
 def initialize_analyzer() -> None:
     """Load the spaCy model once."""
     global nlp
 
     if nlp is None:
-        nlp = spacy.load(SPACY_MODEL_NAME)
+        register_managed_spacy_plugins()
+        nlp = spacy.load(resolve_spacy_model())
 
 
 def _has_direct_object(token: Token) -> bool:
@@ -131,6 +143,59 @@ def _get_direct_target(
     return " ".join(targets)
 
 
+def _get_core_resource(action_token: Token) -> str | None:
+    """Return the core grammatical resource operated on by an action.
+
+    This intentionally uses only dependency structure.  Task-specific
+    arguments such as names, titles, and dates remain in the normal intent
+    fields but do not become part of the capability retrieval query.
+    """
+
+    def collect_compounds(token: Token) -> list[Token]:
+        compounds: list[Token] = []
+        for child in token.children:
+            if child.dep_ == "compound":
+                compounds.extend(collect_compounds(child))
+                compounds.append(child)
+        return compounds
+
+    for child in action_token.children:
+        if child.dep_ not in OBJECT_DEPENDENCIES:
+            continue
+
+        tokens = collect_compounds(child) + [child]
+        tokens.sort(key=lambda token: token.i)
+        resource = " ".join(token.text for token in tokens).strip()
+        if resource:
+            return resource
+
+    # Handle constructions such as "reply to the email".
+    for child in action_token.children:
+        if child.dep_ not in {"prep", "dative"}:
+            continue
+
+        for token in child.subtree:
+            if token.dep_ != "pobj" or token.pos_ not in {"NOUN", "PROPN"}:
+                continue
+
+            tokens = collect_compounds(token) + [token]
+            tokens.sort(key=lambda item: item.i)
+            resource = " ".join(item.text for item in tokens).strip()
+            if resource:
+                return resource
+
+    return None
+
+
+def _get_retrieval_text(action_token: Token) -> str:
+    """Build the compact capability-oriented query for one intent."""
+
+    resource = _get_core_resource(action_token)
+    if not resource:
+        return action_token.lemma_
+    return f"{action_token.lemma_} {resource}"
+
+
 def _get_fallback_target(
     doc: Doc,
     action_token: Token,
@@ -173,7 +238,32 @@ def analyze_intents(text: str) -> list[dict]:
 
     doc = nlp(normalized_text)
 
-    action_tokens = _find_action_tokens(doc)
+    try:
+        action_tokens = _find_action_tokens(doc)
+    except StopIteration:
+        # Some short, mathematical, or malformed benchmark strings can be
+        # parsed without a ROOT. Preserve the request as one opaque intent so
+        # retrieval remains available instead of crashing the service.
+        return [
+            {
+                "action": "request",
+                "target": None,
+                "text": original_text,
+                "retrieval_text": original_text,
+                "context": original_text,
+            }
+        ]
+
+    if not action_tokens:
+        return [
+            {
+                "action": "request",
+                "target": None,
+                "text": original_text,
+                "retrieval_text": original_text,
+                "context": original_text,
+            }
+        ]
 
     intents = []
 
@@ -198,6 +288,7 @@ def analyze_intents(text: str) -> list[dict]:
                     action_token,
                     action_tokens,
                 ),
+                "retrieval_text": _get_retrieval_text(action_token),
                 "context": original_text,
             }
         )

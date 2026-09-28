@@ -1,12 +1,12 @@
 import pytest
 
-from octopus.analyzer import initialize_analyzer
-from octopus.pipeline import process_turn
-from octopus.retriever import (
+from brown_octopus.analyzer import initialize_analyzer
+from brown_octopus.pipeline import process_turn
+from brown_octopus.retriever import (
     initialize_retriever,
     refresh_index,
 )
-from octopus.tool_registry import (
+from brown_octopus.tool_registry import (
     get_all_tools,
     set_tools,
 )
@@ -176,7 +176,7 @@ def test_pipeline_rotates_old_tools_when_active_context_is_full(monkeypatch):
     active_state["tool_4"] = 9
 
     monkeypatch.setattr(
-        "octopus.pipeline.retrieve_tools",
+        "brown_octopus.pipeline.retrieve_tools",
         lambda query: new_tools,
     )
 

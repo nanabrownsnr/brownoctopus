@@ -12,8 +12,8 @@ from transformers import AutoTokenizer
 from evals.common.metrics import score_context
 from evals.common.token_count import count_schema_tokens
 from evals.datasets.internal import sha256_file
-from octopus.active_tools import ACTIVE_TOOL_TTL, MAX_ACTIVE_TOOLS, update_active_tools
-from octopus.index_store import load_tools
+from brown_octopus.active_tools import ACTIVE_TOOL_TTL, MAX_ACTIVE_TOOLS, update_active_tools
+from brown_octopus.index_store import load_tools
 
 
 RAW_DIR = Path("results/raw")

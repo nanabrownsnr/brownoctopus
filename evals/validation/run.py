@@ -14,8 +14,8 @@ from evals.common.metrics import score_context
 from evals.common.token_count import serialize_tool
 from evals.datasets.internal import sha256_file, validate_tasks
 from evals.methods.selection import SelectionMethod, bounded_max_gap
-from octopus.index_store import load_tools
-from octopus import Octopus
+from brown_octopus.index_store import load_tools
+from brown_octopus import Octopus
 
 
 DATASET_PATH = Path("data/evals/octopus_validation_benchmark_v1.json")

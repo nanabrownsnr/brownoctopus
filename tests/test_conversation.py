@@ -1,12 +1,12 @@
 import pytest
 
-from octopus.pipeline import process_turn
-from octopus.retriever import (
+from brown_octopus.pipeline import process_turn
+from brown_octopus.retriever import (
     initialize_retriever,
     refresh_index,
 )
-from octopus.analyzer import initialize_analyzer
-from octopus.tool_registry import (
+from brown_octopus.analyzer import initialize_analyzer
+from brown_octopus.tool_registry import (
     get_all_tools,
     set_tools,
 )
@@ -271,7 +271,7 @@ def test_conversation_context_grows_to_cap_and_rotates_old_capabilities(
     }
 
     monkeypatch.setattr(
-        "octopus.pipeline.retrieve_tools",
+        "brown_octopus.pipeline.retrieve_tools",
         lambda query: retrieval_by_turn[query],
     )
 

@@ -1,8 +1,8 @@
 import asyncio
 
-from octopus import Octopus
-from octopus.analyzer import analyze_intents
-from octopus.retriever import (
+from brown_octopus import Octopus
+from brown_octopus.analyzer import analyze_intents
+from brown_octopus.retriever import (
     rank_tools,
     retrieve_tools_adaptive,
 )

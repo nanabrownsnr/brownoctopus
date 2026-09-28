@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from octopus.sources import load_mcp_urls
+from brown_octopus.sources import load_mcp_urls
 
 
 def test_load_mcp_urls_from_json(tmp_path):

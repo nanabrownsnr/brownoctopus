@@ -2,9 +2,11 @@ import json
 
 import pytest
 
-from octopus.bootstrap import initialize
-from octopus.pipeline import process_turn
-from octopus.tool_registry import get_all_tools
+pytestmark = pytest.mark.external
+
+from brown_octopus.bootstrap import initialize
+from brown_octopus.pipeline import process_turn
+from brown_octopus.tool_registry import get_all_tools
 
 
 WEB_SEARCH_MCP_URL = "https://twynity-dev.mcp.4th-ir.com/web-search/mcp"

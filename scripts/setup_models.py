@@ -1,15 +1,6 @@
-"""Download/check the frozen Brown Octopus models in the active environment."""
+"""Compatibility wrapper for the installed Brown Octopus bootstrap command."""
 
-import spacy
-from sentence_transformers import SentenceTransformer
-
-
-def main() -> None:
-    nlp = spacy.load("en_core_web_trf")
-    print(f"spaCy en_core_web_trf loaded: {nlp.meta.get('version', 'unknown')}")
-    model = SentenceTransformer("Qwen/Qwen3-Embedding-0.6B", trust_remote_code=True)
-    print(f"Qwen/Qwen3-Embedding-0.6B loaded on: {model.device}")
-
+from brown_octopus.setup_models import main
 
 if __name__ == "__main__":
     main()

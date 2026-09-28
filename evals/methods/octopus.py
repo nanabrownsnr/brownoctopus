@@ -1,6 +1,6 @@
 from time import perf_counter
 
-from octopus import Octopus
+from brown_octopus import Octopus
 
 from evals.common.models import RetrievalResult
 

@@ -1,11 +1,11 @@
 from time import perf_counter
 
-from octopus.active_tools import update_active_tools
-from octopus.analyzer import analyze_intents
-from octopus.retriever import rank_tools
-from octopus.selection import select_bounded_max_gap
-from octopus.tool_registry import get_tools
-from octopus import Octopus
+from brown_octopus.active_tools import update_active_tools
+from brown_octopus.analyzer import analyze_intents
+from brown_octopus.retriever import rank_tools
+from brown_octopus.selection import select_bounded_max_gap
+from brown_octopus.tool_registry import get_tools
+from brown_octopus import Octopus
 
 from evals.common.models import RetrievalResult
 

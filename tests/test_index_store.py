@@ -1,8 +1,8 @@
 import json
 
-from octopus.index_store import load_tools
+from brown_octopus.index_store import load_tools
 import torch
-from octopus.index_store import (
+from brown_octopus.index_store import (
     load_embeddings,
     load_tools,
     save_embeddings,
@@ -79,7 +79,7 @@ def test_load_tools_from_index(tmp_path):
 
 
 def test_save_and_load_metadata(tmp_path):
-    from octopus.index_store import (
+    from brown_octopus.index_store import (
         load_metadata,
         save_metadata,
     )

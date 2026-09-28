@@ -1,18 +1,18 @@
 import pytest
 
-from octopus.analyzer import initialize_analyzer
-from octopus.retriever import (
+from brown_octopus.analyzer import initialize_analyzer
+from brown_octopus.retriever import (
     initialize_retriever,
     refresh_index,
     retrieve_tools,
 )
-from octopus.tool_registry import (
+from brown_octopus.tool_registry import (
     get_all_tools,
     set_tools,
 )
 import torch
 
-import octopus.retriever as retriever
+import brown_octopus.retriever as retriever
 
 
 def test_refresh_index_returns_built_embeddings(
@@ -326,11 +326,11 @@ def test_retrieval_uses_bounded_max_gap(
     ]
 
     monkeypatch.setattr(
-        "octopus.retriever.rank_tools",
+        "brown_octopus.retriever.rank_tools",
         lambda query: ranked_tools,
     )
 
-    from octopus.retriever import retrieve_tools
+    from brown_octopus.retriever import retrieve_tools
 
     selected = retrieve_tools("test query")
 
@@ -355,7 +355,7 @@ def test_retrieval_selects_per_intent_then_merges(
     ]
 
     monkeypatch.setattr(
-        "octopus.retriever.analyze_intents",
+        "brown_octopus.retriever.analyze_intents",
         lambda query: intents,
     )
 
@@ -373,11 +373,11 @@ def test_retrieval_selects_per_intent_then_merges(
     }
 
     monkeypatch.setattr(
-        "octopus.retriever.rank_tools",
+        "brown_octopus.retriever.rank_tools",
         lambda query: rankings[query],
     )
 
-    from octopus.retriever import retrieve_tools
+    from brown_octopus.retriever import retrieve_tools
 
     selected = retrieve_tools(
         "Find the latest Nvidia news " "and email a summary to Tom"
@@ -406,7 +406,7 @@ def test_retrieval_deduplicates_tools_across_intents(
     ]
 
     monkeypatch.setattr(
-        "octopus.retriever.analyze_intents",
+        "brown_octopus.retriever.analyze_intents",
         lambda query: intents,
     )
 
@@ -424,11 +424,11 @@ def test_retrieval_deduplicates_tools_across_intents(
     }
 
     monkeypatch.setattr(
-        "octopus.retriever.rank_tools",
+        "brown_octopus.retriever.rank_tools",
         lambda query: rankings[query],
     )
 
-    from octopus.retriever import retrieve_tools
+    from brown_octopus.retriever import retrieve_tools
 
     selected = retrieve_tools("Find and research Nvidia news")
 

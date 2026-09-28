@@ -18,8 +18,8 @@ from evals.methods.all_tools import AllTools
 from evals.methods.bm25 import BM25
 from evals.methods.dense import DenseTopK, MODEL_NAME
 from evals.methods.octopus import OctopusMethod
-from octopus import Octopus
-from octopus.index_store import load_embeddings, load_tools
+from brown_octopus import Octopus
+from brown_octopus.index_store import load_embeddings, load_tools
 
 
 INDEX_PATH = Path("data/indexes/default")
@@ -219,7 +219,7 @@ def run(warmup_runs: int = 5, measured_runs: int = 5) -> tuple[Path, Path]:
     import asyncio
 
     asyncio.run(octopus.initialize())
-    import octopus.retriever as runtime_retriever
+    import brown_octopus.retriever as runtime_retriever
 
     dense_methods = [
         DenseTopK(embeddings=embeddings, model=runtime_retriever.model, k=k)

@@ -16,8 +16,8 @@ from evals.common.metrics import score_context
 from evals.common.token_count import count_schema_tokens
 from evals.datasets.internal import DATASET_PATH, load_tasks, sha256_file, validate_tasks
 from evals.methods.ablation import EvaluationOctopusMethod, OctopusFullMethod
-from octopus import Octopus
-from octopus.index_store import load_tools
+from brown_octopus import Octopus
+from brown_octopus.index_store import load_tools
 
 
 INDEX_PATH = Path("data/indexes/default")

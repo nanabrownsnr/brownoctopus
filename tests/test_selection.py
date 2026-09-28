@@ -1,4 +1,4 @@
-from octopus.selection import select_bounded_max_gap, select_min4_bounded_max_gap
+from brown_octopus.selection import select_bounded_max_gap, select_min4_bounded_max_gap
 
 
 def test_selects_tools_before_largest_gap():

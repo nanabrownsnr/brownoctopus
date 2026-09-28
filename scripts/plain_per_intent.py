@@ -2,9 +2,9 @@ import asyncio
 
 from sentence_transformers import SentenceTransformer, util
 
-from octopus.analyzer import analyze_intents
-from octopus.mcp_discovery import discover_universe
-from octopus.sources import load_mcp_urls
+from brown_octopus.analyzer import analyze_intents
+from brown_octopus.mcp_discovery import discover_universe
+from brown_octopus.sources import load_mcp_urls
 
 
 MODEL_NAME = "Qwen/Qwen3-Embedding-0.6B"

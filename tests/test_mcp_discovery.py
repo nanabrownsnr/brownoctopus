@@ -1,6 +1,6 @@
 import pytest
 
-from octopus.mcp_discovery import (
+from brown_octopus.mcp_discovery import (
     discover_tools,
     discover_universe,
     normalize_name,
@@ -16,6 +16,7 @@ def test_normalize_name():
 
 
 @pytest.mark.anyio
+@pytest.mark.external
 async def test_discover_tools_from_live_mcp():
     tools = await discover_tools(WEB_SEARCH_MCP_URL)
 
@@ -25,6 +26,7 @@ async def test_discover_tools_from_live_mcp():
 
     assert tool["mcp_name"]
     assert tool["mcp_url"] == WEB_SEARCH_MCP_URL
+    assert tool["source_id"] == WEB_SEARCH_MCP_URL
     assert tool["tool_name"] == "web_search"
     assert tool["description"]
     assert tool["input_schema"]
@@ -63,7 +65,7 @@ async def test_discover_universe_combines_tools_from_multiple_mcps(
         ]
 
     monkeypatch.setattr(
-        "octopus.mcp_discovery.discover_tools",
+        "brown_octopus.mcp_discovery.discover_tools",
         fake_discover_tools,
     )
 
@@ -97,7 +99,7 @@ async def test_discover_universe_deduplicates_tools(
         ]
 
     monkeypatch.setattr(
-        "octopus.mcp_discovery.discover_tools",
+        "brown_octopus.mcp_discovery.discover_tools",
         fake_discover_tools,
     )
 
@@ -108,8 +110,9 @@ async def test_discover_universe_deduplicates_tools(
         ]
     )
 
-    assert len(tools) == 1
-    assert tools[0]["name"] == "web_search_tools_web_search"
+    assert len(tools) == 2
+    assert {tool["name"] for tool in tools} == {"web_search_tools_web_search"}
+    assert len({tool["capability_id"] for tool in tools}) == 2
 
 
 @pytest.mark.anyio
@@ -132,7 +135,7 @@ async def test_discover_universe_tolerates_failed_mcp(
         ]
 
     monkeypatch.setattr(
-        "octopus.mcp_discovery.discover_tools",
+        "brown_octopus.mcp_discovery.discover_tools",
         fake_discover_tools,
     )
 

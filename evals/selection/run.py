@@ -19,8 +19,8 @@ from evals.methods.selection import (
     ranked_score_knee,
     relative_threshold,
 )
-from octopus.index_store import load_tools
-from octopus import Octopus
+from brown_octopus.index_store import load_tools
+from brown_octopus import Octopus
 
 
 INDEX_PATH = Path("data/indexes/default")

@@ -1,6 +1,6 @@
 import asyncio
 
-from octopus.bootstrap import initialize
+from brown_octopus.bootstrap import initialize
 
 
 async def main() -> None:
