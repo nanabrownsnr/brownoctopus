@@ -12,11 +12,6 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.13",
 ]
-urls = {
-    Repository = "https://github.com/nanabrownsnr/brownoctopus",
-    Documentation = "https://github.com/nanabrownsnr/brownoctopus/blob/main/docs/production.md",
-    Issues = "https://github.com/nanabrownsnr/brownoctopus/issues",
-}
 requires-python = ">=3.13"
 dependencies = [
     "fastmcp>=4.0.3",
@@ -33,6 +28,11 @@ service = ["fastapi>=0.115.0", "uvicorn[standard]>=0.34.0"]
 
 [project.scripts]
 brown-octopus = "brown_octopus.cli:main"
+
+[project.urls]
+Repository = "https://github.com/nanabrownsnr/brownoctopus"
+Documentation = "https://github.com/nanabrownsnr/brownoctopus/blob/main/docs/production.md"
+Issues = "https://github.com/nanabrownsnr/brownoctopus/issues"
 
 [build-system]
 requires = ["uv_build>=0.12.6,<0.13.0"]
