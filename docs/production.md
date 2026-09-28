@@ -294,6 +294,112 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
+### Source backed by an HTTP API
+
+The source can call an API owned by the host application. The API client and
+its credentials belong to the host; Brown Octopus only receives the normalized
+discovery result.
+
+```python
+import httpx
+
+from brown_octopus import CapabilityDiscoveryResult
+
+
+class RegistryApiSource:
+    def __init__(self, base_url: str, api_token: str):
+        self.base_url = base_url.rstrip("/")
+        self.api_token = api_token
+
+    async def discover(self) -> CapabilityDiscoveryResult:
+        headers = {"Authorization": f"Bearer {self.api_token}"}
+        async with httpx.AsyncClient(timeout=15) as client:
+            response = await client.get(
+                f"{self.base_url}/capabilities",
+                headers=headers,
+            )
+            response.raise_for_status()
+            records = response.json()
+
+        tools = [
+            {
+                "capability_id": record["id"],
+                "source_id": record.get("source_id", "internal-registry"),
+                "name": record["name"],
+                "description": record.get("description", ""),
+                "input_schema": record.get("input_schema", {}),
+            }
+            for record in records
+        ]
+        return CapabilityDiscoveryResult(
+            tools=tools,
+            successful_sources=["internal-registry"],
+            failed_sources={},
+            authoritative=True,
+        )
+```
+
+Use it like any other source:
+
+```python
+octopus = Octopus(
+    capability_source=RegistryApiSource(
+        base_url="https://registry.example.com",
+        api_token=registry_token,
+    ),
+    index_path="data/indexes/default",
+)
+await octopus.update()
+```
+
+The token is application configuration. Do not put it in capability metadata,
+the index, or session state.
+
+### Source backed by a database
+
+A database source follows the same pattern. The database schema and connection
+pool are host concerns:
+
+```python
+from brown_octopus import CapabilityDiscoveryResult
+
+
+class CapabilityDatabaseSource:
+    def __init__(self, db):
+        self.db = db
+
+    async def discover(self) -> CapabilityDiscoveryResult:
+        rows = await self.db.fetch_all(
+            """
+            SELECT capability_id, source_id, name, description, input_schema
+            FROM capabilities
+            WHERE enabled = TRUE
+            """
+        )
+
+        tools = [
+            {
+                "capability_id": row["capability_id"],
+                "source_id": row["source_id"],
+                "name": row["name"],
+                "description": row["description"] or "",
+                "input_schema": row["input_schema"] or {},
+            }
+            for row in rows
+        ]
+        return CapabilityDiscoveryResult(
+            tools=tools,
+            successful_sources=["capability-database"],
+            failed_sources={},
+            authoritative=True,
+        )
+```
+
+The host creates `db` using its chosen database library, connection pool, and
+credentials. Brown Octopus does not require or select an ORM. If the query
+fails, either raise the error so `update()` preserves the existing snapshot,
+or return a result with the affected source in `failed_sources`.
+
 Each normalized capability should provide:
 
 ```text
@@ -452,6 +558,190 @@ store.save(session_id, state)
 
 Two workers can read the same turn and overwrite one another. Implement the
 complete read-modify-write operation behind `mutate()` instead.
+
+### SQLite example
+
+For a small single-host deployment, a custom store can keep only the
+serializable session fields in SQLite. `BEGIN IMMEDIATE` makes the mutation a
+serialized write transaction:
+
+```python
+import json
+import sqlite3
+from copy import deepcopy
+
+from brown_octopus import SessionState
+
+
+class SQLiteSessionStore:
+    def __init__(self, path: str = "data/sessions.sqlite3"):
+        self.path = path
+        with sqlite3.connect(self.path) as db:
+            db.execute(
+                """
+                CREATE TABLE IF NOT EXISTS octopus_sessions (
+                    session_id TEXT PRIMARY KEY,
+                    turn INTEGER NOT NULL,
+                    active_state TEXT NOT NULL
+                )
+                """
+            )
+
+    def _read(self, db, session_id: str) -> SessionState:
+        row = db.execute(
+            "SELECT turn, active_state FROM octopus_sessions "
+            "WHERE session_id = ?",
+            (session_id,),
+        ).fetchone()
+        if row is None:
+            return SessionState(session_id=session_id)
+        return SessionState(
+            session_id=session_id,
+            turn=row[0],
+            active_state=json.loads(row[1]),
+        )
+
+    def _write(self, db, state: SessionState) -> None:
+        db.execute(
+            """
+            INSERT INTO octopus_sessions(session_id, turn, active_state)
+            VALUES (?, ?, ?)
+            ON CONFLICT(session_id) DO UPDATE SET
+                turn = excluded.turn,
+                active_state = excluded.active_state
+            """,
+            (
+                state.session_id,
+                state.turn,
+                json.dumps(state.active_state),
+            ),
+        )
+
+    def get(self, session_id: str) -> SessionState:
+        with sqlite3.connect(self.path) as db:
+            return deepcopy(self._read(db, session_id))
+
+    def mutate(self, session_id, operation):
+        with sqlite3.connect(self.path) as db:
+            db.execute("BEGIN IMMEDIATE")
+            state = self._read(db, session_id)
+            result = operation(state)
+            self._write(db, state)
+            return result
+
+    def reset(self, session_id: str) -> SessionState:
+        def clear(state):
+            state.turn = 0
+            state.active_state.clear()
+            return deepcopy(state)
+
+        return self.mutate(session_id, clear)
+
+    def delete(self, session_id: str) -> None:
+        with sqlite3.connect(self.path) as db:
+            db.execute(
+                "DELETE FROM octopus_sessions WHERE session_id = ?",
+                (session_id,),
+            )
+
+    def snapshot(self, session_id: str) -> dict | None:
+        state = self.get(session_id)
+        return {
+            "session_id": state.session_id,
+            "turn": state.turn,
+            "active_state": dict(state.active_state),
+            "active_tool_ids": list(state.active_state),
+        }
+```
+
+For a multi-process deployment, use the transaction and locking primitives
+recommended by the selected database. Test the implementation under the
+actual worker topology before relying on it in production.
+
+### Redis example
+
+Redis is not a Brown Octopus dependency. A host that already uses Redis can
+implement the same contract with its Redis client. The key requirement is an
+atomic compare-and-set around the complete callback:
+
+```python
+import json
+from dataclasses import asdict
+
+from redis import Redis, WatchError
+
+from brown_octopus import SessionState
+
+
+class RedisSessionStore:
+    def __init__(self, client: Redis, prefix: str = "brown-octopus:session:"):
+        self.client = client
+        self.prefix = prefix
+
+    def _key(self, session_id: str) -> str:
+        return f"{self.prefix}{session_id}"
+
+    @staticmethod
+    def _decode(session_id: str, raw) -> SessionState:
+        if raw is None:
+            return SessionState(session_id=session_id)
+        value = json.loads(raw)
+        return SessionState(**value)
+
+    def get(self, session_id: str) -> SessionState:
+        return self._decode(session_id, self.client.get(self._key(session_id)))
+
+    def mutate(self, session_id, operation):
+        key = self._key(session_id)
+        while True:
+            try:
+                with self.client.pipeline() as pipe:
+                    pipe.watch(key)
+                    state = self._decode(session_id, pipe.get(key))
+                    result = operation(state)
+                    pipe.multi()
+                    pipe.set(key, json.dumps(asdict(state)))
+                    pipe.execute()
+                    return result
+            except WatchError:
+                # Another worker changed this session; retry from fresh state.
+                continue
+
+    def reset(self, session_id: str) -> SessionState:
+        def clear(state):
+            state.turn = 0
+            state.active_state.clear()
+            return state
+
+        return self.mutate(session_id, clear)
+
+    def delete(self, session_id: str) -> None:
+        self.client.delete(self._key(session_id))
+
+    def snapshot(self, session_id: str) -> dict | None:
+        state = self.get(session_id)
+        return {
+            "session_id": state.session_id,
+            "turn": state.turn,
+            "active_state": dict(state.active_state),
+            "active_tool_ids": list(state.active_state),
+        }
+```
+
+The host installs and configures its Redis client, then injects the store:
+
+```python
+from redis import Redis
+from brown_octopus import Octopus
+
+store = RedisSessionStore(Redis.from_url(redis_url))
+octopus = Octopus(session_store=store)
+```
+
+The callback may run more than once if another worker wins the optimistic-lock
+race. The callback must therefore be deterministic and must not perform an
+external side effect such as sending an email. Brown Octopus's callback only
+updates capability state; tool execution remains outside the store.
 
 ## Retrieval results and agent integration
 
