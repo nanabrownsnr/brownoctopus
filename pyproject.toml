@@ -3,9 +3,7 @@ name = "brown-octopus"
 version = "0.4.4"
 description = "Capability-context management for tool-using AI agents"
 readme = "README.md"
-authors = [
-    { name = "nana brown", email = "nanabrownsnr@gmail.com" }
-]
+authors = [{ name = "nana brown", email = "nanabrownsnr@gmail.com" }]
 license = { file = "LICENSE" }
 keywords = ["AI agents", "MCP", "tool retrieval", "capability context"]
 classifiers = [
@@ -14,7 +12,11 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.13",
 ]
-urls = { Repository = "https://github.com/nanabrownsnr/octopus" }
+urls = {
+    Repository = "https://github.com/nanabrownsnr/brownoctopus",
+    Documentation = "https://github.com/nanabrownsnr/brownoctopus/blob/main/docs/production.md",
+    Issues = "https://github.com/nanabrownsnr/brownoctopus/issues",
+}
 requires-python = ">=3.13"
 dependencies = [
     "fastmcp>=4.0.3",
@@ -25,16 +27,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-toolret = [
-    "pyarrow>=18.0.0",
-]
-jev = [
-    "jev-reranker>=0.1.0",
-]
-service = [
-    "fastapi>=0.115.0",
-    "uvicorn[standard]>=0.34.0",
-]
+toolret = ["pyarrow>=18.0.0"]
+jev = ["jev-reranker>=0.1.0"]
+service = ["fastapi>=0.115.0", "uvicorn[standard]>=0.34.0"]
 
 [project.scripts]
 brown-octopus = "brown_octopus.cli:main"
@@ -44,12 +39,8 @@ requires = ["uv_build>=0.12.6,<0.13.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
-dev = [
-    "pytest>=9.1.1",
-]
+dev = ["pytest>=9.1.1"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
-markers = [
-    "external: requires a live external MCP service or network access",
-]
+markers = ["external: requires a live external MCP service or network access"]
