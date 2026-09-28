@@ -40,6 +40,59 @@ Use `await octopus.update()` when the host deliberately wants to discover
 capabilities and build an updated index. `initialize()` loads existing local
 models and index state; it does not discover or download implicitly.
 
+### Build or update an index
+
+The repository includes a runnable example for building the persisted index
+from an MCP catalog:
+
+```bash
+brown-octopus setup-models
+python examples/setup_index.py
+```
+
+By default it reads `data/mcps.json` and writes `data/indexes/default`. Use a
+different catalog or output directory when needed:
+
+```bash
+python examples/setup_index.py \
+  --catalog path/to/my-mcps.json \
+  --index path/to/my-index
+```
+
+The host can perform the same operation in application code:
+
+```python
+from brown_octopus import Octopus
+
+octopus = Octopus(
+    catalog_path="path/to/my-mcps.json",
+    index_path="path/to/my-index",
+)
+report = await octopus.update()
+print(report.tool_count)
+```
+
+An update is not a blind append and it is not an unconditional reset. Brown
+Octopus compares capabilities by stable `capability_id`:
+
+```text
+new capability       -> added
+same ID, new metadata -> changed/replaced
+same ID, unchanged    -> retained
+missing from an authoritative source snapshot -> removed
+temporarily failed source -> previous capabilities preserved
+```
+
+So if you add a new MCP entry to the catalog and run the update, its
+capabilities are added to the existing universe. If you remove an MCP from an
+authoritative catalog, its capabilities are removed. A source failure is not
+treated as deletion.
+
+For a standalone capabilities JSON file, implement a `CapabilitySource` that
+reads that file and returns a `CapabilityDiscoveryResult`; `update()` uses the
+source snapshot and does not automatically scan arbitrary files placed beside
+the index.
+
 ## Frozen V3 pipeline
 
 ```text
