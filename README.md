@@ -1,29 +1,114 @@
 # Brown Octopus
 
-Brown Octopus is a Python library for dynamic capability-context management
-for tool-using AI agents. It determines which capability definitions should be
-available to an agent on each interaction. It does not execute tools, manage
-credentials, or replace the host agent framework.
+Brown Octopus is a Python library that manages the capability context exposed
+to tool-using AI agents. It analyzes requests, retrieves relevant capability
+definitions, and maintains active capabilities across conversation turns.
 
-## Install
+Brown Octopus does not execute tools, manage credentials, or manage the LLM's
+conversation history. Those responsibilities stay with the host application.
+
+## Installation
+
+Brown Octopus requires Python 3.13 or newer.
+
+Using `uv`:
+
+```bash
+uv add brown-octopus
+```
+
+Using `pip`:
 
 ```bash
 pip install brown-octopus
-brown-octopus setup-models
 ```
 
-`setup-models` explicitly prepares `en_core_web_trf` and
-`Qwen/Qwen3-Embedding-0.6B` in Brown Octopus-managed persistent storage.
-Normal initialization does not download models.
+Prepare the runtime models explicitly:
+
+```bash
+uv run brown-octopus setup-models
+uv run brown-octopus doctor
+```
+
+If the environment is already activated, the `uv run` prefix is optional.
+Model setup does not happen automatically during application startup.
 
 ## Quick start
 
+Brown Octopus has two distinct phases:
+
+```text
+SETUP
+CapabilitySource -> update() -> persisted capability index
+
+RUNTIME
+initialize() -> retrieve capability context -> host agent
+```
+
+### Build the capability index
+
+The built-in local source reads MCP server URLs from a catalog with this shape:
+
+```json
+{
+  "items": [
+    {"url": "https://example.com/outlook/mcp"},
+    {"url": "https://example.com/word/mcp"}
+  ]
+}
+```
+
+Create `setup_octopus.py`:
+
 ```python
+import asyncio
+
+from brown_octopus import Octopus
+from brown_octopus.sources import LocalMcpCatalogSource
+
+
+async def main():
+    source = LocalMcpCatalogSource("data/mcps.json")
+    octopus = Octopus(
+        capability_source=source,
+        index_path="data/indexes/default",
+    )
+
+    report = await octopus.update()
+    print(f"Indexed {report.tool_count} capabilities")
+    print(f"Added: {len(report.added)}")
+    print(f"Changed: {len(report.changed)}")
+    print(f"Removed: {len(report.removed)}")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+Run it after `setup-models`:
+
+```bash
+uv run python setup_octopus.py
+```
+
+The repository also includes the equivalent runnable example:
+
+```bash
+python examples/setup_index.py
+```
+
+### Use the index at runtime
+
+Create `app.py`:
+
+```python
+import asyncio
+
 from brown_octopus import Octopus
 
 
 async def main():
-    octopus = Octopus()
+    octopus = Octopus(index_path="data/indexes/default")
     await octopus.initialize()
 
     result = octopus.retrieve_result(
@@ -31,272 +116,187 @@ async def main():
         session_id="conversation-123",
     )
 
-    # Final active capability context for the host agent.
+    print(f"Turn: {result.turn}")
+    print("Capabilities exposed to the agent:")
     for capability in result.tools:
-        print(capability["name"])
+        print("-", capability["name"])
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
-Use `await octopus.update()` when the host deliberately wants to discover
-capabilities and build an updated index. `initialize()` loads existing local
-models and index state; it does not discover or download implicitly.
-
-### Build or update an index
-
-The repository includes a runnable example for building the persisted index
-from an MCP catalog:
+Run it with:
 
 ```bash
-brown-octopus setup-models
-python examples/setup_index.py
+uv run python app.py
 ```
 
-By default it reads `data/mcps.json` and writes `data/indexes/default`. Use a
-different catalog or output directory when needed:
+`result.tools` is the final active capability context to expose to the agent.
+Brown Octopus returns definitions and metadata; the host binds and executes
+the tools.
+
+## Updating capabilities
+
+When the configured capability universe changes, update the source and run the
+same setup script again:
 
 ```bash
-python examples/setup_index.py \
-  --catalog path/to/my-mcps.json \
-  --index path/to/my-index
+uv run python setup_octopus.py
 ```
 
-The host can perform the same operation in application code:
+`update()` currently rediscovers all configured sources and rebuilds embeddings
+for the complete resulting universe before atomically publishing a new index.
+It is not yet an incremental embedding or append-only operation.
+
+Capabilities are compared by stable `capability_id`:
+
+```text
+new capability                         -> added
+existing ID with changed metadata      -> replaced
+unchanged capability                   -> retained
+missing from authoritative snapshot    -> removed
+temporarily failed source              -> preserved
+```
+
+Therefore, to add an MCP while preserving existing capabilities, add it to the
+existing `data/mcps.json` catalog and run the update again. Passing a separate
+file containing only the new MCP makes that file the configured source
+snapshot; it does not automatically append to the previous catalog.
+
+An arbitrary capability JSON file is not scanned automatically. Implement a
+custom `CapabilitySource` if your capabilities come from a file, API,
+database, registry, or marketplace.
+
+## Custom capability sources
+
+MCP is only the default source. Applications can inject their own source:
 
 ```python
 from brown_octopus import Octopus
 
-octopus = Octopus(
-    catalog_path="path/to/my-mcps.json",
-    index_path="path/to/my-index",
-)
+octopus = Octopus(capability_source=my_source)
 report = await octopus.update()
-print(report.tool_count)
 ```
 
-An update is not a blind append and it is not an unconditional reset. Brown
-Octopus compares capabilities by stable `capability_id`:
+A source implements the public `CapabilitySource` contract and returns a
+`CapabilityDiscoveryResult`. Brown Octopus owns indexing and context
+management; the host owns source credentials, permissions, update timing, and
+tool execution.
 
-```text
-new capability       -> added
-same ID, new metadata -> changed/replaced
-same ID, unchanged    -> retained
-missing from an authoritative source snapshot -> removed
-temporarily failed source -> previous capabilities preserved
-```
+## Sessions
 
-So if you add a new MCP entry to the catalog and run the update, its
-capabilities are added to the existing universe. If you remove an MCP from an
-authoritative catalog, its capabilities are removed. A source failure is not
-treated as deletion.
-
-For a standalone capabilities JSON file, implement a `CapabilitySource` that
-reads that file and returns a `CapabilityDiscoveryResult`; `update()` uses the
-source snapshot and does not automatically scan arbitrary files placed beside
-the index.
-
-## Frozen V3 pipeline
-
-```text
-user request
-    -> deterministic spaCy operational-intent analysis
-    -> capability-oriented retrieval text
-    -> Qwen dense retrieval
-    -> Min-4 + Bounded Max Gap selection
-    -> merge and deduplicate
-    -> session capability state
-    -> final active capability context
-    -> host agent
-```
-
-```text
-Embedding:        Qwen/Qwen3-Embedding-0.6B
-Analyzer:         en_core_web_trf
-Representation:   capability name + description
-MIN_TOOLS:        4 per intent
-MAX_TOOLS:        16 per intent
-MIN_GAP_PERCENT:  2.0
-TTL:              8 turns
-Active cap:       30 capabilities
-```
-
-Brown Octopus is intentionally recall-oriented for its first production
-version. It prefers a bounded set of plausible capabilities over aggressively
-pruning and risking a missing required capability. It does not guarantee
-perfect recall.
-
-## Results and sessions
+Use a stable conversation identifier for `session_id`:
 
 ```python
-result = octopus.retrieve_result(query, session_id="conversation-123")
+result = octopus.retrieve_result(
+    "Send Sarah an email",
+    session_id="conversation-123",
+)
 ```
-
-```text
-result.retrieved_tools  capabilities selected on this turn
-result.tools            final active context after TTL/session management
-result.tool_ids         IDs in result.tools
-result.session_id       session identifier
-result.turn             session turn number
-```
-
-Expose `result.tools` to the agent. Brown Octopus returns definitions and
-metadata only; the host binds and executes tools.
 
 One engine can serve many isolated conversations. Models, indexes, and
 retrievers are shared; turn counters, TTL state, and active capabilities are
 session-specific.
 
 ```python
+snapshot = octopus.get_session("conversation-123")
 octopus.reset_session("conversation-123")
 octopus.delete_session("conversation-123")
-snapshot = octopus.get_session("conversation-123")
 ```
 
-The default `InMemorySessionStore` keeps serializable capability state in
-process. Applications needing persistence can inject a custom store:
+The default `InMemorySessionStore` stores serializable capability state in the
+current process. Applications needing persistence can inject a custom store:
 
 ```python
 octopus = Octopus(session_store=my_store)
 ```
 
-Custom stores must make session mutation atomic across workers/processes.
+Custom stores must make session mutation atomic across workers or processes.
 Brown Octopus stores capability state, not conversation history.
 
-## Building and updating the capability index
-
-Brown Octopus separates model setup, capability discovery/indexing, and normal
-runtime initialization:
+## Result fields
 
 ```text
-setup-models       prepare runtime models
-    -> update()    discover capabilities and build/update the index
-    -> initialize() load the existing index for runtime use
+result.retrieved_tools  capabilities selected for the current request
+result.tools            final active context after session/TTL management
+result.tool_ids         IDs in result.tools
+result.session_id       session identifier
+result.turn             current session turn
 ```
 
-Prepare models first:
+Use `result.tools` for the agent. Use `result.retrieved_tools` when you need
+to inspect only the current-turn selection.
+
+## CLI and model storage
 
 ```bash
-uv add brown-octopus
 uv run brown-octopus setup-models
 uv run brown-octopus doctor
+uv run brown-octopus inspect
+uv run brown-octopus inspect --json
+uv run brown-octopus --version
 ```
 
-The repository includes a runnable index setup example:
+Models are stored outside the consumer virtual environment so operations such
+as `uv sync` do not remove them. Set `BROWN_OCTOPUS_MODEL_DIR` to use a custom
+location for containers, CI, or shared model volumes.
 
-```bash
-python examples/setup_index.py
-```
-
-By default it reads `data/mcps.json` and writes `data/indexes/default`. Paths
-can be changed explicitly:
-
-```bash
-python examples/setup_index.py \
-  --catalog path/to/my-mcps.json \
-  --index path/to/my-index
-```
-
-The same operation can be performed in application code:
-
-```python
-from brown_octopus import Octopus
-
-
-async def build_index():
-    octopus = Octopus(
-        catalog_path="data/mcps.json",
-        index_path="data/indexes/default",
-    )
-    report = await octopus.update()
-    print(report.tool_count)
-```
-
-`update()` synchronizes the configured capability source. It currently
-rediscovers all configured sources and rebuilds embeddings for the complete
-resulting universe before atomically publishing the new snapshot. It does not
-yet provide a separate additive-only or incremental-embedding operation.
-
-Capabilities are compared by stable identity:
+## Current default pipeline
 
 ```text
-new capability       -> added
-same ID, new metadata -> changed/replaced
-same ID, unchanged    -> retained
-missing from an authoritative snapshot -> removed
-temporarily failed source -> previous capabilities preserved
+request
+  -> deterministic spaCy operational-intent analysis
+  -> capability-oriented retrieval text
+  -> Qwen/Qwen3-Embedding-0.6B dense retrieval
+  -> Min-4 + Bounded Max Gap selection
+  -> merge/deduplicate
+  -> active capability context
+  -> host agent
 ```
 
-Therefore, to add an MCP while preserving the existing universe, add it to the
-existing catalog and run `update()` again:
+Current limits are 4 minimum tools per intent, 16 maximum tools per intent,
+2% minimum gap, an 8-turn TTL, and a 30-capability active context cap.
+
+## Agent integrations
+
+The integration boundary is:
 
 ```text
-data/mcps.json
-├── existing MCP servers
-└── new MCP server
+user message -> Brown Octopus -> result.tools -> LLM.bind_tools(...) -> agent
 ```
 
-Passing a separate file containing only the new MCP makes that file the
-configured source snapshot; it does not automatically append to the previous
-catalog. An arbitrary capabilities JSON file is not scanned automatically.
-For that case, implement a `CapabilitySource` that reads the file and returns
-a `CapabilityDiscoveryResult`.
+See [`examples/langgraph_app`](examples/langgraph_app/README.md) for a
+LangGraph example. LangGraph is not a Brown Octopus runtime dependency.
 
-The default source is MCP-backed, but the abstraction is provider-neutral:
+## Architecture boundaries
 
-```python
-octopus = Octopus(capability_source=my_source)
-report = await octopus.update()
-```
+Brown Octopus owns capability discovery abstraction, indexing, intent analysis,
+retrieval, selection, active capability context, and session capability state.
 
-Capability identity fields are:
+The host application owns the LLM, conversation history, tool binding and
+execution, credentials, authentication, authorization, user identity, update
+timing, and session lifecycle policy.
 
-```text
-capability_id  stable globally unique capability identity
-source_id      discovery provenance
-mcp_url        execution endpoint when applicable
-```
-
-The host controls when discovery occurs. Brown Octopus does not run a
-scheduler or rediscover capabilities during `initialize()`.
-
-## Model storage and diagnostics
-
-Override the managed model directory for containers or shared volumes with
-`BROWN_OCTOPUS_MODEL_DIR`. Model setup remains explicit:
-
-```bash
-brown-octopus setup-models
-brown-octopus doctor
-brown-octopus inspect
-brown-octopus inspect --json
-```
-
-`doctor` checks package, model, and index readiness. `inspect` reports the
-active index and frozen configuration without exposing credentials.
-
-## Architecture boundary
-
-Brown Octopus owns intent analysis, capability retrieval/selection, index
-construction, active capability context, session capability state, and
-explicit capability updates.
-
-The host owns the LLM, conversation history, tool binding/execution,
-credentials, authentication, authorization, user identity, refresh timing,
-and session lifecycle policy.
-
-Brown Octopus is harness-agnostic. A LangGraph integration example is available
-at [`examples/langgraph_app`](examples/langgraph_app/README.md); LangGraph is
-not a runtime dependency.
-
-## Development
+## Development and research
 
 ```bash
 uv sync
-brown-octopus setup-models
+uv run brown-octopus setup-models
 uv run pytest -m "not external"
 uv build
 ```
 
-Historical evaluation infrastructure remains under `evals/`, benchmark data
-under `data/evals/`, and research outputs under `results/`. These are separate
-from the installable `brown_octopus` package.
+Research and reproducibility materials remain in the repository:
 
-See [`LICENSE`](LICENSE) for licensing information.
+```text
+evals/       evaluation infrastructure
+data/evals/  benchmark datasets
+results/     reports and experiment outputs
+```
+
+They are separate from the installable `brown_octopus` runtime package.
+
+## License
+
+See [`LICENSE`](LICENSE).
