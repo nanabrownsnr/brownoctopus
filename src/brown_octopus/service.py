@@ -32,7 +32,7 @@ def create_app(octopus=None):
 
     instance = octopus or Octopus()
     service = OctopusService(instance)
-    app = FastAPI(title="Brown Octopus", version="0.4.6")
+    app = FastAPI(title="Brown Octopus", version="0.4.7")
 
     @app.get("/health")
     def health():

@@ -168,21 +168,115 @@ An arbitrary capability JSON file is not scanned automatically. Implement a
 custom `CapabilitySource` if your capabilities come from a file, API,
 database, registry, or marketplace.
 
-## Custom capability sources
+## Capability sources
 
-MCP is only the default source. Applications can inject their own source:
+`LocalMcpCatalogSource` is the built-in/default source. It reads MCP server
+locations from the configured catalog and discovers their capabilities.
+
+Brown Octopus is not limited to MCP. Applications can provide a custom source
+for an internal API, database, registry, marketplace, or another capability
+system.
+
+The source discovers capabilities. Brown Octopus owns indexing and active
+capability-context management. The host application owns source credentials,
+permissions, update timing, and tool execution.
+
+### Built-in local MCP source
 
 ```python
-from brown_octopus import Octopus
+import asyncio
 
-octopus = Octopus(capability_source=my_source)
-report = await octopus.update()
+from brown_octopus import Octopus
+from brown_octopus.sources import LocalMcpCatalogSource
+
+
+async def main():
+    source = LocalMcpCatalogSource("data/mcps.json")
+    octopus = Octopus(
+        capability_source=source,
+        index_path="data/indexes/default",
+    )
+
+    report = await octopus.update()
+    print(f"Indexed {report.tool_count} capabilities")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
-A source implements the public `CapabilitySource` contract and returns a
-`CapabilityDiscoveryResult`. Brown Octopus owns indexing and context
-management; the host owns source credentials, permissions, update timing, and
-tool execution.
+### Custom source
+
+A custom source implements the public `CapabilitySource` contract and returns
+a `CapabilityDiscoveryResult` from `discover()`:
+
+```python
+from brown_octopus import CapabilityDiscoveryResult
+
+
+class InternalRegistrySource:
+    async def discover(self) -> CapabilityDiscoveryResult:
+        return CapabilityDiscoveryResult(
+            tools=[
+                {
+                    "capability_id": "internal:crm:search_customers",
+                    "source_id": "internal-crm",
+                    "name": "search_customers",
+                    "description": "Search the customer database.",
+                    "input_schema": {
+                        "type": "object",
+                        "properties": {
+                            "query": {"type": "string"},
+                        },
+                        "required": ["query"],
+                    },
+                },
+            ],
+            successful_sources=["internal-crm"],
+            failed_sources={},
+            authoritative=True,
+        )
+```
+
+Use it when constructing `Octopus`:
+
+```python
+import asyncio
+
+from brown_octopus import Octopus
+
+
+async def main():
+    octopus = Octopus(
+        capability_source=InternalRegistrySource(),
+        index_path="data/indexes/default",
+    )
+
+    report = await octopus.update()
+    print(f"Indexed {report.tool_count} capabilities")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+Each capability should provide:
+
+```text
+capability_id  stable globally unique capability identity
+source_id      stable discovery provenance
+name           readable capability name
+description    text used for retrieval
+input_schema   schema supplied to the host agent
+```
+
+MCP-specific fields such as `mcp_url`, `mcp_name`, and `tool_name` may be
+included when applicable, but they are not required for non-MCP sources.
+
+When `update()` discovers a changed capability universe, it adds new
+capabilities, replaces changed metadata, and removes capabilities missing from
+an authoritative snapshot. A temporarily failed source should be reported in
+`failed_sources`; its previously indexed capabilities are preserved.
 
 ## Sessions
 
