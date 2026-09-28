@@ -160,10 +160,86 @@ octopus = Octopus(session_store=my_store)
 Custom stores must make session mutation atomic across workers/processes.
 Brown Octopus stores capability state, not conversation history.
 
-## Capability sources and updates
+## Building and updating the capability index
 
-The default source reads the local MCP catalog, but the source abstraction is
-provider-neutral. Use a custom source without changing the retrieval engine:
+Brown Octopus separates model setup, capability discovery/indexing, and normal
+runtime initialization:
+
+```text
+setup-models       prepare runtime models
+    -> update()    discover capabilities and build/update the index
+    -> initialize() load the existing index for runtime use
+```
+
+Prepare models first:
+
+```bash
+uv add brown-octopus
+uv run brown-octopus setup-models
+uv run brown-octopus doctor
+```
+
+The repository includes a runnable index setup example:
+
+```bash
+python examples/setup_index.py
+```
+
+By default it reads `data/mcps.json` and writes `data/indexes/default`. Paths
+can be changed explicitly:
+
+```bash
+python examples/setup_index.py \
+  --catalog path/to/my-mcps.json \
+  --index path/to/my-index
+```
+
+The same operation can be performed in application code:
+
+```python
+from brown_octopus import Octopus
+
+
+async def build_index():
+    octopus = Octopus(
+        catalog_path="data/mcps.json",
+        index_path="data/indexes/default",
+    )
+    report = await octopus.update()
+    print(report.tool_count)
+```
+
+`update()` synchronizes the configured capability source. It currently
+rediscovers all configured sources and rebuilds embeddings for the complete
+resulting universe before atomically publishing the new snapshot. It does not
+yet provide a separate additive-only or incremental-embedding operation.
+
+Capabilities are compared by stable identity:
+
+```text
+new capability       -> added
+same ID, new metadata -> changed/replaced
+same ID, unchanged    -> retained
+missing from an authoritative snapshot -> removed
+temporarily failed source -> previous capabilities preserved
+```
+
+Therefore, to add an MCP while preserving the existing universe, add it to the
+existing catalog and run `update()` again:
+
+```text
+data/mcps.json
+├── existing MCP servers
+└── new MCP server
+```
+
+Passing a separate file containing only the new MCP makes that file the
+configured source snapshot; it does not automatically append to the previous
+catalog. An arbitrary capabilities JSON file is not scanned automatically.
+For that case, implement a `CapabilitySource` that reads the file and returns
+a `CapabilityDiscoveryResult`.
+
+The default source is MCP-backed, but the abstraction is provider-neutral:
 
 ```python
 octopus = Octopus(capability_source=my_source)
@@ -178,9 +254,8 @@ source_id      discovery provenance
 mcp_url        execution endpoint when applicable
 ```
 
-Failed or non-authoritative discovery does not silently delete capabilities
-from unavailable sources. New index snapshots are validated and published
-atomically.
+The host controls when discovery occurs. Brown Octopus does not run a
+scheduler or rediscover capabilities during `initialize()`.
 
 ## Model storage and diagnostics
 
