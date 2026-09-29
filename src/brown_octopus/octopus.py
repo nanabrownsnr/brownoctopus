@@ -21,6 +21,8 @@ from brown_octopus.index_store import (
     save_tools,
     save_snapshot_atomic,
 )
+# These names remain module-level compatibility seams for legacy bootstrap,
+# scripts, and integrations that monkeypatch the historical retrieval path.
 from brown_octopus.mcp_discovery import discover_universe
 from brown_octopus.observability import configure_logging
 from brown_octopus.pipeline import CapabilityPipeline, process_turn
