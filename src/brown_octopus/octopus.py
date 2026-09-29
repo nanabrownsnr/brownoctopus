@@ -1,4 +1,5 @@
 from pathlib import Path
+from collections.abc import Iterable
 from contextlib import contextmanager
 from threading import Condition, RLock
 import json
@@ -195,7 +196,18 @@ class Octopus:
 
         return tools
 
-    def _process_session(self, query: str, session_id: str) -> dict:
+    def _process_session(
+        self,
+        query: str,
+        session_id: str,
+        allowed_mcp_urls: Iterable[str] | None = None,
+    ) -> dict:
+        scoped_urls = (
+            tuple(allowed_mcp_urls)
+            if allowed_mcp_urls is not None
+            else None
+        )
+
         def operation(state):
             state.turn += 1
             pipeline_context = getattr(self.pipeline, "context_manager", None)
@@ -227,13 +239,22 @@ class Octopus:
                         state.turn,
                         context_manager=runtime_context,
                         session_id=session_id,
+                        allowed_mcp_urls=scoped_urls,
                     )
                 else:
-                    result = process_turn(
-                        query=query,
-                        active_tools=runtime_context.active_state,
-                        turn=state.turn,
-                    )
+                    if scoped_urls is None:
+                        result = process_turn(
+                            query=query,
+                            active_tools=runtime_context.active_state,
+                            turn=state.turn,
+                        )
+                    else:
+                        result = process_turn(
+                            query=query,
+                            active_tools=runtime_context.active_state,
+                            turn=state.turn,
+                            allowed_mcp_urls=scoped_urls,
+                        )
                     runtime_context.active_state = result["active_state"].copy()
                     result["active_tools"] = result["tools"]
                     result["tool_ids"] = [capability_id(tool) for tool in result["tools"]]
@@ -253,22 +274,41 @@ class Octopus:
                 "retrieved_count": len(result["retrieved_tools"]),
                 "active_count": len(result["active_tools"]),
                 "strategy": result["strategy"],
+                "allowed_mcp_urls": (
+                    list(scoped_urls)
+                    if scoped_urls is not None
+                    else None
+                ),
                 "timing_ms": result.get("timing_ms", {}),
             }
             return result
 
         return self.sessions.mutate(session_id, operation)
 
-    def retrieve(self, query: str, session_id: str = "default") -> list[dict]:
-        return self._process_session(query, session_id)["active_tools"]
+    def retrieve(
+        self,
+        query: str,
+        session_id: str = "default",
+        allowed_mcp_urls: Iterable[str] | None = None,
+    ) -> list[dict]:
+        return self._process_session(
+            query,
+            session_id,
+            allowed_mcp_urls,
+        )["active_tools"]
 
     def retrieve_result(
         self,
         query: str,
         session_id: str = "default",
+        allowed_mcp_urls: Iterable[str] | None = None,
     ) -> RetrievalResult:
         """Return a stable, harness-neutral retrieval response."""
-        result = self._process_session(query, session_id)
+        result = self._process_session(
+            query,
+            session_id,
+            allowed_mcp_urls,
+        )
         tools = result["active_tools"]
         retrieved_tools = result["retrieved_tools"]
         return RetrievalResult(
@@ -286,8 +326,17 @@ class Octopus:
             turn=result["turn"],
         )
 
-    def process(self, query: str, session_id: str = "default") -> dict:
-        return self._process_session(query, session_id)
+    def process(
+        self,
+        query: str,
+        session_id: str = "default",
+        allowed_mcp_urls: Iterable[str] | None = None,
+    ) -> dict:
+        return self._process_session(
+            query,
+            session_id,
+            allowed_mcp_urls,
+        )
 
     def reset(self) -> None:
         self.reset_session("default")

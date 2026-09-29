@@ -14,8 +14,17 @@ class OctopusService:
         ready = self.octopus.pipeline is not None
         return {"status": "ready" if ready else "not_ready", "ready": ready}
 
-    def process(self, session_id: str, query: str) -> dict:
-        return self.octopus.process(query, session_id=session_id)
+    def process(
+        self,
+        session_id: str,
+        query: str,
+        allowed_mcp_urls: list[str] | None = None,
+    ) -> dict:
+        return self.octopus.process(
+            query,
+            session_id=session_id,
+            allowed_mcp_urls=allowed_mcp_urls,
+        )
 
     def reset(self, session_id: str) -> None:
         self.octopus.reset_session(session_id)
@@ -32,7 +41,7 @@ def create_app(octopus=None):
 
     instance = octopus or Octopus()
     service = OctopusService(instance)
-    app = FastAPI(title="Brown Octopus", version="0.4.7")
+    app = FastAPI(title="Brown Octopus", version="0.4.8")
 
     @app.get("/health")
     def health():
@@ -44,7 +53,11 @@ def create_app(octopus=None):
 
     @app.post("/v1/capabilities")
     def capabilities(payload: dict):
-        return service.process(payload.get("session_id", "default"), payload["query"])
+        return service.process(
+            payload.get("session_id", "default"),
+            payload["query"],
+            payload.get("allowed_mcp_urls"),
+        )
 
     @app.post("/v1/sessions/{session_id}/reset")
     def reset(session_id: str):

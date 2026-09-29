@@ -1,9 +1,14 @@
 import os
+from collections.abc import Iterable
 from typing import Any, TYPE_CHECKING
 
 from brown_octopus.analyzer import analyze_intents
 from brown_octopus.tool_registry import capability_id, get_all_tools
 from brown_octopus.selection import select_min4_bounded_max_gap
+from brown_octopus.capability_scope import (
+    normalize_allowed_mcp_urls,
+    tool_is_allowed,
+)
 
 if TYPE_CHECKING:
     from sentence_transformers import SentenceTransformer
@@ -27,13 +32,24 @@ class QwenCandidateRetriever:
     def __init__(self, candidate_k: int | None = None) -> None:
         self.candidate_k = candidate_k
 
-    def retrieve(self, query: str, intent: dict) -> list[dict]:
+    def retrieve(
+        self,
+        query: str,
+        intent: dict,
+        allowed_mcp_urls: Iterable[str] | None = None,
+    ) -> list[dict]:
         retrieval_query = (
             intent.get("retrieval_text")
             or intent.get("text")
             or query
         )
-        ranked = rank_tools(retrieval_query)
+        if allowed_mcp_urls is None:
+            ranked = rank_tools(retrieval_query)
+        else:
+            ranked = rank_tools(
+                retrieval_query,
+                allowed_mcp_urls=allowed_mcp_urls,
+            )
         return ranked if self.candidate_k is None else ranked[: self.candidate_k]
 
 
@@ -65,6 +81,7 @@ def initialize_retriever() -> None:
 
 def retrieve_tools(
     query: str,
+    allowed_mcp_urls: Iterable[str] | None = None,
 ) -> list[dict]:
     intents = analyze_intents(query)
 
@@ -77,7 +94,13 @@ def retrieve_tools(
             or intent.get("text")
             or query
         )
-        ranked_tools = rank_tools(retrieval_query)
+        if allowed_mcp_urls is None:
+            ranked_tools = rank_tools(retrieval_query)
+        else:
+            ranked_tools = rank_tools(
+                retrieval_query,
+                allowed_mcp_urls=allowed_mcp_urls,
+            )
 
         intent_tools = select_min4_bounded_max_gap(ranked_tools)
 
@@ -153,6 +176,7 @@ def load_index(
 
 def rank_tools(
     query: str,
+    allowed_mcp_urls: Iterable[str] | None = None,
 ) -> list[dict]:
     if model is None:
         raise RuntimeError("Retriever is not initialized. " "Call initialize() first.")
@@ -163,30 +187,40 @@ def rank_tools(
     if not query.strip():
         return []
 
+    allowed_urls = normalize_allowed_mcp_urls(allowed_mcp_urls)
+    eligible_indices = [
+        index
+        for index, tool in enumerate(TOOLS)
+        if tool_is_allowed(tool, allowed_urls)
+    ]
+
+    if not eligible_indices:
+        return []
+
     query_embedding = model.encode(
         query,
         convert_to_tensor=True,
         normalize_embeddings=True,
     )
 
-    scores = query_embedding @ tool_embeddings.T
+    scores = query_embedding @ tool_embeddings[eligible_indices].T
 
     ranked_indices = scores.argsort(descending=True)
 
     ranked_tools = []
 
-    for rank, index in enumerate(
+    for rank, local_index in enumerate(
         ranked_indices.tolist(),
         start=1,
     ):
-        ranked_tools.append(
+        source_tool = TOOLS[eligible_indices[local_index]]
+        ranked_tool = dict(source_tool)
+        ranked_tool.update(
             {
                 "rank": rank,
-                "capability_id": capability_id(TOOLS[index]),
-                "name": TOOLS[index]["name"],
-                "description": TOOLS[index].get("description"),
-                "score": float(scores[index]),
+                "score": float(scores[local_index]),
             }
         )
+        ranked_tools.append(ranked_tool)
 
     return ranked_tools

@@ -1,6 +1,10 @@
 """Stateful capability-context management, independent of retrieval."""
 
 from brown_octopus.active_tools import update_active_tools
+from brown_octopus.capability_scope import (
+    normalize_allowed_mcp_urls,
+    tool_is_allowed,
+)
 from brown_octopus.contracts import RetrievalResult
 from brown_octopus.tool_registry import capability_id
 
@@ -31,7 +35,31 @@ class ActiveCapabilityContext:
                 found[identity] = self._registered_tools[identity]
         return [found[identity] for identity in ids if identity in found]
 
-    def update(self, retrieved_tools: list[dict], turn: int) -> RetrievalResult:
+    def update(
+        self,
+        retrieved_tools: list[dict],
+        turn: int,
+        allowed_mcp_urls=None,
+    ) -> RetrievalResult:
+        allowed_urls = normalize_allowed_mcp_urls(allowed_mcp_urls)
+        retrieved_tools = [
+            tool for tool in retrieved_tools
+            if tool_is_allowed(tool, allowed_urls)
+        ]
+
+        if allowed_urls is not None:
+            current_active_tools = self._lookup_tools(self.active_state.keys())
+            allowed_ids = {
+                capability_id(tool)
+                for tool in current_active_tools
+                if tool_is_allowed(tool, allowed_urls)
+            }
+            self.active_state = {
+                identity: last_turn
+                for identity, last_turn in self.active_state.items()
+                if identity in allowed_ids
+            }
+
         names = [capability_id(tool) for tool in retrieved_tools]
         active_state = update_active_tools(
             self.active_state,

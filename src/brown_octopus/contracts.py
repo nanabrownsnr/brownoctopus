@@ -55,7 +55,12 @@ class IntentAnalyzer(Protocol):
 
 
 class CandidateRetriever(Protocol):
-    def retrieve(self, query: str, intent: dict) -> list[dict]: ...
+    def retrieve(
+        self,
+        query: str,
+        intent: dict,
+        allowed_mcp_urls=None,
+    ) -> list[dict]: ...
 
 
 class SelectionStrategy(Protocol):

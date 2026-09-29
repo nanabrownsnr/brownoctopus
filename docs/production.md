@@ -762,6 +762,117 @@ result.session_id       supplied session ID
 result.turn             session turn after this request
 ```
 
+### MCP URL prefilter
+
+Hosts can restrict one retrieval request to a set of MCP endpoints:
+
+```python
+result = octopus.retrieve_result(
+    "Reply to Tom's email",
+    session_id="conversation-123",
+    allowed_mcp_urls=[
+        "https://example.com/outlook/mcp",
+        "https://example.com/gmail/mcp",
+    ],
+)
+```
+
+The processing order is:
+
+```text
+indexed capabilities
+    -> intent analysis
+    -> allowed_mcp_urls filter
+    -> Qwen ranking
+    -> V3 selection
+    -> active-context update
+```
+
+The allowlist is request-scoped and never mutates the shared index. If it is
+omitted (`None`), all indexed capabilities participate as before. An empty
+list means that no MCP capabilities are allowed. Matching is exact after
+trimming a trailing slash, so these are treated as equivalent:
+
+```text
+https://example.com/outlook/mcp
+https://example.com/outlook/mcp/
+```
+
+Capabilities without an `mcp_url` do not match an active MCP URL allowlist.
+The allowlist is also applied to the active session context. A capability from
+an MCP that is not allowed on the current request cannot remain exposed merely
+because it was retrieved on an earlier turn.
+
+The HTTP adapter accepts the same field in its JSON request:
+
+```json
+{
+  "session_id": "conversation-123",
+  "query": "Reply to Tom's email",
+  "allowed_mcp_urls": [
+    "https://example.com/outlook/mcp"
+  ]
+}
+```
+
+### Example response
+
+The Python result is a `RetrievalResult`. A representative response looks like:
+
+```python
+RetrievalResult(
+    tool_ids=["outlook-123:send_email"],
+    tools=[
+        {
+            "rank": 1,
+            "score": 0.91,
+            "capability_id": "outlook-123:send_email",
+            "source_id": "outlook-123",
+            "name": "outlook_send_email",
+            "tool_name": "send_email",
+            "mcp_name": "Outlook Mail",
+            "mcp_url": "https://example.com/outlook/mcp",
+            "description": "Send an email.",
+            "input_schema": {"type": "object"},
+        }
+    ],
+    retrieved_tools=[...],
+    session_id="conversation-123",
+    turn=1,
+)
+```
+
+`retrieved_tools` contains the current-turn selection. `tools` contains the
+final active context, including retained capabilities where applicable. Both
+contain the complete capability definition and metadata supplied by the source,
+including `mcp_url` when the capability is MCP-backed.
+
+### Method return values
+
+```python
+report = await octopus.update()
+# CapabilityUpdateReport with added, changed, removed, failed_sources, tool_count
+
+loaded_tools = await octopus.initialize()
+# list[dict] containing the tools loaded from the existing index
+
+active_tools = octopus.retrieve("Reply to Tom's email")
+# list[dict] containing the final active context
+
+result = octopus.retrieve_result("Reply to Tom's email")
+# RetrievalResult with retrieved_tools, tools, tool_ids, session_id, and turn
+
+details = octopus.process("Reply to Tom's email")
+# dict containing the pipeline result, session metadata, and timing data
+
+session = octopus.get_session("conversation-123")
+# dict containing session_id, turn, active_state, and active_tool_ids
+```
+
+`reset_session()` and `delete_session()` return `None`. `update()` and
+`initialize()` are asynchronous because they perform model/index I/O;
+retrieval and session inspection are synchronous.
+
 The host normally exposes `result.tools` to the agent:
 
 ```text

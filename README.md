@@ -136,6 +136,69 @@ uv run python app.py
 Brown Octopus returns definitions and metadata; the host binds and executes
 the tools.
 
+### Restrict retrieval to selected MCPs
+
+Pass an optional list of allowed MCP URLs when a host wants to limit retrieval
+to capabilities owned or enabled for that request:
+
+```python
+result = octopus.retrieve_result(
+    "Reply to Tom's email",
+    session_id="conversation-123",
+    allowed_mcp_urls=[
+        "https://example.com/outlook/mcp",
+        "https://example.com/gmail/mcp",
+    ],
+)
+```
+
+The filter is applied before ranking. It is request-scoped and does not modify
+the shared index. `None` means no filtering; an empty list means no MCP
+capabilities are allowed. The same scope is applied to retained session
+capabilities, so a tool from a disallowed MCP is not exposed through
+`result.tools`.
+
+MCP URL matching ignores a trailing slash. Capabilities without an `mcp_url`
+are excluded while an allowlist is active.
+
+The result still contains complete capability definitions:
+
+```python
+print(result.retrieved_tools)
+```
+
+```text
+[
+  {
+    'rank': 1,
+    'score': 0.91,
+    'capability_id': 'outlook-123:send_email',
+    'source_id': 'outlook-123',
+    'name': 'outlook_send_email',
+    'tool_name': 'send_email',
+    'mcp_url': 'https://example.com/outlook/mcp',
+    'description': 'Send an email.',
+    'input_schema': {...}
+  }
+]
+```
+
+`result.retrieved_tools` contains the current-turn selection. `result.tools`
+contains the final active context for the session and retains the same tool
+metadata.
+
+The HTTP adapter accepts the same option:
+
+```json
+{
+  "session_id": "conversation-123",
+  "query": "Reply to Tom's email",
+  "allowed_mcp_urls": [
+    "https://example.com/outlook/mcp"
+  ]
+}
+```
+
 ## Updating capabilities
 
 When the configured capability universe changes, update the source and run the
@@ -277,6 +340,36 @@ When `update()` discovers a changed capability universe, it adds new
 capabilities, replaces changed metadata, and removes capabilities missing from
 an authoritative snapshot. A temporarily failed source should be reported in
 `failed_sources`; its previously indexed capabilities are preserved.
+
+## Method results
+
+The main `Octopus` methods return different kinds of results:
+
+```python
+report = await octopus.update()
+# CapabilityUpdateReport(added=[...], changed=[...], removed=[...], ...)
+
+tools = await octopus.initialize()
+# list[dict]: the capabilities loaded from the existing index
+
+active_tools = octopus.retrieve("Reply to Tom's email")
+# list[dict]: final active capability definitions
+
+result = octopus.retrieve_result("Reply to Tom's email")
+# RetrievalResult:
+# result.retrieved_tools -> current-turn selection
+# result.tools            -> final active context
+
+details = octopus.process("Reply to Tom's email")
+# dict containing retrieved_tools, active_tools, tool_ids, session, and timing
+
+session = octopus.get_session("conversation-123")
+# dict with session_id, turn, active_state, and active_tool_ids
+```
+
+`reset_session()` and `delete_session()` change session state and return
+`None`. `update()` and `initialize()` are asynchronous because they perform
+index/model I/O; retrieval and session inspection are synchronous.
 
 ## Sessions
 

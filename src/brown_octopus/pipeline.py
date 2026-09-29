@@ -1,10 +1,15 @@
 from brown_octopus.active_tools import update_active_tools
+from brown_octopus.capability_scope import (
+    normalize_allowed_mcp_urls,
+    tool_is_allowed,
+)
 from brown_octopus.context_manager import ActiveCapabilityContext
 from brown_octopus.retriever import retrieve_tools
 from brown_octopus.tool_registry import get_tools
 from brown_octopus.tool_registry import capability_id
 import logging
 import time
+from collections.abc import Iterable
 
 
 logger = logging.getLogger("brown_octopus.pipeline")
@@ -19,8 +24,17 @@ class CapabilityPipeline:
         self.selector = selector
         self.context_manager = context_manager
 
-    def _retrieve_current(self, query: str) -> dict:
+    def _retrieve_current(
+        self,
+        query: str,
+        allowed_mcp_urls: Iterable[str] | None = None,
+    ) -> dict:
         """Run only the current-turn V3 retrieval and selection stages."""
+        scoped_urls = (
+            tuple(allowed_mcp_urls)
+            if allowed_mcp_urls is not None
+            else None
+        )
         started = time.perf_counter()
         analysis_started = started
         intents = self.analyzer.analyze(query)
@@ -30,7 +44,14 @@ class CapabilityPipeline:
         per_intent = []
         retrieval_started = time.perf_counter()
         for intent in intents:
-            candidates = self.candidate_retriever.retrieve(query, intent)
+            if scoped_urls is None:
+                candidates = self.candidate_retriever.retrieve(query, intent)
+            else:
+                candidates = self.candidate_retriever.retrieve(
+                    query,
+                    intent,
+                    allowed_mcp_urls=scoped_urls,
+                )
             retrieval_ms = (time.perf_counter() - retrieval_started) * 1000
             selection_started = time.perf_counter()
             chosen = self.selector.select(query, intent, candidates)
@@ -65,6 +86,7 @@ class CapabilityPipeline:
         turn: int | None = None,
         context_manager: ActiveCapabilityContext | None = None,
         session_id: str = "default",
+        allowed_mcp_urls: Iterable[str] | None = None,
     ) -> dict:
         """Retrieve capabilities, optionally updating active context.
 
@@ -72,10 +94,21 @@ class CapabilityPipeline:
         current-turn selection and the final active context. Omitting it keeps
         a retrieval-only diagnostic path for internal callers.
         """
-        retrieval = self._retrieve_current(query)
+        scoped_urls = (
+            tuple(allowed_mcp_urls)
+            if allowed_mcp_urls is not None
+            else None
+        )
+        retrieval = self._retrieve_current(query, scoped_urls)
         if turn is None:
             return retrieval
-        return self._with_active_context(retrieval, turn, context_manager, session_id)
+        return self._with_active_context(
+            retrieval,
+            turn,
+            context_manager,
+            session_id,
+            scoped_urls,
+        )
 
     def _with_active_context(
         self,
@@ -83,6 +116,7 @@ class CapabilityPipeline:
         turn: int,
         context_manager: ActiveCapabilityContext | None = None,
         session_id: str = "default",
+        allowed_mcp_urls: Iterable[str] | None = None,
     ) -> dict:
         context_manager = context_manager or self.context_manager
         if context_manager is None:
@@ -90,7 +124,11 @@ class CapabilityPipeline:
         register_tools = getattr(context_manager, "register_tools", None)
         if register_tools is not None:
             register_tools(retrieval["retrieved_tools"])
-        context = context_manager.update(retrieval["retrieved_tools"], turn)
+        context = context_manager.update(
+            retrieval["retrieved_tools"],
+            turn,
+            allowed_mcp_urls=allowed_mcp_urls,
+        )
         logger.info(
             "capability_context_updated",
             extra={
@@ -119,8 +157,15 @@ class CapabilityPipeline:
         turn: int,
         context_manager: ActiveCapabilityContext | None = None,
         session_id: str = "default",
+        allowed_mcp_urls: Iterable[str] | None = None,
     ) -> dict:
-        return self.retrieve(query, turn, context_manager, session_id)
+        return self.retrieve(
+            query,
+            turn,
+            context_manager,
+            session_id,
+            allowed_mcp_urls,
+        )
 
     def reset(self) -> None:
         if self.context_manager is not None:
@@ -131,6 +176,7 @@ def process_turn(
     query: str,
     active_tools: dict[str, int],
     turn: int,
+    allowed_mcp_urls: Iterable[str] | None = None,
 ) -> dict:
     """
     Build the tool context for a single agent turn.
@@ -140,7 +186,13 @@ def process_turn(
     and the resulting tool definitions are returned for the
     agent to use.
     """
-    retrieved_tools = retrieve_tools(query)
+    if allowed_mcp_urls is None:
+        retrieved_tools = retrieve_tools(query)
+    else:
+        retrieved_tools = retrieve_tools(
+            query,
+            allowed_mcp_urls=allowed_mcp_urls,
+        )
 
     retrieved_tool_names = [tool["name"] for tool in retrieved_tools]
 
@@ -149,6 +201,20 @@ def process_turn(
         retrieved_tools=retrieved_tool_names,
         turn=turn,
     )
+
+    if allowed_mcp_urls is not None:
+        allowed_urls = normalize_allowed_mcp_urls(allowed_mcp_urls)
+        active_definitions = get_tools(active_state.keys())
+        allowed_ids = {
+            capability_id(tool)
+            for tool in active_definitions
+            if tool_is_allowed(tool, allowed_urls)
+        }
+        active_state = {
+            identity: last_turn
+            for identity, last_turn in active_state.items()
+            if identity in allowed_ids
+        }
 
     active_tools = get_tools(active_state.keys())
 
