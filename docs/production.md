@@ -54,6 +54,64 @@ applications that need custom infrastructure. Most applications should only
 need to construct `Octopus`, call `update()` during setup or an explicit host
 refresh, and call `initialize()` once at application startup.
 
+For applications that want a simpler setup facade, `OctopusIndex` wraps the
+same source and snapshot lifecycle:
+
+```python
+from brown_octopus import OctopusIndex
+
+index = OctopusIndex.from_mcp_server(
+    "https://example.com/outlook/mcp",
+    index_path="data/indexes/default",
+)
+await index.create()
+
+octopus = index.runtime()
+await octopus.initialize()
+```
+
+The facade also supports normalized JSON and HTTP API sources:
+
+```python
+file_index = OctopusIndex.from_file(
+    "data/capabilities.json",
+    items_path="capabilities",
+)
+
+api_index = OctopusIndex.from_api(
+    "https://registry.example.com/capabilities",
+    items_path="data.items",
+    fields={
+        "capability_id": "id",
+        "source_id": "server_id",
+        "name": "name",
+        "description": "description",
+        "input_schema": "input_schema",
+    },
+    headers={"Authorization": "Bearer <host-provided-token>"},
+)
+```
+
+The API source expects JSON records and field mappings; credentials belong to
+the host application. The current MCP convenience source supports one HTTP MCP
+server. stdio MCP configuration is not currently part of this facade.
+
+Index lifecycle methods are:
+
+```python
+await index.create()                         # initial/full synchronization
+await index.add(other_source)                # add a configured source
+await index.update()                          # synchronize all sources
+await index.remove_source("outlook-prod")    # remove one source
+await index.remove_capability("crm_search")  # suppress one capability
+index.reset()                                 # remove the persisted index
+```
+
+`OctopusIndex.from_sources([...])` is available for advanced applications that
+already have custom `CapabilitySource` objects. `OctopusIndex` does not replace
+the lower-level `CapabilitySource` contract; it provides convenience adapters
+for common source shapes.
+
 The host application owns:
 
 - source credentials and permissions;

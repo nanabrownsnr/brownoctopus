@@ -4,6 +4,7 @@ from contextlib import contextmanager
 from threading import Condition, RLock
 import json
 import hashlib
+import shutil
 from datetime import datetime, timezone
 from importlib.metadata import PackageNotFoundError, version as package_version
 
@@ -490,3 +491,19 @@ class Octopus:
             load_index(tools=tools, embeddings=embeddings)
             self._build_pipeline()
         return report
+
+    def reset_index(self) -> None:
+        """Remove this engine's persisted capability index.
+
+        This is an explicit setup operation. Runtime retrieval must be
+        reinitialized after a subsequent ``update()`` or ``create()``.
+        Session state is intentionally not modified here.
+        """
+        if self.index_path.exists():
+            shutil.rmtree(self.index_path)
+        set_tools([])
+        load_index(tools=[], embeddings=None)
+        self.pipeline = None
+        self.candidate_retriever = None
+        self.selection_strategy = None
+        self._runtime_tool_definitions.clear()

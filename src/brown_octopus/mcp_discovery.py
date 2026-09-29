@@ -14,11 +14,15 @@ def make_capability_id(
     server_name: str,
     tool_name: str,
     server_url: str | None = None,
+    server_id: str | None = None,
 ) -> str:
-    server_id = normalize_name(server_name)
-    if server_url:
-        server_id = f"{server_id}-{hashlib.sha256(server_url.encode()).hexdigest()[:12]}"
-    return f"{server_id}:{normalize_name(tool_name)}"
+    stable_server_id = normalize_name(server_id or server_name)
+    if server_id is None and server_url:
+        stable_server_id = (
+            f"{stable_server_id}-"
+            f"{hashlib.sha256(server_url.encode()).hexdigest()[:12]}"
+        )
+    return f"{stable_server_id}_{normalize_name(tool_name)}"
 
 
 def discovered_capability_id(tool: dict) -> str:
@@ -37,7 +41,10 @@ def discovered_capability_id(tool: dict) -> str:
     )
 
 
-async def discover_tools(mcp_url: str) -> list[dict]:
+async def discover_tools(
+    mcp_url: str,
+    server_id: str | None = None,
+) -> list[dict]:
     """
     Connect to an MCP server and discover its available tools.
 
@@ -62,8 +69,13 @@ async def discover_tools(mcp_url: str) -> list[dict]:
 
     return [
         {
-            "capability_id": make_capability_id(mcp_name, tool.name, mcp_url),
-            "source_id": mcp_url,
+            "capability_id": make_capability_id(
+                mcp_name,
+                tool.name,
+                mcp_url,
+                server_id=server_id,
+            ),
+            "source_id": server_id or mcp_url,
             "name": f"{normalized_mcp_name}_{tool.name}",
             "mcp_name": mcp_name,
             "mcp_url": mcp_url,
@@ -115,9 +127,6 @@ async def discover_universe(
         )
         normalized_tools.append(normalized_tool)
 
-    unique_tools = {
-        discovered_capability_id(tool): tool
-        for tool in normalized_tools
-    }
+    unique_tools = {discovered_capability_id(tool): tool for tool in normalized_tools}
 
     return list(unique_tools.values())
