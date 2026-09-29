@@ -467,6 +467,20 @@ timing, and session lifecycle policy.
 
 ## Development and research
 
+The repository separates the installable library from integration examples and
+research history:
+
+```text
+src/brown_octopus/  production Python package
+tests/              package correctness tests
+examples/           host/agent integration examples
+docs/               user and deployment documentation
+docs/research/      research notes and historical technical reports
+evals/              evaluation infrastructure
+data/evals/         benchmark datasets
+results/            raw and processed evaluation outputs
+```
+
 ```bash
 uv sync
 uv run brown-octopus setup-models
@@ -477,9 +491,10 @@ uv build
 Research and reproducibility materials remain in the repository:
 
 ```text
-evals/       evaluation infrastructure
-data/evals/  benchmark datasets
-results/     reports and experiment outputs
+evals/              evaluation infrastructure
+data/evals/         benchmark datasets
+results/            reports and experiment outputs
+docs/research/      research notes and historical reports
 ```
 
 They are separate from the installable `brown_octopus` runtime package.

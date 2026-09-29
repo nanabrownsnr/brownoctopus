@@ -8,6 +8,12 @@ wheels/
 
 # Virtual environments
 .venv
+.clean-env/
+
+# Test and local tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
 # Generated external benchmark data and indexes
 data/external/tool-retrieval-benchmark/
