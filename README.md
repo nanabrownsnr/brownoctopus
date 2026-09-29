@@ -467,9 +467,8 @@ timing, and session lifecycle policy.
 
 ## Development and research
 
-The detailed Python API reference is in
-[`docs/api.md`](docs/api.md). Deployment-oriented source and session-store
-examples are in [`docs/production.md`](docs/production.md).
+The detailed Python API, source, session-store, and deployment documentation is
+in [`docs/production.md`](docs/production.md).
 
 The repository separates the installable library from integration examples and
 research history:

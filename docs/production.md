@@ -14,6 +14,46 @@ Brown Octopus owns:
 - active capability context and TTL handling;
 - session capability state through a `SessionStore`.
 
+## Public API at a glance
+
+The normal application-facing API is intentionally small:
+
+```python
+from brown_octopus import Octopus
+
+octopus = Octopus()
+await octopus.initialize()
+
+result = octopus.retrieve_result(
+    user_message,
+    session_id="conversation-123",
+)
+
+tools = result.tools
+```
+
+The public lifecycle is split deliberately:
+
+```text
+brown-octopus setup-models
+    prepare local model assets
+
+await octopus.update()
+    discover capabilities and build/update the persisted index
+
+await octopus.initialize()
+    load existing local models and index for runtime retrieval
+
+octopus.retrieve_result(...)
+    retrieve the current active capability context
+```
+
+`Octopus` is the runtime facade. `CapabilitySource`, `SessionStore`, and the
+lower-level analyzer/retriever/selector protocols are extension points for
+applications that need custom infrastructure. Most applications should only
+need to construct `Octopus`, call `update()` during setup or an explicit host
+refresh, and call `initialize()` once at application startup.
+
 The host application owns:
 
 - source credentials and permissions;
