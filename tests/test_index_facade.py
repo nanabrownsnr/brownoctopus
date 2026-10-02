@@ -142,10 +142,17 @@ async def test_index_facade_adds_and_removes_sources(monkeypatch, tmp_path):
     calls = []
 
     async def fake_update():
-        calls.append([getattr(source, "source_id", None) for source in index.sources])
+        await index.source.discover()
+        return CapabilityDiscoveryResult()
+
+    async def fake_discover():
+        calls.append(
+            [getattr(source, "source_id", None) for source in index.source.sources]
+        )
         return CapabilityDiscoveryResult()
 
     monkeypatch.setattr(index._octopus, "update", fake_update)
+    monkeypatch.setattr(index.source, "discover", fake_discover)
     source = McpServerSource("https://example.com/mcp", source_id="crm")
 
     await index.add(source)

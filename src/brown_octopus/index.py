@@ -38,6 +38,10 @@ class OctopusIndex:
             config=config,
         )
 
+    def _sync_sources(self) -> None:
+        """Keep the composite source aligned with the public source list."""
+        self.source.sources = list(self.sources)
+
     @classmethod
     def from_sources(
         cls,
@@ -109,10 +113,12 @@ class OctopusIndex:
     async def add(self, source: CapabilitySource):
         """Add a source and synchronize the complete configured source set."""
         self.sources.append(source)
+        self._sync_sources()
         try:
             return await self.update()
         except Exception:
             self.sources.pop()
+            self._sync_sources()
             raise
 
     async def remove_source(self, source_id: str):
@@ -126,10 +132,12 @@ class OctopusIndex:
         if len(remaining) == len(original):
             raise ValueError(f"No configured source has ID '{source_id}'.")
         self.sources[:] = remaining
+        self._sync_sources()
         try:
             return await self.update()
         except Exception:
             self.sources[:] = original
+            self._sync_sources()
             raise
 
     async def remove_capability(self, capability_id: str):
