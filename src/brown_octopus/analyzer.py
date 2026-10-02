@@ -26,6 +26,13 @@ def initialize_analyzer() -> None:
 
     if nlp is None:
         register_managed_spacy_plugins()
+        try:
+            # spaCy uses CuPy for GPU execution. If the compatible CuPy
+            # runtime is absent, prefer_gpu() safely returns False and the
+            # analyzer remains on CPU.
+            spacy.prefer_gpu()
+        except Exception:
+            pass
         nlp = spacy.load(resolve_spacy_model())
 
 

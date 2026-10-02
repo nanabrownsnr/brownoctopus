@@ -8,6 +8,7 @@ from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
 from brown_octopus.config import OctopusConfig
+from brown_octopus.device import detect_compute_device
 from brown_octopus.model_store import (
     EMBEDDING_MODEL_NAME,
 )
@@ -132,6 +133,7 @@ def _inspect(as_json: bool) -> int:
         "index_version": index.get("index_version"),
         "index_path": str(config.index_path),
         "embedding_model": index.get("embedding_model") or EMBEDDING_MODEL_NAME,
+        "compute_device": detect_compute_device(),
         "analyzer": "deterministic-spacy",
         "selector": "V3 Min-4 + Bounded Max Gap",
         "ttl": config.ttl,
@@ -146,6 +148,7 @@ def _inspect(as_json: bool) -> int:
         ("capabilities", "Capabilities"),
         ("index_version", "Index version"),
         ("embedding_model", "Embedding"),
+        ("compute_device", "Compute device"),
         ("analyzer", "Analyzer"),
         ("selector", "Selector"),
         ("ttl", "TTL"),

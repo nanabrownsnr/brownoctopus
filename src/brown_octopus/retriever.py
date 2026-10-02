@@ -9,6 +9,7 @@ from brown_octopus.capability_scope import (
     normalize_allowed_mcp_urls,
     tool_is_allowed,
 )
+from brown_octopus.device import detect_compute_device
 
 if TYPE_CHECKING:
     from sentence_transformers import SentenceTransformer
@@ -22,6 +23,7 @@ RETRIEVAL_METHOD = "brown_octopus_v3"
 model: Any = None
 TOOLS: list[dict] = []
 tool_embeddings = None
+model_device = "cpu"
 
 
 class QwenCandidateRetriever:
@@ -55,17 +57,19 @@ class QwenCandidateRetriever:
 
 def initialize_retriever() -> None:
     """Load the embedding model once."""
-    global model
+    global model, model_device
 
     if model is None:
         allow_download = os.getenv("BROWN_OCTOPUS_ALLOW_MODEL_DOWNLOAD", "0") == "1"
         try:
             from sentence_transformers import SentenceTransformer
 
+            model_device = detect_compute_device()
             model = SentenceTransformer(
                 MODEL_NAME,
                 trust_remote_code=True,
                 local_files_only=not allow_download,
+                device=model_device,
             )
         except Exception as exc:
             action = (

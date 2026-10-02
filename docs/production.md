@@ -138,6 +138,12 @@ prefix. Model setup prepares `en_core_web_trf` and
 model is missing, initialization raises an actionable error directing the host
 to `brown-octopus setup-models`.
 
+At runtime, Brown Octopus detects the best accelerator visible to the local
+PyTorch installation. It prefers CUDA, then Apple MPS or Intel XPU when
+available, and otherwise uses CPU. Qwen receives this device explicitly. spaCy
+also requests GPU execution when its compatible GPU runtime is available and
+otherwise remains on CPU. No GPU is required.
+
 ## Runtime pipeline
 
 ```text

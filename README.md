@@ -9,7 +9,7 @@ conversation history. Those responsibilities stay with the host application.
 
 ## Installation
 
-Brown Octopus requires Python 3.13 or newer.
+Brown Octopus requires Python 3.12 or newer.
 
 Using `uv`:
 
