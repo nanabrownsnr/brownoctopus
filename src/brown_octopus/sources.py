@@ -195,6 +195,15 @@ class McpRegistrySource:
         server_id_field: str = "id",
         page_param: str = "page",
         limit_param: str = "limit",
+        cursor_param: str = "cursor",
+        next_cursor_paths: Sequence[str] = (
+            "next_cursor",
+            "nextCursor",
+            "pagination.next_cursor",
+            "pagination.nextCursor",
+            "meta.next_cursor",
+            "meta.nextCursor",
+        ),
         page_size: int = 100,
         max_pages: int = 1000,
         headers: Mapping[str, str] | None = None,
@@ -214,6 +223,8 @@ class McpRegistrySource:
         self.server_id_field = server_id_field
         self.page_param = page_param
         self.limit_param = limit_param
+        self.cursor_param = cursor_param
+        self.next_cursor_paths = tuple(next_cursor_paths)
         self.page_size = page_size
         self.max_pages = max_pages
         self.headers = dict(headers or {})
@@ -227,6 +238,8 @@ class McpRegistrySource:
         headers = dict(self.headers)
         refreshed = False
         page = 1
+        cursor: str | None = None
+        seen_cursors: set[str] = set()
 
         while page <= self.max_pages:
             try:
@@ -234,6 +247,7 @@ class McpRegistrySource:
                     self._request_page,
                     page,
                     headers,
+                    cursor,
                 )
                 if status_code in {401, 403} and self.refresh_headers and not refreshed:
                     refreshed = True
@@ -246,7 +260,7 @@ class McpRegistrySource:
                     raise RuntimeError(
                         f"registry authorization failed (HTTP {status_code})"
                     )
-                records, has_more = self._records_from_page(payload)
+                records, next_cursor, has_more = self._records_from_page(payload)
             except Exception as exc:
                 result.failed_sources[self.source_id] = str(exc)
                 result.authoritative = False
@@ -257,7 +271,17 @@ class McpRegistrySource:
 
             if not has_more:
                 break
-            page += 1
+            if next_cursor is not None:
+                if next_cursor in seen_cursors:
+                    result.failed_sources[self.source_id] = (
+                        "registry returned a repeated pagination cursor"
+                    )
+                    result.authoritative = False
+                    return result
+                seen_cursors.add(next_cursor)
+                cursor = next_cursor
+            else:
+                page += 1
         else:
             result.failed_sources[self.source_id] = (
                 f"registry exceeded max_pages={self.max_pages}"
@@ -295,14 +319,14 @@ class McpRegistrySource:
         self,
         page: int,
         headers: Mapping[str, str],
+        cursor: str | None = None,
     ) -> tuple[Any, int]:
-        request_url = _with_query(
-            self.url,
-            {
-                self.page_param: page,
-                self.limit_param: self.page_size,
-            },
-        )
+        values: dict[str, Any] = {self.limit_param: self.page_size}
+        if cursor is not None:
+            values[self.cursor_param] = cursor
+        else:
+            values[self.page_param] = page
+        request_url = _with_query(self.url, values)
         request = urllib.request.Request(request_url, headers=dict(headers))
         try:
             with urllib.request.urlopen(request, timeout=self.timeout) as response:
@@ -312,7 +336,10 @@ class McpRegistrySource:
                 return None, exc.code
             raise
 
-    def _records_from_page(self, payload: Any) -> tuple[list[dict], bool]:
+    def _records_from_page(
+        self,
+        payload: Any,
+    ) -> tuple[list[dict], str | None, bool]:
         records = payload if isinstance(payload, list) else _nested_value(
             payload, self.items_path
         )
@@ -322,7 +349,17 @@ class McpRegistrySource:
             )
         records = [record for record in records if isinstance(record, dict)]
         if isinstance(payload, list):
-            return records, len(records) >= self.page_size
+            return records, None, len(records) >= self.page_size
+        next_cursor = next(
+            (
+                _nested_value(payload, path)
+                for path in self.next_cursor_paths
+                if _nested_value(payload, path) not in (None, "")
+            ),
+            None,
+        )
+        if next_cursor is not None:
+            return records, str(next_cursor), True
         next_value = (
             _nested_value(payload, "next")
             or _nested_value(payload, "next_url")
@@ -330,8 +367,8 @@ class McpRegistrySource:
             or _nested_value(payload, "pagination.next")
         )
         if next_value:
-            return records, True
-        return records, len(records) >= self.page_size
+            return records, None, True
+        return records, None, len(records) >= self.page_size
 
 
 class CompositeCapabilitySource:

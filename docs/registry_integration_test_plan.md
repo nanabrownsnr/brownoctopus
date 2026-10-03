@@ -119,7 +119,18 @@ Acceptance criteria:
 ## Test 2: pagination
 
 Use a registry with more records than one page, or a local mock that returns
-two pages.
+two pages. If the registry is cursor-paginated, the response should contain a
+cursor such as:
+
+```json
+{
+  "items": [],
+  "next_cursor": "opaque-cursor-value"
+}
+```
+
+The source sends that value back using the configured `cursor_param` (default:
+`cursor`).
 
 Verify:
 

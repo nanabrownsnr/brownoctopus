@@ -191,13 +191,100 @@ async def test_mcp_registry_source_paginates_and_discovers_tools():
         page_size=2,
         tool_discoverer=discover_tools_for_server,
     )
-    source._request_page = lambda page, headers: (pages[page], 200)
+    source._request_page = lambda page, headers, cursor=None: (pages[page], 200)
 
     result = await source.discover()
 
     assert [item[1] for item in calls] == ["web", "mail", "calendar"]
     assert len(result.tools) == 3
     assert result.failed_sources == {}
+
+
+@pytest.mark.anyio
+async def test_mcp_registry_source_follows_cursor_pagination():
+    requests = []
+    responses = {
+        None: (
+            {
+                "items": [
+                    {"id": "first", "url": "https://first"},
+                ],
+                "next_cursor": "cursor-2",
+            },
+            200,
+        ),
+        "cursor-2": (
+            {
+                "items": [
+                    {"id": "second", "url": "https://second"},
+                ],
+                "next_cursor": None,
+            },
+            200,
+        ),
+    }
+
+    async def discover_tools_for_server(url, server_id=None):
+        return [
+            {
+                "capability_id": f"{server_id}:tool",
+                "name": f"{server_id}_tool",
+                "description": "test",
+                "input_schema": {},
+            }
+        ]
+
+    source = McpRegistrySource(
+        "https://registry.example/servers",
+        page_size=10,
+        tool_discoverer=discover_tools_for_server,
+    )
+
+    def request_page(page, headers, cursor=None):
+        requests.append((page, cursor))
+        return responses[cursor]
+
+    source._request_page = request_page
+    result = await source.discover()
+
+    assert requests == [(1, None), (1, "cursor-2")]
+    assert [tool["capability_id"] for tool in result.tools] == [
+        "first:tool",
+        "second:tool",
+    ]
+
+
+@pytest.mark.anyio
+async def test_mcp_registry_source_refreshes_headers_once_after_auth_failure():
+    requests = []
+    refreshes = []
+
+    async def refresh_headers():
+        refreshes.append(True)
+        return {"Authorization": "Bearer refreshed"}
+
+    source = McpRegistrySource(
+        "https://registry.example/servers",
+        headers={"Authorization": "Bearer expired"},
+        refresh_headers=refresh_headers,
+    )
+
+    def request_page(page, headers, cursor=None):
+        requests.append(dict(headers))
+        if len(requests) == 1:
+            return None, 401
+        return {"items": []}, 200
+
+    source._request_page = request_page
+    result = await source.discover()
+
+    assert len(refreshes) == 1
+    assert requests == [
+        {"Authorization": "Bearer expired"},
+        {"Authorization": "Bearer refreshed"},
+    ]
+    assert result.failed_sources == {}
+    assert result.successful_sources == [source.source_id]
 
 
 @pytest.mark.anyio
@@ -218,7 +305,7 @@ async def test_mcp_registry_source_preserves_partial_failures():
         "https://registry.example/servers",
         tool_discoverer=discover_tools_for_server,
     )
-    source._request_page = lambda page, headers: (
+    source._request_page = lambda page, headers, cursor=None: (
         {
             "items": [
                 {"id": "online", "url": "https://online"},

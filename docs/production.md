@@ -126,6 +126,11 @@ registry_index = OctopusIndex.from_mcp_registry(
 report = await registry_index.create()
 ```
 
+The registry source supports both page/limit and cursor pagination. Cursor
+responses are followed through fields such as `next_cursor` or
+`pagination.next_cursor`; repeated cursors are rejected to prevent an
+infinite refresh loop.
+
 If a registry token can expire, the host can provide a one-time refresh
 callback:
 
