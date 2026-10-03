@@ -327,10 +327,12 @@ def test_index_facade_exposes_registry_constructor():
         "https://registry.example/servers",
         index_path="data/indexes/registry-test",
         headers={"Authorization": "Bearer secret"},
+        cursor_param="next",
     )
 
     assert isinstance(index.sources[0], McpRegistrySource)
     assert index.sources[0].headers["Authorization"] == "Bearer secret"
+    assert index.sources[0].cursor_param == "next"
 
 
 @pytest.mark.anyio

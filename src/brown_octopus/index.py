@@ -81,6 +81,8 @@ class OctopusIndex:
                 "server_id_field",
                 "page_param",
                 "limit_param",
+                "cursor_param",
+                "next_cursor_paths",
                 "page_size",
                 "max_pages",
                 "headers",
