@@ -15,6 +15,7 @@ from brown_octopus.sources import (
     CapabilityUpdateReport,
     JsonCapabilitySource,
     LocalMcpCatalogSource,
+    McpRegistrySource,
     McpServerSource,
 )
 
@@ -32,6 +33,7 @@ __all__ = [
     "CapabilityUpdateReport",
     "LocalMcpCatalogSource",
     "McpServerSource",
+    "McpRegistrySource",
     "JsonCapabilitySource",
     "ApiCapabilitySource",
 ]

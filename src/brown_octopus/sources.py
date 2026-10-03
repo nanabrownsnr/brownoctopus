@@ -1,9 +1,12 @@
 import json
 import asyncio
+import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from inspect import isawaitable
+from typing import Any, Awaitable, Callable, Mapping, Sequence
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from brown_octopus.mcp_discovery import discover_tools
 from brown_octopus.contracts import CapabilityDiscoveryResult, CapabilitySource
@@ -143,12 +146,23 @@ class ApiCapabilitySource:
             "name",
             "description",
             "input_schema",
+            "mcp_url",
+            "mcp_name",
+            "tool_name",
         }
         tool = {
             field: _nested_value(record, path)
             for field, path in self.fields.items()
             if field in required
         }
+        for field in required:
+            if (
+                field in record
+                and field not in tool
+                and field not in self.fields
+                and field not in self.fields.values()
+            ):
+                tool[field] = record[field]
         tool.setdefault("source_id", self.source_id)
         tool.setdefault("description", "")
         tool.setdefault("input_schema", {})
@@ -157,6 +171,167 @@ class ApiCapabilitySource:
                 "Capability API records must map capability_id and name."
             )
         return tool
+
+
+class McpRegistrySource:
+    """Discover MCP tools from a registry that returns MCP server records.
+
+    This is intentionally separate from :class:`ApiCapabilitySource`:
+    ``ApiCapabilitySource`` consumes already-normalized capability records,
+    while this source fetches server records and discovers tools from each
+    server URL.
+
+    ``refresh_headers`` may be supplied by the host for an expired registry
+    token. It is called at most once after a 401/403 response. Header values
+    are never included in errors or logs.
+    """
+
+    def __init__(
+        self,
+        url: str,
+        *,
+        items_path: str = "items",
+        server_url_field: str = "url",
+        server_id_field: str = "id",
+        page_param: str = "page",
+        limit_param: str = "limit",
+        page_size: int = 100,
+        max_pages: int = 1000,
+        headers: Mapping[str, str] | None = None,
+        refresh_headers: Callable[
+            [], Mapping[str, str] | Awaitable[Mapping[str, str]]
+        ]
+        | None = None,
+        timeout: float = 15.0,
+        source_id: str | None = None,
+        tool_discoverer: Callable[..., Awaitable[list[dict]]] | None = None,
+    ) -> None:
+        if page_size <= 0 or max_pages <= 0:
+            raise ValueError("page_size and max_pages must be positive.")
+        self.url = url
+        self.items_path = items_path
+        self.server_url_field = server_url_field
+        self.server_id_field = server_id_field
+        self.page_param = page_param
+        self.limit_param = limit_param
+        self.page_size = page_size
+        self.max_pages = max_pages
+        self.headers = dict(headers or {})
+        self.refresh_headers = refresh_headers
+        self.timeout = timeout
+        self.source_id = source_id or url
+        self.tool_discoverer = tool_discoverer or discover_tools
+
+    async def discover(self) -> CapabilityDiscoveryResult:
+        result = CapabilityDiscoveryResult()
+        headers = dict(self.headers)
+        refreshed = False
+        page = 1
+
+        while page <= self.max_pages:
+            try:
+                payload, status_code = await asyncio.to_thread(
+                    self._request_page,
+                    page,
+                    headers,
+                )
+                if status_code in {401, 403} and self.refresh_headers and not refreshed:
+                    refreshed = True
+                    refreshed_headers = self.refresh_headers()
+                    if isawaitable(refreshed_headers):
+                        refreshed_headers = await refreshed_headers
+                    headers = dict(refreshed_headers)
+                    continue
+                if status_code in {401, 403}:
+                    raise RuntimeError(
+                        f"registry authorization failed (HTTP {status_code})"
+                    )
+                records, has_more = self._records_from_page(payload)
+            except Exception as exc:
+                result.failed_sources[self.source_id] = str(exc)
+                result.authoritative = False
+                return result
+
+            for record in records:
+                await self._discover_server(record, result)
+
+            if not has_more:
+                break
+            page += 1
+        else:
+            result.failed_sources[self.source_id] = (
+                f"registry exceeded max_pages={self.max_pages}"
+            )
+            result.authoritative = False
+
+        if result.failed_sources:
+            result.authoritative = False
+        if not result.failed_sources:
+            result.successful_sources.append(self.source_id)
+        return result
+
+    async def _discover_server(
+        self,
+        record: dict[str, Any],
+        result: CapabilityDiscoveryResult,
+    ) -> None:
+        mcp_url = record.get(self.server_url_field)
+        if not isinstance(mcp_url, str) or not mcp_url:
+            return
+        server_id = str(record.get(self.server_id_field) or mcp_url)
+        try:
+            tools = await self.tool_discoverer(mcp_url, server_id=server_id)
+            for tool in tools:
+                tool.setdefault("source_id", server_id)
+                tool.setdefault("mcp_url", mcp_url)
+                if record.get("name"):
+                    tool.setdefault("mcp_name", record["name"])
+                result.tools.append(tool)
+            result.successful_sources.append(server_id)
+        except Exception as exc:
+            result.failed_sources[server_id] = str(exc)
+
+    def _request_page(
+        self,
+        page: int,
+        headers: Mapping[str, str],
+    ) -> tuple[Any, int]:
+        request_url = _with_query(
+            self.url,
+            {
+                self.page_param: page,
+                self.limit_param: self.page_size,
+            },
+        )
+        request = urllib.request.Request(request_url, headers=dict(headers))
+        try:
+            with urllib.request.urlopen(request, timeout=self.timeout) as response:
+                return json.loads(response.read().decode("utf-8")), response.status
+        except urllib.error.HTTPError as exc:
+            if exc.code in {401, 403}:
+                return None, exc.code
+            raise
+
+    def _records_from_page(self, payload: Any) -> tuple[list[dict], bool]:
+        records = payload if isinstance(payload, list) else _nested_value(
+            payload, self.items_path
+        )
+        if not isinstance(records, list):
+            raise ValueError(
+                f"MCP registry field '{self.items_path}' must contain a list."
+            )
+        records = [record for record in records if isinstance(record, dict)]
+        if isinstance(payload, list):
+            return records, len(records) >= self.page_size
+        next_value = (
+            _nested_value(payload, "next")
+            or _nested_value(payload, "next_url")
+            or _nested_value(payload, "links.next")
+            or _nested_value(payload, "pagination.next")
+        )
+        if next_value:
+            return records, True
+        return records, len(records) >= self.page_size
 
 
 class CompositeCapabilitySource:
@@ -199,6 +374,16 @@ def _nested_value(payload: Any, path: str) -> Any:
             return None
         value = value[part]
     return value
+
+
+def _with_query(url: str, values: Mapping[str, Any]) -> str:
+    """Add or replace query parameters without dropping existing filters."""
+    parts = urlsplit(url)
+    query = dict(parse_qsl(parts.query, keep_blank_values=True))
+    query.update({key: str(value) for key, value in values.items()})
+    return urlunsplit(
+        (parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment)
+    )
 
 
 def load_mcp_urls(path: str | Path) -> list[str]:

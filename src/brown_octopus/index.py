@@ -9,6 +9,7 @@ from brown_octopus.sources import (
     ApiCapabilitySource,
     CompositeCapabilitySource,
     JsonCapabilitySource,
+    McpRegistrySource,
     McpServerSource,
 )
 
@@ -62,6 +63,34 @@ class OctopusIndex:
             [McpServerSource(url, source_id=source_id)],
             **kwargs,
         )
+
+    @classmethod
+    def from_mcp_registry(
+        cls,
+        url: str,
+        **kwargs,
+    ) -> "OctopusIndex":
+        """Build an index from a registry that returns MCP server records."""
+        source_kwargs = {
+            key: kwargs.pop(key)
+            for key in tuple(kwargs)
+            if key
+            in {
+                "items_path",
+                "server_url_field",
+                "server_id_field",
+                "page_param",
+                "limit_param",
+                "page_size",
+                "max_pages",
+                "headers",
+                "refresh_headers",
+                "timeout",
+                "source_id",
+                "tool_discoverer",
+            }
+        }
+        return cls([McpRegistrySource(url, **source_kwargs)], **kwargs)
 
     @classmethod
     def from_file(

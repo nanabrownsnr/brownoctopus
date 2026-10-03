@@ -92,9 +92,63 @@ api_index = OctopusIndex.from_api(
 )
 ```
 
+`from_api()` expects one normalized capability record per item. It preserves
+execution metadata when supplied:
+
+```json
+{
+  "capability_id": "outlook:send_email",
+  "source_id": "outlook-prod",
+  "name": "outlook_send_email",
+  "description": "Send an email",
+  "input_schema": {"type": "object"},
+  "mcp_url": "https://example.com/outlook/mcp",
+  "tool_name": "send_email"
+}
+```
+
 The API source expects JSON records and field mappings; credentials belong to
-the host application. The current MCP convenience source supports one HTTP MCP
-server. stdio MCP configuration is not currently part of this facade.
+the host application.
+
+For registries that return MCP server records rather than normalized
+capabilities, use the dedicated registry source. It fetches all pages,
+discovers tools from each server URL, and records partial source failures:
+
+```python
+registry_index = OctopusIndex.from_mcp_registry(
+    "https://registry.example.com/mcp-servers",
+    items_path="items",
+    headers={"Authorization": "Bearer <host-provided-token>"},
+    page_size=50,
+    index_path="data/indexes/default",
+)
+
+report = await registry_index.create()
+```
+
+If a registry token can expire, the host can provide a one-time refresh
+callback:
+
+```python
+async def refresh_headers():
+    token = await get_new_registry_token()
+    return {"Authorization": f"Bearer {token}"}
+
+
+registry_index = OctopusIndex.from_mcp_registry(
+    registry_url,
+    headers={"Authorization": "Bearer <short-lived-token>"},
+    refresh_headers=refresh_headers,
+)
+```
+
+`mcp_url` and `tool_name` are execution metadata. Brown Octopus returns them
+to the host but does not execute the MCP tool. The host owns credentials,
+authorization, and execution. Header values and tokens are not logged by the
+source.
+
+The MCP convenience source supports one HTTP MCP server. stdio MCP
+configuration is not currently part of this facade.
 
 Index lifecycle methods are:
 

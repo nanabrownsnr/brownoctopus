@@ -6,6 +6,7 @@ from brown_octopus import (
     ApiCapabilitySource,
     CapabilityDiscoveryResult,
     JsonCapabilitySource,
+    McpRegistrySource,
     McpServerSource,
     OctopusIndex,
 )
@@ -133,7 +134,116 @@ def test_api_source_normalizes_mapped_fields():
         "name": "search_customers",
         "description": "Search customers",
         "input_schema": {"type": "object"},
+    } 
+
+
+def test_api_source_preserves_execution_metadata():
+    source = ApiCapabilitySource("https://registry.example/capabilities")
+
+    tool = source._normalize(
+        {
+            "capability_id": "outlook:send_email",
+            "source_id": "outlook-prod",
+            "name": "outlook_send_email",
+            "description": "Send an email",
+            "input_schema": {},
+            "mcp_url": "https://example.com/outlook/mcp",
+            "tool_name": "send_email",
+        }
+    )
+
+    assert tool["mcp_url"] == "https://example.com/outlook/mcp"
+    assert tool["tool_name"] == "send_email"
+
+
+@pytest.mark.anyio
+async def test_mcp_registry_source_paginates_and_discovers_tools():
+    pages = {
+        1: {
+            "items": [
+                {"id": "web", "name": "Web Search", "url": "https://web"},
+                {"id": "mail", "name": "Mail", "url": "https://mail"},
+            ]
+        },
+        2: {
+            "items": [
+                {"id": "calendar", "name": "Calendar", "url": "https://calendar"}
+            ]
+        },
     }
+    calls = []
+
+    async def discover_tools_for_server(url, server_id=None):
+        calls.append((url, server_id))
+        return [
+            {
+                "capability_id": f"{server_id}:tool",
+                "name": f"{server_id}_tool",
+                "description": "test",
+                "input_schema": {},
+                "mcp_url": url,
+                "tool_name": "tool",
+            }
+        ]
+
+    source = McpRegistrySource(
+        "https://registry.example/servers",
+        page_size=2,
+        tool_discoverer=discover_tools_for_server,
+    )
+    source._request_page = lambda page, headers: (pages[page], 200)
+
+    result = await source.discover()
+
+    assert [item[1] for item in calls] == ["web", "mail", "calendar"]
+    assert len(result.tools) == 3
+    assert result.failed_sources == {}
+
+
+@pytest.mark.anyio
+async def test_mcp_registry_source_preserves_partial_failures():
+    async def discover_tools_for_server(url, server_id=None):
+        if server_id == "offline":
+            raise RuntimeError("provider unavailable")
+        return [
+            {
+                "capability_id": f"{server_id}:tool",
+                "name": f"{server_id}_tool",
+                "description": "test",
+                "input_schema": {},
+            }
+        ]
+
+    source = McpRegistrySource(
+        "https://registry.example/servers",
+        tool_discoverer=discover_tools_for_server,
+    )
+    source._request_page = lambda page, headers: (
+        {
+            "items": [
+                {"id": "online", "url": "https://online"},
+                {"id": "offline", "url": "https://offline"},
+            ]
+        },
+        200,
+    )
+
+    result = await source.discover()
+
+    assert result.tools[0]["capability_id"] == "online:tool"
+    assert result.failed_sources["offline"] == "provider unavailable"
+    assert result.authoritative is False
+
+
+def test_index_facade_exposes_registry_constructor():
+    index = OctopusIndex.from_mcp_registry(
+        "https://registry.example/servers",
+        index_path="data/indexes/registry-test",
+        headers={"Authorization": "Bearer secret"},
+    )
+
+    assert isinstance(index.sources[0], McpRegistrySource)
+    assert index.sources[0].headers["Authorization"] == "Bearer secret"
 
 
 @pytest.mark.anyio
