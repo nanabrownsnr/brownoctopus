@@ -1049,6 +1049,31 @@ user message
 LangGraph-specific code remains outside Brown Octopus. Brown Octopus has no
 dependency on a particular agent harness.
 
+## Registry integration checks
+
+For a registry-backed deployment, validate the complete path before enabling
+it in production:
+
+```text
+registry API
+    -> pagination
+    -> MCP server discovery
+    -> capability index
+    -> runtime retrieval
+    -> host-side MCP execution
+```
+
+The registry source handles pagination and preserves prior capabilities when a
+source is temporarily unavailable. It can refresh registry request headers
+once after an authorization failure when the host supplies `refresh_headers`.
+It does not refresh tokens used by the host's later MCP execution request.
+That token lifecycle belongs to the host execution layer.
+
+Run the external validation described in
+[`registry_integration_test_plan.md`](registry_integration_test_plan.md).
+Use a read-only MCP allowlist first. Run write-capable operations only against
+an explicitly approved disposable service.
+
 ## HTTP service
 
 The optional FastAPI adapter exposes retrieval without executing tools. Install
@@ -1104,6 +1129,11 @@ brown-octopus inspect --json
 active index and runtime configuration without performing capability discovery.
 Neither command exposes credentials.
 
+If retrieval succeeds but MCP execution returns HTTP 401 or 403, Brown
+Octopus has already completed its responsibility. Refresh the host execution
+token and retry the MCP call; do not treat that response as a retrieval or
+index failure.
+
 ## Logging and deployment
 
 Brown Octopus uses Python logging and is quiet by default as a library. Hosts
@@ -1129,3 +1159,13 @@ uv build
 
 Install the built wheel into a separate clean environment before distributing
 it. The source checkout must not be required at runtime.
+
+Known boundaries:
+
+- Brown Octopus does not execute MCP tools or own their access tokens.
+- Registry discovery can preserve a previous snapshot after a partial source
+  failure, but the host must decide when to retry the source.
+- External `SessionStore` implementations must provide atomic `mutate()`
+  behavior across workers.
+- The default in-memory session store is process-local.
+- The V3 selector is recall-oriented and may expose adjacent capabilities.

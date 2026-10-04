@@ -7,6 +7,24 @@ definitions, and maintains active capabilities across conversation turns.
 Brown Octopus does not execute tools, manage credentials, or manage the LLM's
 conversation history. Those responsibilities stay with the host application.
 
+## What the package provides
+
+| Part | Responsibility |
+| --- | --- |
+| `OctopusIndex` | Create and update a persisted capability index |
+| `Octopus` | Load the index and retrieve the active capability context |
+| `CapabilitySource` | Supply capabilities from MCP, files, APIs, or custom systems |
+| `SessionStore` | Persist per-conversation capability state |
+
+The normal application path is:
+
+```text
+source -> OctopusIndex.create()/update() -> persisted index
+                                              |
+                                              v
+                         Octopus.initialize() -> retrieve_result()
+```
+
 ## Installation
 
 Brown Octopus requires Python 3.12 or newer.
@@ -96,6 +114,26 @@ The repository also includes the equivalent runnable example:
 ```bash
 python examples/setup_index.py
 ```
+
+For a registry that returns MCP server records, use the registry-specific
+facade. It follows page/limit or cursor pagination, discovers tools from each
+server URL, and preserves the execution metadata the host needs:
+
+```python
+from brown_octopus import OctopusIndex
+
+index = OctopusIndex.from_mcp_registry(
+    "https://registry.example.com/mcp-servers",
+    headers={"Authorization": "Bearer <host-token>"},
+    index_path="data/indexes/default",
+)
+
+report = await index.create()
+```
+
+Use `from_api()` instead when the API already returns one normalized capability
+record per item. See [`docs/production.md`](docs/production.md) for registry,
+API, source, session-store, and deployment examples.
 
 ### Use the index at runtime
 
@@ -235,6 +273,18 @@ database, registry, or marketplace.
 
 `LocalMcpCatalogSource` is the built-in/default source. It reads MCP server
 locations from the configured catalog and discovers their capabilities.
+
+The built-in setup facades cover three common shapes:
+
+| Constructor | Input |
+| --- | --- |
+| `OctopusIndex.from_mcp_server()` | One HTTP MCP server URL |
+| `OctopusIndex.from_mcp_registry()` | An API returning MCP server records |
+| `OctopusIndex.from_file()` / `from_api()` | Already-normalized capability records |
+
+For registry-backed MCPs, `mcp_url` and `tool_name` remain in the returned
+capability definition. Brown Octopus uses them as execution metadata; the host
+still owns authentication and tool execution.
 
 Brown Octopus is not limited to MCP. Applications can provide a custom source
 for an internal API, database, registry, marketplace, or another capability
@@ -491,6 +541,11 @@ uv run pytest -m "not external"
 uv build
 ```
 
+The registry integration test plan is in
+[`docs/registry_integration_test_plan.md`](docs/registry_integration_test_plan.md).
+It covers live registry discovery, cursor pagination, partial MCP failures,
+token refresh, Redis session persistence, and safe read-only execution.
+
 Research and reproducibility materials remain in the repository:
 
 ```text
@@ -501,6 +556,21 @@ docs/research/      research notes and historical reports
 ```
 
 They are separate from the installable `brown_octopus` runtime package.
+
+## Current status
+
+The default V3 retrieval path is frozen. Brown Octopus has been validated with
+MCP discovery, registry-backed indexing, LangGraph capability retrieval,
+read-only MCP execution, and synchronous Redis-backed session persistence.
+Write-capable MCP execution remains host- and environment-specific and is not
+run against production services by default.
+
+## Documentation
+
+- [Production and deployment guide](docs/production.md)
+- [Registry integration test plan](docs/registry_integration_test_plan.md)
+- [LangGraph example](examples/langgraph_app/README.md)
+- [Research and evaluation history](docs/research/)
 
 ## License
 
