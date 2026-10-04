@@ -114,7 +114,10 @@ def _doctor() -> int:
         if not spacy_ok or not qwen_ok:
             print("  brown-octopus setup-models")
         if not index_ok:
-            print("  Build or provide a valid index with: await octopus.update()")
+            print(
+                "  Build or provide a valid index with: "
+                "await index.create()"
+            )
         if not package_ok and package_output:
             print(f"  Import diagnostic: {package_output.splitlines()[-1]}")
         print("\nStatus\n  [FAIL] Brown Octopus is not ready.")

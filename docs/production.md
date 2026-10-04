@@ -158,6 +158,217 @@ source.
 The MCP convenience source supports one HTTP MCP server. stdio MCP
 configuration is not currently part of this facade.
 
+## Public API reference
+
+This section lists the supported application-facing classes and methods. The
+implementation modules contain additional internal helpers; those are not
+part of the public integration contract.
+
+### `OctopusIndex`
+
+`OctopusIndex` is the setup and maintenance facade for a persisted capability
+index. Use it when creating an index or synchronizing capabilities. It does
+not replace the runtime `Octopus` object.
+
+Constructor:
+
+```python
+OctopusIndex(
+    sources,
+    *,
+    index_path="data/indexes/default",
+    session_store=None,
+    config=None,
+)
+```
+
+The `sources` argument is a sequence of objects implementing
+`CapabilitySource`. In most applications, use one of the class methods below.
+
+| Method | Purpose | Returns |
+| --- | --- | --- |
+| `from_sources(sources, **kwargs)` | Use custom source objects | `OctopusIndex` |
+| `from_mcp_server(url, *, source_id=None, **kwargs)` | Discover one HTTP MCP server | `OctopusIndex` |
+| `from_mcp_registry(url, **kwargs)` | Read MCP server records, follow pagination, and discover each server's tools | `OctopusIndex` |
+| `from_file(path, *, items_path="capabilities", **kwargs)` | Read normalized capability records from JSON | `OctopusIndex` |
+| `from_api(url, *, items_path="items", fields=None, headers=None, timeout=15.0, source_id=None, **kwargs)` | Read normalized capability records from an HTTP JSON API | `OctopusIndex` |
+| `create()` | Build the initial persisted index | `CapabilityUpdateReport` |
+| `update()` | Rediscover all configured sources and publish a replacement snapshot | `CapabilityUpdateReport` |
+| `add(source)` | Add a source, then synchronize | `CapabilityUpdateReport` |
+| `remove_source(source_id)` | Remove a configured source, then synchronize | `CapabilityUpdateReport` |
+| `remove_capability(capability_id)` | Suppress one capability from future snapshots | `CapabilityUpdateReport` |
+| `runtime()` | Return the runtime engine for this index | `Octopus` |
+| `reset()` | Delete this persisted index and clear its in-memory registry | `None` |
+
+Example:
+
+```python
+index = OctopusIndex.from_mcp_server(
+    "https://example.com/outlook/mcp",
+    index_path="data/indexes/default",
+)
+
+created = await index.create()
+print(created.tool_count)
+
+updated = await index.update()
+print(updated.added, updated.changed, updated.removed)
+
+octopus = index.runtime()
+await octopus.initialize()
+```
+
+`index.octopus` is an advanced property alias for `index.runtime()`. The
+`create()` method is the clear initial-setup operation; `update()` is the
+explicit later synchronization operation. Both currently rediscover the
+configured sources and rebuild embeddings for the resulting universe before
+atomically publishing the snapshot.
+
+### `Octopus`
+
+`Octopus` is the runtime facade used by the host application after an index
+exists.
+
+Constructor:
+
+```python
+Octopus(
+    index_path="data/indexes/default",
+    catalog_path="data/mcps.json",
+    *,
+    config=None,
+    capability_source=None,
+    session_store=None,
+)
+```
+
+| Method or property | Purpose | Returns |
+| --- | --- | --- |
+| `await initialize()` | Load local models and the existing index; no discovery, rebuild, or download | `list[dict]` |
+| `retrieve(query, session_id="default", allowed_mcp_urls=None)` | Retrieve the final active context | `list[dict]` |
+| `retrieve_result(query, session_id="default", allowed_mcp_urls=None)` | Return the typed harness-neutral result | `RetrievalResult` |
+| `process(query, session_id="default", allowed_mcp_urls=None)` | Return detailed pipeline, session, and timing data | `dict` |
+| `await update()` | Advanced direct runtime discovery/index path | `CapabilityUpdateReport` |
+| `reset()` | Reset the default session | `None` |
+| `reset_session(session_id)` | Clear one session while keeping it usable | `None` |
+| `delete_session(session_id)` | Delete one session's state | `None` |
+| `get_session(session_id="default")` | Return a serializable session snapshot | `dict | None` |
+| `reset_index()` | Remove the persisted index; setup must run again before retrieval | `None` |
+| `active_tools` | Compatibility view of default-session active state | `dict[str, int]` |
+| `turn` | Compatibility view of default-session turn | `int` |
+
+The `active_tools` and `turn` properties are compatibility views for older
+single-session integrations. New code should use `session_id` and the result
+object.
+
+```python
+octopus = Octopus(index_path="data/indexes/default")
+await octopus.initialize()
+
+result = octopus.retrieve_result(
+    "Reply to Tom's email",
+    session_id="conversation-123",
+)
+agent_tools = result.tools
+```
+
+`allowed_mcp_urls` is optional and request-scoped. If supplied, only
+capabilities with a matching normalized `mcp_url` participate in ranking and
+active-context exposure. It does not mutate the shared index.
+
+### Built-in capability sources
+
+Every built-in source implements:
+
+```python
+async def discover() -> CapabilityDiscoveryResult:
+    ...
+```
+
+| Class | Constructor | Behavior |
+| --- | --- | --- |
+| `LocalMcpCatalogSource` | `LocalMcpCatalogSource(catalog_path="data/mcps.json")` | Reads a local MCP catalog and discovers tools from each URL |
+| `McpServerSource` | `McpServerSource(url, source_id=None)` | Discovers tools from one HTTP MCP server |
+| `McpRegistrySource` | `McpRegistrySource(url, *, items_path="items", server_url_field="url", server_id_field="id", page_param="page", limit_param="limit", cursor_param="cursor", next_cursor_paths=..., page_size=100, max_pages=1000, headers=None, refresh_headers=None, timeout=15.0, source_id=None, tool_discoverer=None)` | Reads paginated server records and discovers their tools |
+| `JsonCapabilitySource` | `JsonCapabilitySource(path, *, items_path="capabilities")` | Reads normalized capability records from JSON |
+| `ApiCapabilitySource` | `ApiCapabilitySource(url, *, items_path="items", fields=None, headers=None, timeout=15.0, source_id=None)` | Reads normalized capability records from an HTTP JSON API |
+
+Use `from_mcp_registry()` when the API returns server records that still need
+MCP discovery. Use `from_api()` when the API already returns one normalized
+capability record per item.
+
+### Discovery and result contracts
+
+`CapabilityDiscoveryResult` fields are `tools`, `successful_sources`,
+`failed_sources`, and `authoritative`. A failed source is keyed by its
+`source_id`; Brown Octopus preserves its previously indexed capabilities.
+Set `authoritative=False` when the complete current universe could not be
+determined.
+
+`CapabilityUpdateReport` is returned by index lifecycle methods and contains:
+
+```python
+report.added
+report.changed
+report.removed
+report.failed_sources
+report.tool_count
+report.authoritative
+```
+
+### `RetrievalResult`
+
+`retrieve_result()` returns:
+
+```python
+result.tool_ids          # IDs in the final active context
+result.tools             # final active context for the session
+result.retrieved_tools   # current-turn selection only
+result.session_id
+result.turn
+result.scores            # optional score mapping
+result.metadata          # session, timing, and strategy metadata
+```
+
+`result.active_tools` is an alias for `result.tools`. `result.active_state`
+is a compatibility view of active capability timestamps. Expose
+`result.tools` to the agent; use `result.retrieved_tools` for current-turn
+diagnostics.
+
+### `SessionState`, `SessionStore`, and `InMemorySessionStore`
+
+`SessionState` is the serializable state for one conversation:
+
+```python
+SessionState(
+    session_id="conversation-123",
+    turn=5,
+    active_state={"outlook:send_email": 5},
+)
+```
+
+`SessionStore` defines `get(session_id)`,
+`mutate(session_id, operation)`, `reset(session_id)`,
+`delete(session_id)`, and `snapshot(session_id)`. `mutate()` must perform the
+complete read-modify-write atomically for that session. `InMemorySessionStore`
+is the zero-configuration default and uses private per-session locks.
+
+### `OctopusConfig` and device detection
+
+`OctopusConfig` fields are `index_path`, `catalog_path`, `ttl`, `active_cap`,
+`min_tools`, `max_tools`, `min_gap_percent`, and `log_level`. Use
+`OctopusConfig.from_env()` for the supported `OCTOPUS_*` variables and
+`config.validate()` to validate values. The exported `detect_compute_device()`
+reports `cuda`, `mps`, `xpu`, or `cpu`.
+
+### Errors and async boundaries
+
+`initialize()`, `create()`, `update()`, `add()`, `remove_source()`, and
+`remove_capability()` are asynchronous. Retrieval, session inspection, reset,
+and deletion are synchronous. Expected failures use Brown Octopus errors such
+as missing/incompatible index, model initialization, and capability update
+errors; messages include the next action where possible.
+
 Index lifecycle methods are:
 
 ```python

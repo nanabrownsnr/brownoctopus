@@ -299,6 +299,10 @@ The source discovers capabilities. Brown Octopus owns indexing and active
 capability-context management. The host application owns source credentials,
 permissions, update timing, and tool execution.
 
+For complete constructor signatures, method behavior, source contracts, session
+store requirements, result fields, and operational examples, see the
+[production API guide](docs/production.md#public-api-reference).
+
 ### Built-in local MCP source
 
 ```python
