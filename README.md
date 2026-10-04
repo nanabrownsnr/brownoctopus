@@ -19,7 +19,8 @@ conversation history. Those responsibilities stay with the host application.
 The normal application path is:
 
 ```text
-source -> OctopusIndex.create()/update() -> persisted index
+source -> OctopusIndex.create() -> persisted index
+             update() for later synchronization
                                               |
                                               v
                          Octopus.initialize() -> retrieve_result()
@@ -57,7 +58,8 @@ Brown Octopus has two distinct phases:
 
 ```text
 SETUP
-CapabilitySource -> update() -> persisted capability index
+CapabilitySource -> OctopusIndex.create() -> persisted capability index
+                    update() for later synchronization
 
 RUNTIME
 initialize() -> retrieve capability context -> host agent
@@ -81,18 +83,18 @@ Create `setup_octopus.py`:
 ```python
 import asyncio
 
-from brown_octopus import Octopus
+from brown_octopus import OctopusIndex
 from brown_octopus.sources import LocalMcpCatalogSource
 
 
 async def main():
     source = LocalMcpCatalogSource("data/mcps.json")
-    octopus = Octopus(
-        capability_source=source,
+    index = OctopusIndex.from_sources(
+        [source],
         index_path="data/indexes/default",
     )
 
-    report = await octopus.update()
+    report = await index.create()
     print(f"Indexed {report.tool_count} capabilities")
     print(f"Added: {len(report.added)}")
     print(f"Changed: {len(report.changed)}")
@@ -240,11 +242,14 @@ The HTTP adapter accepts the same option:
 ## Updating capabilities
 
 When the configured capability universe changes, update the source and run the
-same setup script again:
+index synchronization operation:
 
 ```bash
-uv run python setup_octopus.py
+uv run python examples/setup_index.py --update
 ```
+
+The initial run uses `await index.create()`. Later runs use
+`await index.update()` against the same configured sources.
 
 `update()` currently rediscovers all configured sources and rebuilds embeddings
 for the complete resulting universe before atomically publishing a new index.
@@ -299,18 +304,18 @@ permissions, update timing, and tool execution.
 ```python
 import asyncio
 
-from brown_octopus import Octopus
+from brown_octopus import OctopusIndex
 from brown_octopus.sources import LocalMcpCatalogSource
 
 
 async def main():
     source = LocalMcpCatalogSource("data/mcps.json")
-    octopus = Octopus(
-        capability_source=source,
+    index = OctopusIndex.from_sources(
+        [source],
         index_path="data/indexes/default",
     )
 
-    report = await octopus.update()
+    report = await index.create()
     print(f"Indexed {report.tool_count} capabilities")
 
 
@@ -351,21 +356,21 @@ class InternalRegistrySource:
         )
 ```
 
-Use it when constructing `Octopus`:
+Use it when constructing `OctopusIndex`:
 
 ```python
 import asyncio
 
-from brown_octopus import Octopus
+from brown_octopus import OctopusIndex
 
 
 async def main():
-    octopus = Octopus(
-        capability_source=InternalRegistrySource(),
+    index = OctopusIndex.from_sources(
+        [InternalRegistrySource()],
         index_path="data/indexes/default",
     )
 
-    report = await octopus.update()
+    report = await index.create()
     print(f"Indexed {report.tool_count} capabilities")
 
 
@@ -396,8 +401,11 @@ an authoritative snapshot. A temporarily failed source should be reported in
 The main `Octopus` methods return different kinds of results:
 
 ```python
-report = await octopus.update()
-# CapabilityUpdateReport(added=[...], changed=[...], removed=[...], ...)
+report = await index.create()
+# initial CapabilityUpdateReport
+
+report = await index.update()
+# later synchronization: added, changed, removed, failed_sources, ...
 
 tools = await octopus.initialize()
 # list[dict]: the capabilities loaded from the existing index

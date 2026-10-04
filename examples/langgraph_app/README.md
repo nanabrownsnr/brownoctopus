@@ -1,17 +1,26 @@
 # LangGraph integration example
 
-This is a separate application. It imports the repository as an installed
-`octopus` package and keeps all LangGraph-specific code outside the Octopus
-core.
+This is a separate application. It imports `brown-octopus` as a package and
+keeps all LangGraph-specific code outside the Brown Octopus core.
+
+When run from this repository, its development configuration points at the
+local package source. A consumer application should instead depend on the
+published Brown Octopus wheel or release.
 
 ## Run
 
-From this directory:
+From the repository root, after creating an index:
 
 ```bash
-uv sync
-uv run python app.py
+brown-octopus setup-models
+python examples/setup_index.py
+uv sync --project examples/langgraph_app
+uv run --project examples/langgraph_app python examples/langgraph_app/app.py
 ```
+
+The example expects a compatible index at `data/indexes/default`. It uses the
+installed Brown Octopus runtime to retrieve capabilities; it does not discover
+or execute MCP tools itself.
 
 Set the required model and service credentials first:
 

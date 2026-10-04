@@ -1,7 +1,7 @@
 [project]
 name = "octopus-langgraph-example"
 version = "0.1.0"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
     "brown-octopus",
     "langgraph>=0.6.0",

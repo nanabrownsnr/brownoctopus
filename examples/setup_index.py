@@ -16,7 +16,7 @@ import argparse
 import asyncio
 from pathlib import Path
 
-from brown_octopus import Octopus
+from brown_octopus import OctopusIndex
 
 
 def parse_args() -> argparse.Namespace:
@@ -33,15 +33,26 @@ def parse_args() -> argparse.Namespace:
         default=Path("data/indexes/default"),
         help="Directory for the persisted index (default: data/indexes/default)",
     )
+    parser.add_argument(
+        "--update",
+        action="store_true",
+        help="Synchronize an existing index instead of creating it initially",
+    )
     return parser.parse_args()
 
 
 async def main() -> None:
     args = parse_args()
-    octopus = Octopus(index_path=args.index, catalog_path=args.catalog)
-    report = await octopus.update()
+    from brown_octopus.sources import LocalMcpCatalogSource
 
-    print(f"Index updated: {args.index}")
+    index = OctopusIndex.from_sources(
+        [LocalMcpCatalogSource(args.catalog)],
+        index_path=args.index,
+    )
+    report = await (index.update() if args.update else index.create())
+
+    operation = "updated" if args.update else "created"
+    print(f"Index {operation}: {args.index}")
     print(f"Capabilities: {report.tool_count}")
     print(f"Added: {len(report.added)}")
     print(f"Changed: {len(report.changed)}")

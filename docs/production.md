@@ -38,8 +38,11 @@ The public lifecycle is split deliberately:
 brown-octopus setup-models
     prepare local model assets
 
-await octopus.update()
-    discover capabilities and build/update the persisted index
+await index.create()
+    perform the initial capability discovery and build the persisted index
+
+await index.update()
+    synchronize the configured sources after the index exists
 
 await octopus.initialize()
     load existing local models and index for runtime retrieval
@@ -50,9 +53,9 @@ octopus.retrieve_result(...)
 
 `Octopus` is the runtime facade. `CapabilitySource`, `SessionStore`, and the
 lower-level analyzer/retriever/selector protocols are extension points for
-applications that need custom infrastructure. Most applications should only
-need to construct `Octopus`, call `update()` during setup or an explicit host
-refresh, and call `initialize()` once at application startup.
+applications that need custom infrastructure. Most applications should use
+`OctopusIndex.create()` during setup, `OctopusIndex.update()` for later source
+synchronization, and `Octopus.initialize()` at application startup.
 
 For applications that want a simpler setup facade, `OctopusIndex` wraps the
 same source and snapshot lifecycle:
@@ -239,12 +242,20 @@ These operations have deliberately different responsibilities:
 brown-octopus setup-models
     prepare local model assets
 
-await octopus.update()
-    discover capabilities and build/publish an index
+await index.create()
+    initial discovery and index creation through the setup facade
+
+await index.update()
+    later synchronization of the configured sources
 
 await octopus.initialize()
     load the existing models and index for runtime use
 ```
+
+For normal applications, use `OctopusIndex.create()` and
+`OctopusIndex.update()`. The direct `Octopus.update()` method remains an
+advanced lower-level path for applications that intentionally construct the
+runtime with a custom `CapabilitySource`.
 
 ### Build or update an index
 
@@ -253,18 +264,18 @@ Create `setup_index.py`:
 ```python
 import asyncio
 
-from brown_octopus import Octopus
+from brown_octopus import OctopusIndex
 from brown_octopus.sources import LocalMcpCatalogSource
 
 
 async def main():
     source = LocalMcpCatalogSource("data/mcps.json")
-    octopus = Octopus(
-        capability_source=source,
+    index = OctopusIndex.from_sources(
+        [source],
         index_path="data/indexes/default",
     )
 
-    report = await octopus.update()
+    report = await index.create()
     print(f"Indexed: {report.tool_count}")
     print(f"Added: {len(report.added)}")
     print(f"Changed: {len(report.changed)}")
@@ -282,10 +293,14 @@ Run it after model setup:
 uv run python setup_index.py
 ```
 
-`update()` discovers the source, prepares the new embeddings and metadata
+`create()` discovers the source, prepares the new embeddings and metadata
 outside the live snapshot, validates the result, and atomically publishes it.
 Retrievals already in progress keep using their valid snapshot; subsequent
 retrievals use the new one.
+
+After the initial index exists, use `await index.update()` to synchronize the
+same configured sources. Use `await octopus.update()` only when working with
+the lower-level runtime API directly.
 
 The current implementation rebuilds embeddings for the complete resulting
 universe. It is not an incremental append-only operation.
@@ -436,20 +451,20 @@ class InternalRegistrySource:
         )
 ```
 
-Use the source when constructing `Octopus` and update the index:
+Use the source with `OctopusIndex` and create the initial index:
 
 ```python
 import asyncio
 
-from brown_octopus import Octopus
+from brown_octopus import OctopusIndex
 
 
 async def main():
-    octopus = Octopus(
-        capability_source=InternalRegistrySource(),
+    index = OctopusIndex.from_sources(
+        [InternalRegistrySource()],
         index_path="data/indexes/default",
     )
-    report = await octopus.update()
+    report = await index.create()
     print(f"Indexed {report.tool_count} capabilities")
 
 
@@ -502,17 +517,17 @@ class RegistryApiSource:
         )
 ```
 
-Use it like any other source:
+Use it like any other source through `OctopusIndex`:
 
 ```python
-octopus = Octopus(
-    capability_source=RegistryApiSource(
+index = OctopusIndex.from_sources(
+    [RegistryApiSource(
         base_url="https://registry.example.com",
         api_token=registry_token,
-    ),
+    )],
     index_path="data/indexes/default",
 )
-await octopus.update()
+await index.create()
 ```
 
 The token is application configuration. Do not put it in capability metadata,
@@ -1013,8 +1028,11 @@ including `mcp_url` when the capability is MCP-backed.
 ### Method return values
 
 ```python
-report = await octopus.update()
-# CapabilityUpdateReport with added, changed, removed, failed_sources, tool_count
+report = await index.create()
+# initial CapabilityUpdateReport
+
+report = await index.update()
+# later synchronization: added, changed, removed, failed_sources, tool_count
 
 loaded_tools = await octopus.initialize()
 # list[dict] containing the tools loaded from the existing index

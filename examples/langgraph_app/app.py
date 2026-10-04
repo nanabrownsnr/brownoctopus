@@ -85,7 +85,9 @@ async def run_turn(octopus: Octopus, model, user_message: str, history=None):
 
 
 async def main():
-    octopus = Octopus()
+    octopus = Octopus(
+        index_path=os.getenv("OCTOPUS_INDEX_PATH", "data/indexes/default")
+    )
     await octopus.initialize()
     model = ChatOpenAI(model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"))
 
