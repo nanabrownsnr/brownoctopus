@@ -3,6 +3,11 @@ from importlib.metadata import PackageNotFoundError, version as package_version
 from brown_octopus.octopus import Octopus
 from brown_octopus.index import OctopusIndex
 from brown_octopus.device import detect_compute_device
+from brown_octopus.embedding import (
+    EmbeddingProvider,
+    HttpEmbeddingProvider,
+    LocalEmbeddingProvider,
+)
 from brown_octopus.config import OctopusConfig
 from brown_octopus.contracts import RetrievalResult
 from brown_octopus.contracts import (
@@ -25,12 +30,15 @@ try:
     __version__ = package_version("brown-octopus")
 except PackageNotFoundError:
     # Keep source-checkout imports useful before the project is installed.
-    __version__ = "0.4.17"
+    __version__ = "0.4.18"
 
 __all__ = [
     "Octopus",
     "OctopusIndex",
     "detect_compute_device",
+    "EmbeddingProvider",
+    "HttpEmbeddingProvider",
+    "LocalEmbeddingProvider",
     "OctopusConfig",
     "RetrievalResult",
     "CapabilitySource",

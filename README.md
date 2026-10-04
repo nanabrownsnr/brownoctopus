@@ -52,6 +52,74 @@ uv run brown-octopus doctor
 If the environment is already activated, the `uv run` prefix is optional.
 Model setup does not happen automatically during application startup.
 
+### Choosing an embedding provider
+
+The default embedding provider is a local SentenceTransformers model using
+`Qwen/Qwen3-Embedding-0.6B`. You can replace it with another compatible local
+model or an HTTP embedding service. The analyzer remains the deterministic
+spaCy analyzer; embedding-provider configuration affects capability indexing
+and retrieval only.
+
+Use another local model by name:
+
+```python
+from brown_octopus import LocalEmbeddingProvider, OctopusIndex
+
+provider = LocalEmbeddingProvider(
+    model_name="sentence-transformers/all-MiniLM-L6-v2",
+)
+
+index = OctopusIndex.from_sources(
+    [source],
+    index_path="data/indexes/custom-model",
+    embedding_provider=provider,
+)
+await index.create()
+```
+
+Or load a model from a local directory:
+
+```python
+provider = LocalEmbeddingProvider(
+    model_path="C:/models/my-embedding-model",
+)
+```
+
+For an HTTP service such as Ollama:
+
+```python
+from brown_octopus import HttpEmbeddingProvider, OctopusIndex
+
+provider = HttpEmbeddingProvider(
+    url="http://localhost:11434/api/embed",
+    model="qwen3-embedding:0.6b",
+)
+
+index = OctopusIndex.from_sources(
+    [source],
+    index_path="data/indexes/ollama",
+    embedding_provider=provider,
+)
+await index.create()
+```
+
+Pass the same provider when loading the index at runtime:
+
+```python
+from brown_octopus import Octopus
+
+octopus = Octopus(
+    index_path="data/indexes/ollama",
+    embedding_provider=provider,
+)
+await octopus.initialize()
+```
+
+The provider determines the vector dimension. Do not manually resize vectors.
+If you change the model or provider, create a new index or rebuild the index
+with that provider. Brown Octopus records provider metadata and rejects an
+incompatible provider/index combination.
+
 ## Quick start
 
 Brown Octopus has two distinct phases:

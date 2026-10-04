@@ -13,6 +13,8 @@ from brown_octopus.analyzer import DeterministicIntentAnalyzer
 from brown_octopus.config import OctopusConfig
 from brown_octopus.context_manager import ActiveCapabilityContext
 from brown_octopus.contracts import CapabilitySource, RetrievalResult, SessionStore
+from brown_octopus.embedding import EmbeddingProvider
+from brown_octopus.embedding import LocalEmbeddingProvider, MODEL_NAME
 from brown_octopus.index_store import (
     load_embeddings,
     load_tools,
@@ -99,12 +101,14 @@ class Octopus:
         config: OctopusConfig | None = None,
         capability_source: CapabilitySource | None = None,
         session_store: SessionStore | None = None,
+        embedding_provider: EmbeddingProvider | None = None,
     ):
         self.config = config or OctopusConfig.from_env()
         configure_logging(self.config.log_level)
         self.index_path = Path(index_path) if index_path != "data/indexes/default" else self.config.index_path
         self.catalog_path = Path(catalog_path) if catalog_path != "data/mcps.json" else self.config.catalog_path
         self.capability_source = capability_source or LocalMcpCatalogSource(self.catalog_path)
+        self.embedding_provider = embedding_provider
         self._snapshot_lock = SnapshotReadWriteLock()
 
         self.analyzer = DeterministicIntentAnalyzer()
@@ -141,7 +145,10 @@ class Octopus:
     async def initialize(self) -> list[dict]:
         try:
             initialize_analyzer()
-            initialize_retriever()
+            if self.embedding_provider is None:
+                initialize_retriever()
+            else:
+                initialize_retriever(self.embedding_provider)
         except Exception as exc:
             raise ModelInitializationError(
                 "Brown Octopus could not load its required runtime models. "
@@ -180,6 +187,47 @@ class Octopus:
             raise IncompatibleIndexError(
                 "Brown Octopus index version is unsupported: "
                 f"{metadata.get('version')}. Rebuild it with this package version."
+            )
+
+        configured_provider = self.embedding_provider
+        indexed_provider = metadata.get("embedding_provider")
+        if indexed_provider is None:
+            indexed_provider = {
+                "type": "LocalEmbeddingProvider",
+                "model_id": MODEL_NAME,
+            }
+        elif indexed_provider.get("type") == "QwenEmbeddingProvider":
+            # Indexes created by the pre-generic-provider implementation remain
+            # valid when they use the unchanged default Qwen model.
+            indexed_provider = dict(indexed_provider)
+            indexed_provider["type"] = "LocalEmbeddingProvider"
+        if configured_provider is None:
+            configured_provider = LocalEmbeddingProvider(model_name=MODEL_NAME)
+        configured_identity = {
+            "type": type(configured_provider).__name__,
+            "model_id": configured_provider.model_id,
+        }
+        if any(
+            indexed_provider.get(key) != value
+            for key, value in configured_identity.items()
+            if indexed_provider.get(key) is not None
+        ):
+            raise IncompatibleIndexError(
+                "Brown Octopus index was built with a different embedding provider "
+                f"({indexed_provider.get('model_id')}); configured provider is "
+                f"{configured_identity['model_id']}. Rebuild the index with "
+                "the configured provider."
+            )
+        indexed_dimension = indexed_provider.get("dimension")
+        configured_dimension = getattr(configured_provider, "dimension", None)
+        if (
+            indexed_dimension is not None
+            and configured_dimension is not None
+            and indexed_dimension != configured_dimension
+        ):
+            raise IncompatibleIndexError(
+                "Brown Octopus index embedding dimension does not match the "
+                "configured provider. Rebuild the index with that provider."
             )
 
         try:
@@ -355,7 +403,9 @@ class Octopus:
 
     def _build_pipeline(self) -> None:
         self.config.validate()
-        candidate_retriever = QwenCandidateRetriever()
+        candidate_retriever = QwenCandidateRetriever(
+            embedding_provider=self.embedding_provider,
+        )
         self.candidate_retriever = candidate_retriever
         selector = BoundedMaxGapSelectionStrategy()
         self.selection_strategy = selector
@@ -464,10 +514,22 @@ class Octopus:
         """Prepare and atomically install a host-requested capability snapshot."""
         try:
             initialize_analyzer()
-            initialize_retriever()
+            if self.embedding_provider is None:
+                initialize_retriever()
+            else:
+                initialize_retriever(self.embedding_provider)
             discovered = await self._discover_snapshot()
             tools, report = self._merge_snapshot_tools(discovered)
-            embeddings = build_embeddings(tools) if tools else None
+            if tools:
+                if self.embedding_provider is None:
+                    embeddings = build_embeddings(tools)
+                else:
+                    embeddings = build_embeddings(
+                        tools,
+                        embedding_provider=self.embedding_provider,
+                    )
+            else:
+                embeddings = None
             metadata = {
                 "version": 1,
                 "index_format_version": 1,
@@ -476,6 +538,22 @@ class Octopus:
                 "tool_count": len(tools),
                 "created_at": datetime.now(timezone.utc).isoformat(),
                 "tool_universe_fingerprint": self._tool_universe_fingerprint(tools),
+                "embedding_provider": {
+                    "type": type(
+                        self.embedding_provider
+                        or LocalEmbeddingProvider(model_name=MODEL_NAME)
+                    ).__name__,
+                    "model_id": (
+                        self.embedding_provider.model_id
+                        if self.embedding_provider is not None
+                        else MODEL_NAME
+                    ),
+                    "dimension": getattr(
+                        self.embedding_provider,
+                        "dimension",
+                        None,
+                    ),
+                },
             }
             save_snapshot_atomic(self.index_path, tools, embeddings, metadata)
         except CapabilityUpdateError:

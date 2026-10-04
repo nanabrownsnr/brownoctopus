@@ -57,6 +57,81 @@ applications that need custom infrastructure. Most applications should use
 `OctopusIndex.create()` during setup, `OctopusIndex.update()` for later source
 synchronization, and `Octopus.initialize()` at application startup.
 
+### Embedding providers
+
+Embedding providers are configurable independently of the intent analyzer.
+The analyzer remains the deterministic spaCy implementation. The selected
+embedding provider is used for both capability/tool embeddings when an index
+is created or updated and query embeddings during retrieval.
+
+With no provider supplied, Brown Octopus uses the existing local default:
+
+```text
+LocalEmbeddingProvider("Qwen/Qwen3-Embedding-0.6B")
+```
+
+Use another compatible local SentenceTransformers model by name or path:
+
+```python
+from brown_octopus import LocalEmbeddingProvider, OctopusIndex
+
+provider = LocalEmbeddingProvider(
+    model_name="sentence-transformers/all-MiniLM-L6-v2",
+)
+
+index = OctopusIndex.from_sources(
+    [source],
+    index_path="data/indexes/custom-embeddings",
+    embedding_provider=provider,
+)
+await index.create()
+```
+
+```python
+provider = LocalEmbeddingProvider(
+    model_path="C:/models/my-embedding-model",
+)
+```
+
+For a remote service, use the HTTP provider. It supports Ollama's
+`{"embeddings": [...]}` response and OpenAI-compatible `data` responses:
+
+```python
+from brown_octopus import HttpEmbeddingProvider, OctopusIndex
+
+provider = HttpEmbeddingProvider(
+    url="http://localhost:11434/api/embed",
+    model="qwen3-embedding:0.6b",
+    api_key=None,
+)
+
+index = OctopusIndex.from_sources(
+    [source],
+    index_path="data/indexes/ollama",
+    embedding_provider=provider,
+)
+await index.create()
+```
+
+Pass the same provider when the runtime loads that index:
+
+```python
+from brown_octopus import Octopus
+
+octopus = Octopus(
+    index_path="data/indexes/ollama",
+    embedding_provider=provider,
+)
+await octopus.initialize()
+```
+
+The provider/model determines the vector dimension. Applications should not
+resize vectors manually. Brown Octopus records the provider type, model ID,
+and observed dimension in index metadata and rejects incompatible providers
+when loading an index. If the model or provider changes, create or rebuild an
+index with the new provider. Custom local models are managed by the host;
+`setup-models` prepares Brown Octopus's default runtime models only.
+
 For applications that want a simpler setup facade, `OctopusIndex` wraps the
 same source and snapshot lifecycle:
 
@@ -179,6 +254,7 @@ OctopusIndex(
     index_path="data/indexes/default",
     session_store=None,
     config=None,
+    embedding_provider=None,
 )
 ```
 
@@ -239,6 +315,7 @@ Octopus(
     config=None,
     capability_source=None,
     session_store=None,
+    embedding_provider=None,
 )
 ```
 

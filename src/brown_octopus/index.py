@@ -4,6 +4,7 @@ from pathlib import Path
 from collections.abc import Sequence
 
 from brown_octopus.contracts import CapabilitySource
+from brown_octopus.embedding import EmbeddingProvider
 from brown_octopus.octopus import Octopus
 from brown_octopus.sources import (
     ApiCapabilitySource,
@@ -28,6 +29,7 @@ class OctopusIndex:
         index_path: str | Path = "data/indexes/default",
         session_store=None,
         config=None,
+        embedding_provider: EmbeddingProvider | None = None,
     ) -> None:
         self.index_path = Path(index_path)
         self.sources = list(sources)
@@ -37,6 +39,7 @@ class OctopusIndex:
             capability_source=self.source,
             session_store=session_store,
             config=config,
+            embedding_provider=embedding_provider,
         )
 
     def _sync_sources(self) -> None:
