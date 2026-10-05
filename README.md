@@ -356,6 +356,42 @@ brown-octopus inspect --json
 Help and version do not load models. `doctor` checks package, models, and the
 configured index. `inspect` reports configuration and index metadata.
 
+## Runtime context limits
+
+The default active-context policy is:
+
+```text
+TTL:       8 turns
+Active cap: 30 capabilities
+```
+
+These defaults preserve the validated behavior, but applications can tune
+them when their context budget requires it:
+
+```python
+from brown_octopus import OctopusIndex
+
+index = OctopusIndex(index_path="data/indexes/default")
+await index.create()
+octopus = index.runtime(
+    capability_ttl=3,
+    active_cap=20,
+)
+await octopus.initialize()
+```
+
+`capability_ttl` controls how many later turns a retrieved capability can
+remain active without being retrieved again. `active_cap` limits the total
+number of active capabilities in a session. These settings affect session
+context management, not candidate ranking or the V3 selection algorithm.
+
+The same values can be configured through environment variables:
+
+```text
+OCTOPUS_CAPABILITY_TTL=3
+OCTOPUS_ACTIVE_CAP=20
+```
+
 ## Architecture boundary
 
 Brown Octopus owns capability discovery adapters, indexing, intent analysis,

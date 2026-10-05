@@ -660,6 +660,42 @@ OCTOPUS_ACTIVE_CAP             active capability cap; default 30
 OCTOPUS_LOG_LEVEL              Python logging level
 ```
 
+### Runtime context limits
+
+The default context limits remain:
+
+```text
+TTL:        8 turns
+Active cap: 30 capabilities per session
+```
+
+An application can override them directly on the runtime or index facade:
+
+```python
+from brown_octopus import Octopus, OctopusIndex
+
+index = OctopusIndex(
+    index_path="data/indexes/default",
+)
+await index.create()
+octopus = index.runtime(capability_ttl=3, active_cap=20)
+await octopus.initialize()
+```
+
+The equivalent environment configuration is:
+
+```text
+OCTOPUS_CAPABILITY_TTL=3
+OCTOPUS_ACTIVE_CAP=20
+```
+
+`capability_ttl` controls how long a capability remains active after its last
+retrieval. `active_cap` limits the number of capabilities retained in a
+session. These settings change active-session context management only; they do
+not change embedding, ranking, Min-4, or Bounded Max Gap behavior. Existing
+applications that do not configure either value continue to use TTL 8 and
+active cap 30.
+
 ## 12. Errors and operational behavior
 
 ```text

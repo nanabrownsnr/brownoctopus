@@ -199,8 +199,21 @@ class OctopusIndex:
             self.source.suppressed_capabilities.discard(capability_id)
             raise
 
-    def runtime(self) -> Octopus:
-        """Return the runtime engine using this index's persisted path."""
+    def runtime(
+        self,
+        *,
+        capability_ttl: int | None = None,
+        active_cap: int | None = None,
+    ) -> Octopus:
+        """Return the runtime engine with optional session-context limits.
+
+        The limits apply to runtime session state, not to index creation or
+        capability ranking. Configure them before ``initialize()``.
+        """
+        self._octopus._configure_context_limits(
+            capability_ttl=capability_ttl,
+            active_cap=active_cap,
+        )
         return self._octopus
 
     @property

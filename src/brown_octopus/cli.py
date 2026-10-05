@@ -23,7 +23,7 @@ def _version() -> str:
     try:
         return version("brown-octopus")
     except PackageNotFoundError:
-        return "0.5.1"
+        return "0.5.2"
 
 
 def _run_probe(code: str, timeout: int = 120) -> tuple[bool, str]:

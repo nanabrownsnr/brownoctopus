@@ -1,6 +1,7 @@
 from pathlib import Path
 from collections.abc import Iterable
 from contextlib import contextmanager
+from dataclasses import replace
 from threading import Condition, RLock
 import logging
 import json
@@ -109,8 +110,15 @@ class Octopus:
         session_store: SessionStore | None = None,
         embedding_provider: EmbeddingProvider | None = None,
         index_store: IndexStore | None = None,
+        capability_ttl: int | None = None,
+        active_cap: int | None = None,
     ):
         self.config = config or OctopusConfig.from_env()
+        if capability_ttl is not None or active_cap is not None:
+            self._configure_context_limits(
+                capability_ttl=capability_ttl,
+                active_cap=active_cap,
+            )
         configure_logging(self.config.log_level)
         self.index_path = Path(index_path) if index_path != "data/indexes/default" else self.config.index_path
         self.catalog_path = Path(catalog_path) if catalog_path != "data/mcps.json" else self.config.catalog_path
@@ -127,6 +135,33 @@ class Octopus:
         # Runtime-only fallback definitions for injected pipelines. The
         # canonical production universe remains the shared tool registry.
         self._runtime_tool_definitions: dict[str, dict] = {}
+
+    def _configure_context_limits(
+        self,
+        *,
+        capability_ttl: int | None = None,
+        active_cap: int | None = None,
+    ) -> None:
+        """Configure runtime session limits before initialization."""
+        if getattr(self, "pipeline", None) is not None:
+            raise RuntimeError(
+                "Runtime context limits must be configured before initialize()."
+            )
+
+        updates = {
+            key: value
+            for key, value in {
+                "ttl": capability_ttl,
+                "active_cap": active_cap,
+            }.items()
+            if value is not None
+        }
+        if not updates:
+            return
+
+        configured = replace(self.config, **updates)
+        configured.validate()
+        self.config = configured
 
     @property
     def active_tools(self) -> dict[str, int]:
