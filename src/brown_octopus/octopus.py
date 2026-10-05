@@ -31,6 +31,7 @@ from brown_octopus.observability import configure_logging
 from brown_octopus.pipeline import CapabilityPipeline, process_turn
 from brown_octopus.retriever import (
     build_embeddings,
+    get_embedding_provider,
     QwenCandidateRetriever,
     initialize_retriever,
     load_index,
@@ -202,7 +203,10 @@ class Octopus:
             indexed_provider = dict(indexed_provider)
             indexed_provider["type"] = "LocalEmbeddingProvider"
         if configured_provider is None:
-            configured_provider = LocalEmbeddingProvider(model_name=MODEL_NAME)
+            configured_provider = (
+                get_embedding_provider()
+                or LocalEmbeddingProvider(model_name=MODEL_NAME)
+            )
         configured_identity = {
             "type": type(configured_provider).__name__,
             "model_id": configured_provider.model_id,
@@ -530,6 +534,11 @@ class Octopus:
                     )
             else:
                 embeddings = None
+            active_provider = (
+                self.embedding_provider
+                or get_embedding_provider()
+                or LocalEmbeddingProvider(model_name=MODEL_NAME)
+            )
             metadata = {
                 "version": 1,
                 "index_format_version": 1,
@@ -539,20 +548,9 @@ class Octopus:
                 "created_at": datetime.now(timezone.utc).isoformat(),
                 "tool_universe_fingerprint": self._tool_universe_fingerprint(tools),
                 "embedding_provider": {
-                    "type": type(
-                        self.embedding_provider
-                        or LocalEmbeddingProvider(model_name=MODEL_NAME)
-                    ).__name__,
-                    "model_id": (
-                        self.embedding_provider.model_id
-                        if self.embedding_provider is not None
-                        else MODEL_NAME
-                    ),
-                    "dimension": getattr(
-                        self.embedding_provider,
-                        "dimension",
-                        None,
-                    ),
+                    "type": type(active_provider).__name__,
+                    "model_id": active_provider.model_id,
+                    "dimension": getattr(active_provider, "dimension", None),
                 },
             }
             save_snapshot_atomic(self.index_path, tools, embeddings, metadata)

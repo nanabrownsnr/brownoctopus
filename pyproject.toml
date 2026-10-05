@@ -1,6 +1,6 @@
 [project]
 name = "brown-octopus"
-version = "0.4.18"
+version = "0.4.19"
 description = "Capability-context management for tool-using AI agents"
 readme = "README.md"
 authors = [{ name = "nana brown", email = "nanabrownsnr@gmail.com" }]

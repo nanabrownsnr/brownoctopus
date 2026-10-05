@@ -30,6 +30,11 @@ model_device = "cpu"
 embedding_provider: EmbeddingProvider | None = None
 
 
+def get_embedding_provider() -> EmbeddingProvider | None:
+    """Return the provider currently backing the shared retriever."""
+    return embedding_provider
+
+
 def _active_provider(
     provider: EmbeddingProvider | None = None,
 ) -> EmbeddingProvider | None:

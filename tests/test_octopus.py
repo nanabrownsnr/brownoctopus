@@ -106,6 +106,50 @@ async def test_octopus_update_saves_index_metadata(
 
 
 @pytest.mark.anyio
+async def test_default_provider_dimension_is_recorded_in_index_metadata(
+    monkeypatch,
+    tmp_path,
+):
+    class Source:
+        async def discover(self):
+            return CapabilityDiscoveryResult(
+                tools=[{"capability_id": "tool-a", "name": "tool_a"}],
+            )
+
+    class Provider:
+        model_id = "Qwen/Qwen3-Embedding-0.6B"
+        dimension = 1024
+
+    saved = {}
+    monkeypatch.setattr("brown_octopus.octopus.initialize_analyzer", lambda: None)
+    monkeypatch.setattr("brown_octopus.octopus.initialize_retriever", lambda: None)
+    monkeypatch.setattr(
+        "brown_octopus.octopus.get_embedding_provider",
+        lambda: Provider(),
+    )
+    monkeypatch.setattr(
+        "brown_octopus.octopus.build_embeddings",
+        lambda tools: "fake-embeddings",
+    )
+    monkeypatch.setattr(
+        "brown_octopus.octopus.save_snapshot_atomic",
+        lambda path, tools, embeddings, metadata: saved.update(metadata=metadata),
+    )
+
+    octopus = Octopus(
+        index_path=tmp_path / "index",
+        capability_source=Source(),
+    )
+
+    await octopus.update()
+
+    assert saved["metadata"]["embedding_provider"]["model_id"] == (
+        "Qwen/Qwen3-Embedding-0.6B"
+    )
+    assert saved["metadata"]["embedding_provider"]["dimension"] == 1024
+
+
+@pytest.mark.anyio
 async def test_octopus_initialize_fails_clearly_when_index_is_missing(
     monkeypatch,
     tmp_path,
