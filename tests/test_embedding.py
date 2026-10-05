@@ -5,6 +5,9 @@ from brown_octopus.embedding import LocalEmbeddingProvider
 
 
 def test_local_provider_preserves_default_qwen_model_and_encoding_contract(monkeypatch):
+    # CI may enable explicit model downloads for integration tests. This unit
+    # test verifies the provider's normal offline-by-default behavior.
+    monkeypatch.delenv("BROWN_OCTOPUS_ALLOW_MODEL_DOWNLOAD", raising=False)
     calls = {}
 
     class FakeModel:
