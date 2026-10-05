@@ -9,9 +9,55 @@ permissions:
   contents: read
 
 jobs:
+  tests:
+    name: Release tests (${{ matrix.os }}, Python ${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    env:
+      BROWN_OCTOPUS_ALLOW_MODEL_DOWNLOAD: "1"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.12", "3.13"]
+
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Cache Hugging Face and Torch models
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/huggingface
+            ~/.cache/torch
+          key: qwen3-embedding-0.6b-${{ runner.os }}-${{ matrix.python }}-${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            qwen3-embedding-0.6b-${{ runner.os }}-${{ matrix.python }}-
+
+      - name: Install project and test tools
+        run: python -m pip install --upgrade pip && python -m pip install . pytest
+
+      - name: Prepare spaCy test model
+        run: python -m spacy download en_core_web_trf
+
+      - name: Prepare Qwen embedding test model
+        run: >-
+          python -c "from sentence_transformers import SentenceTransformer;
+          SentenceTransformer('Qwen/Qwen3-Embedding-0.6B', trust_remote_code=True)"
+
+      - name: Run Brown Octopus tests
+        run: python -m pytest -q -m "not external" tests
+
   publish:
     name: Build and publish to PyPI
     runs-on: ubuntu-latest
+    needs: tests
     environment:
       name: pypi
       url: https://pypi.org/p/brown-octopus
