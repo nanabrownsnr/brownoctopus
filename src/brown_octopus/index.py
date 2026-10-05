@@ -2,9 +2,11 @@
 
 from pathlib import Path
 from collections.abc import Sequence
+import warnings
 
 from brown_octopus.contracts import CapabilitySource
 from brown_octopus.embedding import EmbeddingProvider
+from brown_octopus.index_store import IndexStore
 from brown_octopus.octopus import Octopus
 from brown_octopus.sources import (
     ApiCapabilitySource,
@@ -24,15 +26,16 @@ class OctopusIndex:
 
     def __init__(
         self,
-        sources: Sequence[CapabilitySource],
+        sources: Sequence[CapabilitySource] | None = None,
         *,
         index_path: str | Path = "data/indexes/default",
         session_store=None,
         config=None,
         embedding_provider: EmbeddingProvider | None = None,
+        index_store: IndexStore | None = None,
     ) -> None:
         self.index_path = Path(index_path)
-        self.sources = list(sources)
+        self.sources = list(sources or [])
         self.source = CompositeCapabilitySource(self.sources)
         self._octopus = Octopus(
             index_path=self.index_path,
@@ -40,6 +43,7 @@ class OctopusIndex:
             session_store=session_store,
             config=config,
             embedding_provider=embedding_provider,
+            index_store=index_store,
         )
 
     def _sync_sources(self) -> None:
@@ -175,7 +179,19 @@ class OctopusIndex:
             raise
 
     async def remove_capability(self, capability_id: str):
-        """Suppress one capability from future snapshots from these sources."""
+        """Suppress one capability from future snapshots from these sources.
+
+        .. deprecated::
+           Prefer :meth:`remove_source` or update the authoritative source.
+           This method remains temporarily for compatibility with existing
+           applications.
+        """
+        warnings.warn(
+            "OctopusIndex.remove_capability() is deprecated; use "
+            "remove_source() or update the authoritative CapabilitySource.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         self.source.suppressed_capabilities.add(capability_id)
         try:
             return await self.update()

@@ -23,7 +23,7 @@ def _version() -> str:
     try:
         return version("brown-octopus")
     except PackageNotFoundError:
-        return "0.4.8"
+        return "0.5.1"
 
 
 def _run_probe(code: str, timeout: int = 120) -> tuple[bool, str]:
@@ -181,9 +181,21 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Prepare the models required by Octopus.",
         description=(
             "Download and validate en_core_web_trf and "
-            "Qwen/Qwen3-Embedding-0.6B.\n"
+            "Qwen/Qwen3-Embedding-0.6B. Use --spacy or --embedding "
+            "to prepare only one.\n"
             "Model setup is explicit; initialize() never downloads models."
         ),
+    )
+    model_group = setup.add_mutually_exclusive_group()
+    model_group.add_argument(
+        "--spacy",
+        action="store_true",
+        help="Prepare only en_core_web_trf.",
+    )
+    model_group.add_argument(
+        "--embedding",
+        action="store_true",
+        help="Prepare only Qwen/Qwen3-Embedding-0.6B.",
     )
     setup.set_defaults(handler="setup-models")
     doctor = subparsers.add_parser("doctor", help="Check whether Brown Octopus is ready.")
@@ -206,7 +218,7 @@ def main() -> int:
         if handler == "setup-models":
             from brown_octopus.setup_models import main as setup_models
 
-            setup_models()
+            setup_models(spacy=args.spacy, embedding=args.embedding)
             return 0
         if handler == "doctor":
             return _doctor()

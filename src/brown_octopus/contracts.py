@@ -63,6 +63,24 @@ class CandidateRetriever(Protocol):
     ) -> list[dict]: ...
 
 
+class VectorSearchIndex(Protocol):
+    """Optional index capability for database-native vector search.
+
+    Implementations must return the same ranked capability shape as the
+    local retriever, including ``rank`` and ``score``. The query embedding is
+    supplied by Brown Octopus so the configured embedding provider remains
+    the single source of query representation.
+    """
+
+    def search_vectors(
+        self,
+        query_embedding,
+        *,
+        limit: int | None = None,
+        allowed_mcp_urls=None,
+    ) -> list[dict]: ...
+
+
 class SelectionStrategy(Protocol):
     name: str
 

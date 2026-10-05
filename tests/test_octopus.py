@@ -150,7 +150,7 @@ async def test_default_provider_dimension_is_recorded_in_index_metadata(
 
 
 @pytest.mark.anyio
-async def test_octopus_initialize_fails_clearly_when_index_is_missing(
+async def test_octopus_initialize_starts_empty_when_index_is_missing(
     monkeypatch,
     tmp_path,
 ):
@@ -168,11 +168,7 @@ async def test_octopus_initialize_fails_clearly_when_index_is_missing(
         index_path=tmp_path / "missing-index",
     )
 
-    with pytest.raises(
-        RuntimeError,
-        match="index is incomplete",
-    ):
-        await octopus.initialize()
+    assert await octopus.initialize() == []
 
 
 @pytest.mark.anyio

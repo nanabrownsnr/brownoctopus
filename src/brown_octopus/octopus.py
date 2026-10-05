@@ -2,9 +2,9 @@ from pathlib import Path
 from collections.abc import Iterable
 from contextlib import contextmanager
 from threading import Condition, RLock
+import logging
 import json
 import hashlib
-import shutil
 from datetime import datetime, timezone
 from importlib.metadata import PackageNotFoundError, version as package_version
 
@@ -16,13 +16,15 @@ from brown_octopus.contracts import CapabilitySource, RetrievalResult, SessionSt
 from brown_octopus.embedding import EmbeddingProvider
 from brown_octopus.embedding import LocalEmbeddingProvider, MODEL_NAME
 from brown_octopus.index_store import (
+    IndexStore,
+    LocalIndexStore,
     load_embeddings,
+    load_metadata,
     load_tools,
     save_embeddings,
-    load_metadata,
     save_metadata,
-    save_tools,
     save_snapshot_atomic,
+    save_tools,
 )
 # These names remain module-level compatibility seams for legacy bootstrap,
 # scripts, and integrations that monkeypatch the historical retrieval path.
@@ -32,7 +34,8 @@ from brown_octopus.pipeline import CapabilityPipeline, process_turn
 from brown_octopus.retriever import (
     build_embeddings,
     get_embedding_provider,
-    QwenCandidateRetriever,
+    LocalCandidateRetriever,
+    VectorSearchCandidateRetriever,
     initialize_retriever,
     load_index,
     refresh_index,
@@ -51,10 +54,12 @@ from brown_octopus.errors import (
     IncompatibleIndexError,
     IndexLoadError,
     InitializationError,
-    MissingIndexError,
     ModelInitializationError,
 )
 from brown_octopus.tool_registry import capability_id, get_tools, set_tools
+
+
+logger = logging.getLogger("brown_octopus")
 
 
 class SnapshotReadWriteLock:
@@ -103,6 +108,7 @@ class Octopus:
         capability_source: CapabilitySource | None = None,
         session_store: SessionStore | None = None,
         embedding_provider: EmbeddingProvider | None = None,
+        index_store: IndexStore | None = None,
     ):
         self.config = config or OctopusConfig.from_env()
         configure_logging(self.config.log_level)
@@ -110,6 +116,7 @@ class Octopus:
         self.catalog_path = Path(catalog_path) if catalog_path != "data/mcps.json" else self.config.catalog_path
         self.capability_source = capability_source or LocalMcpCatalogSource(self.catalog_path)
         self.embedding_provider = embedding_provider
+        self.index_store = index_store or LocalIndexStore(self.index_path)
         self._snapshot_lock = SnapshotReadWriteLock()
 
         self.analyzer = DeterministicIntentAnalyzer()
@@ -158,26 +165,23 @@ class Octopus:
                 "automatically by initialize()."
             ) from exc
 
-        tools_path = self.index_path / "tools.json"
-        embeddings_path = self.index_path / "embeddings.pt"
-        metadata_path = self.index_path / "metadata.json"
-
-        has_legacy_files = (
-            tools_path.exists()
-            and embeddings_path.exists()
-            and metadata_path.exists()
-        )
-        has_published_snapshot = (self.index_path / "current.json").exists()
-        if not has_legacy_files and not has_published_snapshot:
-            raise MissingIndexError(
-                f"Brown Octopus index is incomplete at '{self.index_path}'. "
-                "Expected tools.json, embeddings.pt, and metadata.json. "
-                "Run `await octopus.update()` with a working CapabilitySource "
-                "or provide a valid persisted index."
+        if not self.index_store.exists():
+            # A runtime may be started before its capability universe has been
+            # provisioned.  Treat this as a valid empty staged-provisioning
+            # state; create() or update() can publish the first snapshot later.
+            logger.warning(
+                "Capability index not found at %s; starting with an empty "
+                "capability universe.",
+                self.index_path,
             )
+            with self._snapshot_lock.write():
+                set_tools([])
+                load_index(tools=[], embeddings=None)
+                self._build_pipeline()
+            return []
 
         try:
-            metadata = load_metadata(self.index_path)
+            metadata = self.index_store.load_metadata()
         except Exception as exc:
             raise IndexLoadError(
                 f"Brown Octopus could not load the index at '{self.index_path}'. "
@@ -235,8 +239,12 @@ class Octopus:
             )
 
         try:
-            tools = load_tools(self.index_path)
-            embeddings = load_embeddings(self.index_path)
+            tools = self.index_store.load_tools()
+            embeddings = (
+                None
+                if getattr(self.index_store, "supports_native_vector_search", False)
+                else self.index_store.load_embeddings()
+            )
         except Exception as exc:
             raise IndexLoadError(
                 f"Brown Octopus could not load the index at '{self.index_path}'. "
@@ -407,9 +415,20 @@ class Octopus:
 
     def _build_pipeline(self) -> None:
         self.config.validate()
-        candidate_retriever = QwenCandidateRetriever(
-            embedding_provider=self.embedding_provider,
-        )
+        if getattr(self.index_store, "supports_native_vector_search", False):
+            provider = self.embedding_provider or get_embedding_provider()
+            if provider is None:
+                raise RuntimeError(
+                    "Native vector retrieval requires an initialized embedding provider."
+                )
+            candidate_retriever = VectorSearchCandidateRetriever(
+                self.index_store,
+                provider,
+            )
+        else:
+            candidate_retriever = LocalCandidateRetriever(
+                embedding_provider=self.embedding_provider,
+            )
         self.candidate_retriever = candidate_retriever
         selector = BoundedMaxGapSelectionStrategy()
         self.selection_strategy = selector
@@ -478,7 +497,7 @@ class Octopus:
         discovered: CapabilityDiscoveryResult,
     ) -> tuple[list[dict], CapabilityUpdateReport]:
         try:
-            previous = load_tools(self.index_path)
+            previous = self.index_store.load_tools()
         except Exception:
             previous = []
 
@@ -553,7 +572,17 @@ class Octopus:
                     "dimension": getattr(active_provider, "dimension", None),
                 },
             }
-            save_snapshot_atomic(self.index_path, tools, embeddings, metadata)
+            # Preserve the historical module-level seam used by integrations
+            # and tests while allowing custom stores to own publication.
+            if isinstance(self.index_store, LocalIndexStore):
+                save_snapshot_atomic(
+                    self.index_path,
+                    tools,
+                    embeddings,
+                    metadata,
+                )
+            else:
+                self.index_store.save_snapshot_atomic(tools, embeddings, metadata)
         except CapabilityUpdateError:
             raise
         except Exception as exc:
@@ -564,7 +593,14 @@ class Octopus:
 
         with self._snapshot_lock.write():
             set_tools(tools)
-            load_index(tools=tools, embeddings=embeddings)
+            load_index(
+                tools=tools,
+                embeddings=(
+                    None
+                    if getattr(self.index_store, "supports_native_vector_search", False)
+                    else embeddings
+                ),
+            )
             self._build_pipeline()
         return report
 
@@ -575,8 +611,7 @@ class Octopus:
         reinitialized after a subsequent ``update()`` or ``create()``.
         Session state is intentionally not modified here.
         """
-        if self.index_path.exists():
-            shutil.rmtree(self.index_path)
+        self.index_store.reset()
         set_tools([])
         load_index(tools=[], embeddings=None)
         self.pipeline = None

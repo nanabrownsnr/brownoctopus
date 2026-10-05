@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import sys
+import warnings
 from importlib.metadata import entry_points
 from pathlib import Path
 
@@ -64,9 +65,20 @@ def register_managed_spacy_plugins() -> None:
     if prepare_spacy_runtime() is None:
         return
     try:
-        import spacy_curated_transformers.models  # noqa: F401
-        import spacy_curated_transformers.tokenization  # noqa: F401
-        import spacy_curated_transformers.pipeline.transformer  # noqa: F401
+        # curated-transformers 0.1.1 uses torch.jit.script during module
+        # registration. Keep its known upstream deprecation warning from
+        # leaking into normal library startup without suppressing unrelated
+        # warnings from spaCy, Torch, or the host application.
+        with warnings.catch_warnings():
+            warnings.filterwarnings(
+                "ignore",
+                message=r"`torch\.jit\.script` is deprecated.*",
+                category=FutureWarning,
+                module=r"torch\.jit\._script",
+            )
+            import spacy_curated_transformers.models  # noqa: F401
+            import spacy_curated_transformers.tokenization  # noqa: F401
+            import spacy_curated_transformers.pipeline.transformer  # noqa: F401
         from spacy.util import registry
 
         for entry_point in entry_points(group="spacy_architectures"):

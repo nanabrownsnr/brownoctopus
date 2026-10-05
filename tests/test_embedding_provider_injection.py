@@ -44,15 +44,10 @@ def test_candidate_retriever_accepts_an_injected_embedding_provider(monkeypatch)
     assert provider.calls == ["capability query"]
 
 
-def test_legacy_rank_tools_still_uses_the_default_global_path(monkeypatch):
+def test_empty_legacy_index_returns_no_candidates(monkeypatch):
     monkeypatch.setattr(retriever, "model", object())
     monkeypatch.setattr(retriever, "embedding_provider", None)
     monkeypatch.setattr(retriever, "TOOLS", [])
     monkeypatch.setattr(retriever, "tool_embeddings", None)
 
-    try:
-        rank_tools("query")
-    except RuntimeError as exc:
-        assert "Tool index is not loaded" in str(exc)
-    else:
-        raise AssertionError("rank_tools should reject an unloaded legacy index")
+    assert rank_tools("query") == []

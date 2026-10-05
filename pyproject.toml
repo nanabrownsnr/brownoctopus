@@ -1,6 +1,6 @@
 [project]
 name = "brown-octopus"
-version = "0.4.20"
+version = "0.5.1"
 description = "Capability-context management for tool-using AI agents"
 readme = "README.md"
 authors = [{ name = "nana brown", email = "nanabrownsnr@gmail.com" }]
@@ -16,7 +16,7 @@ classifiers = [
 requires-python = ">=3.12"
 dependencies = [
     "fastmcp>=4.0.3",
-    "numpy>=2.5.3",
+    "numpy>=2.2,<2.3",
     "packaging>=24.0",
     "sentence-transformers>=6.0.1",
     "spacy>=3.8.16",
@@ -26,6 +26,8 @@ dependencies = [
 toolret = ["pyarrow>=18.0.0"]
 jev = ["jev-reranker>=0.1.0"]
 service = ["fastapi>=0.115.0", "uvicorn[standard]>=0.34.0"]
+postgres = ["psycopg[binary]>=3.2.0"]
+mongo = ["pymongo>=4.10.0"]
 
 [project.scripts]
 brown-octopus = "brown_octopus.cli:main"

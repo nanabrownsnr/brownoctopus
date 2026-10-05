@@ -209,10 +209,18 @@ def _prepare_embedding_model() -> None:
     _run_python(download)
 
 
-def main() -> None:
-    """Download and validate models without requiring a package manager."""
-    _prepare_spaCy_model()
-    _prepare_embedding_model()
+def main(*, spacy: bool = False, embedding: bool = False) -> None:
+    """Download and validate selected models without a package manager.
+
+    With no selector, preserve the original behavior and prepare both runtime
+    models. The selectors are intentionally mutually exclusive at the CLI.
+    """
+    prepare_spacy = spacy or not (spacy or embedding)
+    prepare_embedding = embedding or not (spacy or embedding)
+    if prepare_spacy:
+        _prepare_spaCy_model()
+    if prepare_embedding:
+        _prepare_embedding_model()
     print("Brown Octopus model bootstrap complete.")
 
 

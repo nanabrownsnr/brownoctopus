@@ -50,7 +50,7 @@ def _active_provider(
     return None
 
 
-class QwenCandidateRetriever:
+class LocalCandidateRetriever:
     """Candidate retrieval only; relevance selection is a separate strategy."""
 
     name = "qwen_dense"
@@ -87,6 +87,52 @@ class QwenCandidateRetriever:
             if self.embedding_provider is not None:
                 kwargs["embedding_provider"] = self.embedding_provider
             ranked = rank_tools(retrieval_query, **kwargs)
+        return ranked if self.candidate_k is None else ranked[: self.candidate_k]
+
+
+# Compatibility alias for applications that imported the historical name.
+# The implementation is provider-agnostic even though the original class was
+# introduced for the default Qwen model.
+QwenCandidateRetriever = LocalCandidateRetriever
+
+
+class VectorSearchCandidateRetriever:
+    """Candidate retriever backed by an index's native vector search.
+
+    The index owns persistence and database-specific search. This class owns
+    only query representation, candidate limits, and the stable candidate
+    contract consumed by the existing V3 selector.
+    """
+
+    name = "native_vector_search"
+
+    def __init__(
+        self,
+        index,
+        embedding_provider: EmbeddingProvider,
+        candidate_k: int | None = None,
+    ) -> None:
+        self.index = index
+        self.embedding_provider = embedding_provider
+        self.candidate_k = candidate_k
+
+    def retrieve(
+        self,
+        query: str,
+        intent: dict,
+        allowed_mcp_urls: Iterable[str] | None = None,
+    ) -> list[dict]:
+        retrieval_query = (
+            intent.get("retrieval_text")
+            or intent.get("text")
+            or query
+        )
+        query_embedding = self.embedding_provider.embed(retrieval_query)
+        ranked = self.index.search_vectors(
+            query_embedding,
+            limit=self.candidate_k,
+            allowed_mcp_urls=allowed_mcp_urls,
+        )
         return ranked if self.candidate_k is None else ranked[: self.candidate_k]
 
 
@@ -160,11 +206,11 @@ def retrieve_tools(
 
 def retrieve_candidates(
     query: str,
-    candidate_retriever: QwenCandidateRetriever | None = None,
+    candidate_retriever: LocalCandidateRetriever | None = None,
 ) -> list[dict]:
     """Return candidates for all intents without applying a selector."""
     analyzer_intents = analyze_intents(query)
-    retriever = candidate_retriever or QwenCandidateRetriever()
+    retriever = candidate_retriever or LocalCandidateRetriever()
     candidates = []
     for intent in analyzer_intents:
         candidates.append({
@@ -230,6 +276,12 @@ def rank_tools(
     provider = _active_provider(embedding_provider)
     if model is None and provider is None:
         raise RuntimeError("Retriever is not initialized. " "Call initialize() first.")
+
+    # An empty, valid capability index is a supported staged-provisioning
+    # state. It has no embedding matrix to search and therefore produces no
+    # candidates rather than being treated as an uninitialized retriever.
+    if not TOOLS and tool_embeddings is None:
+        return []
 
     if tool_embeddings is None:
         raise RuntimeError("Tool index is not loaded.")

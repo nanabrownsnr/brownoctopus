@@ -27,6 +27,13 @@ def test_subcommand_help_does_not_initialize_models():
         assert "Traceback" not in result.stderr
 
 
+def test_setup_models_exposes_model_selectors_without_loading_models():
+    result = run_cli("setup-models", "--help")
+    assert result.returncode == 0
+    assert "--spacy" in result.stdout
+    assert "--embedding" in result.stdout
+
+
 def test_root_without_command_displays_help():
     result = run_cli()
     assert result.returncode == 0
