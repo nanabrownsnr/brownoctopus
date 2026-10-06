@@ -43,7 +43,7 @@ try:
     __version__ = package_version("brown-octopus")
 except PackageNotFoundError:
     # Keep source-checkout imports useful before the project is installed.
-    __version__ = "0.5.2"
+    __version__ = "0.5.3"
 
 __all__ = [
     "Octopus",

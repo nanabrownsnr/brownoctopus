@@ -11,6 +11,7 @@ from brown_octopus.octopus import Octopus
 from brown_octopus.sources import (
     ApiCapabilitySource,
     CompositeCapabilitySource,
+    CapabilityUpdateReport,
     JsonCapabilitySource,
     McpRegistrySource,
     McpServerSource,
@@ -140,8 +141,23 @@ class OctopusIndex:
             **kwargs,
         )
 
-    async def create(self):
-        """Create the initial index, or synchronize an existing one."""
+    async def create(self, *, replace: bool = False):
+        """Create the index if missing, or explicitly replace it.
+
+        An existing snapshot is left untouched by default. Pass
+        ``replace=True`` to deliberately rediscover the configured sources
+        and publish a new snapshot.
+        """
+        if not replace and self._octopus.index_store.exists():
+            tools = self._octopus.index_store.load_tools()
+            return CapabilityUpdateReport(
+                added=[],
+                changed=[],
+                removed=[],
+                failed_sources={},
+                tool_count=len(tools),
+                authoritative=True,
+            )
         return await self.update()
 
     async def update(self):

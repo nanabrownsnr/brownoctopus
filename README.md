@@ -106,8 +106,10 @@ Run it once after the catalog is configured:
 python setup_index.py
 ```
 
-`create()` discovers capabilities, builds embeddings, validates a complete
-snapshot, and publishes it atomically. It does not execute MCP tools.
+`create()` creates and publishes a snapshot only when the index does not already
+exist. It discovers capabilities, builds embeddings, and validates the
+snapshot atomically. To deliberately rebuild an existing index, use
+`create(replace=True)`. It does not execute MCP tools.
 
 ### 3. Start the runtime
 
@@ -144,7 +146,8 @@ host decides how to bind and execute the definitions.
 
 `OctopusIndex` owns index lifecycle:
 
-- `create()` builds the initial index;
+- `create()` creates the index only if it is missing;
+- `create(replace=True)` deliberately rebuilds the index;
 - `update()` synchronizes configured sources;
 - `add(source)` adds a source and synchronizes;
 - `remove_source(source_id)` removes a configured source and synchronizes;
@@ -173,7 +176,8 @@ assert result.tool_ids == []
 
 If the path has no snapshot, runtime initialization starts with an empty
 capability universe. Configure a source and call `create()` or `update()` when
-the host is ready to provision capabilities.
+the host is ready to provision capabilities. Calling `create()` during every
+startup is safe: an existing snapshot is left unchanged.
 
 ## Updating capabilities
 

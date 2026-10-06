@@ -91,7 +91,10 @@ setup-models
     prepare runtime model assets
 
 OctopusIndex.create()
-    discover capabilities and publish the first snapshot
+    create and publish a snapshot only if one is missing
+
+OctopusIndex.create(replace=True)
+    deliberately rebuild and publish a new snapshot
 
 OctopusIndex.update()
     host-requested synchronization of configured sources
@@ -173,6 +176,12 @@ A missing path is not an implicit discovery request. A malformed existing
 snapshot remains an error because it may indicate corruption or an incomplete
 deployment.
 
+For application startup, it is also safe to call `create()` as an
+ensure-created operation. If the configured store already has an active
+snapshot, `create()` leaves it untouched. Use `create(replace=True)` only when
+the host explicitly wants to rediscover sources and replace the active
+snapshot.
+
 ## 4. `OctopusIndex`
 
 ### Constructor
@@ -206,7 +215,8 @@ from_api(url, **kwargs)               normalized capabilities from HTTP JSON
 ### Lifecycle methods
 
 ```text
-await index.create()                  build the initial snapshot
+await index.create()                  create snapshot only if missing
+await index.create(replace=True)      deliberately replace snapshot
 await index.update()                  synchronize configured sources
 await index.add(source)               add a source and synchronize
 await index.remove_source(source_id) remove a configured source

@@ -361,6 +361,44 @@ async def test_index_facade_adds_and_removes_sources(monkeypatch, tmp_path):
     assert calls == [["crm"], []]
 
 
+@pytest.mark.anyio
+async def test_create_does_not_replace_existing_snapshot_by_default(monkeypatch, tmp_path):
+    index = OctopusIndex.from_sources([], index_path=tmp_path / "index")
+    existing_tools = [{"capability_id": "existing", "name": "existing"}]
+    update_calls = []
+
+    index._octopus.index_store.exists = lambda: True
+    index._octopus.index_store.load_tools = lambda: existing_tools
+
+    async def fake_update():
+        update_calls.append(True)
+        return None
+
+    monkeypatch.setattr(index, "update", fake_update)
+
+    report = await index.create()
+
+    assert report.tool_count == 1
+    assert update_calls == []
+
+
+@pytest.mark.anyio
+async def test_create_replace_rebuilds_existing_snapshot(monkeypatch, tmp_path):
+    index = OctopusIndex.from_sources([], index_path=tmp_path / "index")
+    update_calls = []
+
+    index._octopus.index_store.exists = lambda: True
+
+    async def fake_update():
+        update_calls.append(True)
+        return "updated"
+
+    monkeypatch.setattr(index, "update", fake_update)
+
+    assert await index.create(replace=True) == "updated"
+    assert update_calls == [True]
+
+
 def test_index_reset_removes_persisted_directory(tmp_path):
     index_path = tmp_path / "index"
     index_path.mkdir()
