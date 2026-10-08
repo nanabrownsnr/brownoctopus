@@ -340,18 +340,22 @@ async def test_index_facade_adds_and_removes_sources(monkeypatch, tmp_path):
     index = OctopusIndex.from_sources([], index_path=tmp_path / "index")
     calls = []
 
-    async def fake_update():
-        await index.source.discover()
+    index._octopus.index_store.exists = lambda: True
+
+    async def fake_add_sources(sources):
+        calls.append(
+            [getattr(source, "source_id", None) for source in sources]
+        )
         return CapabilityDiscoveryResult()
 
-    async def fake_discover():
+    async def fake_update():
         calls.append(
             [getattr(source, "source_id", None) for source in index.source.sources]
         )
         return CapabilityDiscoveryResult()
 
+    monkeypatch.setattr(index._octopus, "add_sources", fake_add_sources)
     monkeypatch.setattr(index._octopus, "update", fake_update)
-    monkeypatch.setattr(index.source, "discover", fake_discover)
     source = McpServerSource("https://example.com/mcp", source_id="crm")
 
     await index.add(source)
@@ -359,6 +363,38 @@ async def test_index_facade_adds_and_removes_sources(monkeypatch, tmp_path):
 
     await index.remove_source("crm")
     assert calls == [["crm"], []]
+
+
+@pytest.mark.anyio
+async def test_index_facade_add_accepts_multiple_sources_in_one_update(
+    monkeypatch,
+    tmp_path,
+):
+    index = OctopusIndex.from_sources([], index_path=tmp_path / "index")
+    index._octopus.index_store.exists = lambda: True
+    calls = []
+
+    async def fake_add_sources(sources):
+        calls.append([source.source_id for source in sources])
+        return CapabilityDiscoveryResult()
+
+    monkeypatch.setattr(index._octopus, "add_sources", fake_add_sources)
+
+    await index.add(
+        McpServerSource("https://example.com/a", source_id="a"),
+        McpServerSource("https://example.com/b", source_id="b"),
+    )
+
+    assert calls == [["a", "b"]]
+    assert [source.source_id for source in index.sources] == ["a", "b"]
+
+
+@pytest.mark.anyio
+async def test_index_facade_add_requires_an_existing_index(tmp_path):
+    index = OctopusIndex.from_sources([], index_path=tmp_path / "missing")
+
+    with pytest.raises(RuntimeError, match="index exists"):
+        await index.add(McpServerSource("https://example.com/mcp"))
 
 
 @pytest.mark.anyio

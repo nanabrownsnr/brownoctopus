@@ -6,6 +6,7 @@ from threading import Condition, RLock
 import logging
 import json
 import hashlib
+import torch
 from datetime import datetime, timezone
 from importlib.metadata import PackageNotFoundError, version as package_version
 
@@ -48,6 +49,7 @@ from brown_octopus.sources import load_mcp_urls
 from brown_octopus.sources import (
     CapabilityDiscoveryResult,
     CapabilityUpdateReport,
+    CompositeCapabilitySource,
     LocalMcpCatalogSource,
 )
 from brown_octopus.errors import (
@@ -55,6 +57,7 @@ from brown_octopus.errors import (
     IncompatibleIndexError,
     IndexLoadError,
     InitializationError,
+    MissingIndexError,
     ModelInitializationError,
 )
 from brown_octopus.tool_registry import capability_id, get_tools, set_tools
@@ -630,6 +633,200 @@ class Octopus:
             set_tools(tools)
             load_index(
                 tools=tools,
+                embeddings=(
+                    None
+                    if getattr(self.index_store, "supports_native_vector_search", False)
+                    else embeddings
+                ),
+            )
+            self._build_pipeline()
+        return report
+
+    @staticmethod
+    def _rows(embeddings):
+        if embeddings is None:
+            return []
+        tensor = embeddings if torch.is_tensor(embeddings) else torch.as_tensor(embeddings)
+        if tensor.ndim == 1:
+            tensor = tensor.unsqueeze(0)
+        return list(tensor)
+
+    @classmethod
+    def _merge_incremental_embeddings(
+        cls,
+        previous_tools: list[dict],
+        previous_embeddings,
+        merged_tools: list[dict],
+        replacement_embeddings: dict[str, object],
+    ):
+        previous_rows = cls._rows(previous_embeddings)
+        if previous_tools and len(previous_rows) != len(previous_tools):
+            raise CapabilityUpdateError(
+                "The existing index has no complete embedding matrix. "
+                "Rebuild it with await index.create(replace=True)."
+            )
+
+        previous_by_id = {
+            capability_id(tool): row
+            for tool, row in zip(previous_tools, previous_rows)
+        }
+        rows = []
+        for tool in merged_tools:
+            identity = capability_id(tool)
+            row = replacement_embeddings.get(identity, previous_by_id.get(identity))
+            if row is None:
+                raise CapabilityUpdateError(
+                    "The incremental index update did not produce an embedding "
+                    f"for capability '{identity}'."
+                )
+            rows.append(row if torch.is_tensor(row) else torch.as_tensor(row))
+
+        if not rows:
+            return None
+        return torch.stack(rows)
+
+    async def add_sources(
+        self,
+        sources: Iterable[CapabilitySource],
+    ) -> CapabilityUpdateReport:
+        """Incrementally merge capabilities from the supplied sources.
+
+        This operation requires an existing snapshot and never treats the
+        supplied sources as the complete authoritative source universe. Only
+        new or changed capabilities are embedded; capabilities already in the
+        snapshot are retained unchanged.
+        """
+        if not self.index_store.exists():
+            raise MissingIndexError(
+                "Cannot add capabilities before an index exists. "
+                "Call await index.create() first."
+            )
+
+        sources = list(sources)
+        if not sources:
+            tools = self.index_store.load_tools()
+            return CapabilityUpdateReport(
+                added=[],
+                changed=[],
+                removed=[],
+                failed_sources={},
+                tool_count=len(tools),
+                authoritative=True,
+            )
+
+        try:
+            initialize_analyzer()
+            if self.embedding_provider is None:
+                initialize_retriever()
+            else:
+                initialize_retriever(self.embedding_provider)
+
+            discovered = await CompositeCapabilitySource(sources).discover()
+            previous_tools = self.index_store.load_tools()
+            # Native-vector stores do not need the matrix for runtime search,
+            # but incremental publication still needs the existing rows so it
+            # can retain them without re-embedding unchanged capabilities.
+            previous_embeddings = self.index_store.load_embeddings()
+            previous_by_id = {
+                capability_id(tool): tool for tool in previous_tools
+            }
+            discovered_by_id = {
+                capability_id(tool): tool for tool in discovered.tools
+            }
+
+            merged_by_id = dict(previous_by_id)
+            merged_by_id.update(discovered_by_id)
+            merged_tools = list(merged_by_id.values())
+
+            added = sorted(set(merged_by_id) - set(previous_by_id))
+            changed = sorted(
+                identity
+                for identity in set(previous_by_id) & set(discovered_by_id)
+                if self._tool_signature(previous_by_id[identity])
+                != self._tool_signature(discovered_by_id[identity])
+            )
+            to_embed = [
+                discovered_by_id[identity]
+                for identity in [*added, *changed]
+            ]
+            if to_embed:
+                if self.embedding_provider is None:
+                    encoded = build_embeddings(to_embed)
+                else:
+                    encoded = build_embeddings(
+                        to_embed,
+                        embedding_provider=self.embedding_provider,
+                    )
+                replacement_embeddings = {
+                    identity: row
+                    for identity, row in zip(
+                        [*added, *changed],
+                        self._rows(encoded),
+                    )
+                }
+            else:
+                replacement_embeddings = {}
+
+            embeddings = self._merge_incremental_embeddings(
+                previous_tools,
+                previous_embeddings,
+                merged_tools,
+                replacement_embeddings,
+            )
+            active_provider = (
+                self.embedding_provider
+                or get_embedding_provider()
+                or LocalEmbeddingProvider(model_name=MODEL_NAME)
+            )
+            metadata = {
+                "version": 1,
+                "index_format_version": 1,
+                "brown_octopus_version": self._package_version(),
+                "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+                "tool_count": len(merged_tools),
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "tool_universe_fingerprint": self._tool_universe_fingerprint(
+                    merged_tools
+                ),
+                "embedding_provider": {
+                    "type": type(active_provider).__name__,
+                    "model_id": active_provider.model_id,
+                    "dimension": getattr(active_provider, "dimension", None),
+                },
+            }
+            if isinstance(self.index_store, LocalIndexStore):
+                save_snapshot_atomic(
+                    self.index_path,
+                    merged_tools,
+                    embeddings,
+                    metadata,
+                )
+            else:
+                self.index_store.save_snapshot_atomic(
+                    merged_tools,
+                    embeddings,
+                    metadata,
+                )
+        except (MissingIndexError, CapabilityUpdateError):
+            raise
+        except Exception as exc:
+            raise CapabilityUpdateError(
+                "Brown Octopus could not add capabilities. "
+                "The existing in-memory and persisted snapshot was preserved."
+            ) from exc
+
+        report = CapabilityUpdateReport(
+            added=added,
+            changed=changed,
+            removed=[],
+            failed_sources=dict(discovered.failed_sources),
+            tool_count=len(merged_tools),
+            authoritative=False if discovered.failed_sources else True,
+        )
+        with self._snapshot_lock.write():
+            set_tools(merged_tools)
+            load_index(
+                tools=merged_tools,
                 embeddings=(
                     None
                     if getattr(self.index_store, "supports_native_vector_search", False)

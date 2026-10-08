@@ -8,6 +8,7 @@ from brown_octopus.contracts import CapabilitySource
 from brown_octopus.embedding import EmbeddingProvider
 from brown_octopus.index_store import IndexStore
 from brown_octopus.octopus import Octopus
+from brown_octopus.errors import MissingIndexError
 from brown_octopus.sources import (
     ApiCapabilitySource,
     CompositeCapabilitySource,
@@ -164,14 +165,39 @@ class OctopusIndex:
         """Synchronize all configured sources with the persisted index."""
         return await self._octopus.update()
 
-    async def add(self, source: CapabilitySource):
-        """Add a source and synchronize the complete configured source set."""
-        self.sources.append(source)
+    async def add(
+        self,
+        source: CapabilitySource,
+        *additional_sources: CapabilitySource,
+    ):
+        """Incrementally add one or more sources to an existing index.
+
+        Unlike :meth:`update`, this operation does not reconcile the complete
+        configured source universe. It discovers only the supplied source(s)
+        and merges their capabilities into the persisted snapshot.
+        """
+        if not self._octopus.index_store.exists():
+            raise MissingIndexError(
+                "Cannot add capabilities before an index exists. "
+                "Call await index.create() first."
+            )
+
+        sources = (source, *additional_sources)
+        original = list(self.sources)
+        existing_ids = {
+            getattr(item, "source_id", None)
+            for item in self.sources
+        }
+        for item in sources:
+            source_id = getattr(item, "source_id", None)
+            if source_id not in existing_ids:
+                self.sources.append(item)
+                existing_ids.add(source_id)
         self._sync_sources()
         try:
-            return await self.update()
+            return await self._octopus.add_sources(sources)
         except Exception:
-            self.sources.pop()
+            self.sources[:] = original
             self._sync_sources()
             raise
 

@@ -1,8 +1,97 @@
 import pytest
+import torch
 
 from brown_octopus import CapabilityDiscoveryResult, Octopus
 
 from pathlib import Path
+
+
+@pytest.mark.anyio
+async def test_octopus_add_sources_merges_only_new_capability_embeddings(
+    monkeypatch,
+    tmp_path,
+):
+    from brown_octopus.index_store import save_snapshot_atomic
+
+    index_path = tmp_path / "index"
+    existing_tools = [
+        {
+            "capability_id": "existing",
+            "name": "existing_tool",
+            "description": "already indexed",
+        }
+    ]
+    save_snapshot_atomic(
+        index_path,
+        existing_tools,
+        torch.tensor([[1.0, 0.0]]),
+        {
+            "version": 1,
+            "index_format_version": 1,
+            "embedding_provider": {
+                "type": "FakeProvider",
+                "model_id": "fake",
+                "dimension": 2,
+            },
+        },
+    )
+
+    class Source:
+        async def discover(self):
+            return CapabilityDiscoveryResult(
+                tools=[
+                    {
+                        "capability_id": "new",
+                        "name": "new_tool",
+                        "description": "new capability",
+                    }
+                ]
+            )
+
+    class Provider:
+        model_id = "fake"
+        dimension = 2
+
+    encoded = []
+
+    def fake_build_embeddings(tools, embedding_provider=None):
+        encoded.append([tool["capability_id"] for tool in tools])
+        return torch.tensor([[0.0, 1.0] for _ in tools])
+
+    monkeypatch.setattr("brown_octopus.octopus.initialize_analyzer", lambda: None)
+    monkeypatch.setattr("brown_octopus.octopus.initialize_retriever", lambda *args: None)
+    monkeypatch.setattr("brown_octopus.octopus.get_embedding_provider", lambda: Provider())
+    monkeypatch.setattr("brown_octopus.octopus.build_embeddings", fake_build_embeddings)
+    monkeypatch.setattr("brown_octopus.octopus.set_tools", lambda tools: None)
+    monkeypatch.setattr("brown_octopus.octopus.load_index", lambda **kwargs: None)
+
+    octopus = Octopus(
+        index_path=index_path,
+        capability_source=Source(),
+    )
+    octopus._build_pipeline = lambda: None
+
+    report = await octopus.add_sources([Source()])
+
+    assert encoded == [["new"]]
+    assert report.added == ["new"]
+    assert report.removed == []
+    assert octopus.index_store.load_tools() == [
+        existing_tools[0],
+        {
+            "capability_id": "new",
+            "name": "new_tool",
+            "description": "new capability",
+        },
+    ]
+
+
+@pytest.mark.anyio
+async def test_octopus_add_sources_requires_an_existing_snapshot(tmp_path):
+    octopus = Octopus(index_path=tmp_path / "missing")
+
+    with pytest.raises(RuntimeError, match="index exists"):
+        await octopus.add_sources([])
 
 
 @pytest.mark.anyio

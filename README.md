@@ -149,7 +149,8 @@ host decides how to bind and execute the definitions.
 - `create()` creates the index only if it is missing;
 - `create(replace=True)` deliberately rebuilds the index;
 - `update()` synchronizes configured sources;
-- `add(source)` adds a source and synchronizes;
+- `add(source)` incrementally adds a source to an existing index;
+- `add(source_a, source_b)` batches several incremental additions;
 - `remove_source(source_id)` removes a configured source and synchronizes;
 - `reset()` removes the persisted index;
 - `runtime()` returns the runtime facade.
@@ -216,6 +217,25 @@ await index.add(
         source_id="word",
     )
 )
+```
+
+`add()` requires an existing index. It discovers only the supplied source,
+embeds only new or changed capabilities, and preserves capabilities already in
+the snapshot. It does not perform a full source synchronization. To add a
+batch in one operation:
+
+```python
+await index.add(
+    McpServerSource("https://example.com/word/mcp", source_id="word"),
+    McpServerSource("https://example.com/mail/mcp", source_id="mail"),
+)
+```
+
+Call `create()` before the first `add()`:
+
+```python
+await index.create()
+await index.add(McpServerSource("https://example.com/word/mcp"))
 ```
 
 `remove_capability()` remains temporarily for older applications but is

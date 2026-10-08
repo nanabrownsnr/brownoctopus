@@ -164,11 +164,32 @@ assert result.retrieved_tools == []
 assert result.tool_ids == []
 ```
 
-This is a valid staged-provisioning state. The host can add a source later:
+This is a valid staged-provisioning state. The host can establish the empty
+index first, then add a source later:
 
 ```python
 from brown_octopus import McpServerSource
 
+await index.create()
+await index.add(McpServerSource("https://example.com/outlook/mcp"))
+```
+
+`add()` is incremental. It requires an existing index, discovers only the
+supplied source, embeds only new or changed capabilities, and preserves the
+rest of the snapshot. It does not synchronize or remove capabilities from
+other sources. Several sources can be added in one operation:
+
+```python
+await index.add(
+    McpServerSource("https://example.com/outlook/mcp", source_id="outlook"),
+    McpServerSource("https://example.com/word/mcp", source_id="word"),
+)
+```
+
+For a new index, establish the snapshot first:
+
+```python
+await index.create()
 await index.add(McpServerSource("https://example.com/outlook/mcp"))
 ```
 
@@ -218,7 +239,8 @@ from_api(url, **kwargs)               normalized capabilities from HTTP JSON
 await index.create()                  create snapshot only if missing
 await index.create(replace=True)      deliberately replace snapshot
 await index.update()                  synchronize configured sources
-await index.add(source)               add a source and synchronize
+await index.add(source)               incrementally add to an existing index
+await index.add(source_a, source_b)  batch incremental additions
 await index.remove_source(source_id) remove a configured source
 index.runtime()                       return the Octopus runtime
 index.octopus                         compatibility alias for runtime()
@@ -246,8 +268,9 @@ await index.remove_source("word")
 
 `remove_source()` removes a source configured on the current `OctopusIndex`
 instance. After a process restart, recreate source objects if the host needs
-to discover or remove them by source ID. Credentials and source configuration
-are not stored in the index snapshot.
+to run a full `update()` or remove a source by source ID. Credentials and
+source configuration are not stored in the index snapshot. Runtime loading and
+incremental `add()` still use the existing persisted snapshot safely.
 
 ## 5. Capability source contract
 

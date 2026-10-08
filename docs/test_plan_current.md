@@ -242,6 +242,7 @@ Test:
 
 ```python
 await index.add(source)
+await index.add(source_a, source_b)
 await index.remove_source(source_id)
 await index.remove_capability(capability_id)
 index.reset()
@@ -249,6 +250,10 @@ index.reset()
 
 Verify that each operation affects only the intended source/index and that
 reset does not delete sessions, models, or unrelated indexes.
+
+For `add()`, also verify that an existing snapshot survives a process restart,
+that adding a source does not remove previously indexed capabilities, and that
+only new or changed capabilities are sent to the embedding provider.
 
 ## 7. Capability sources
 
