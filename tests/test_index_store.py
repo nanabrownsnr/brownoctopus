@@ -54,6 +54,25 @@ def test_save_and_load_embeddings(tmp_path):
     )
 
 
+def test_load_embeddings_maps_to_cpu_when_cuda_is_unavailable(monkeypatch, tmp_path):
+    captured = {}
+
+    def fake_load(source, **options):
+        captured.update(options)
+        return torch.tensor([[1.0, 0.0]])
+
+    monkeypatch.setattr("brown_octopus.index_store.torch.load", fake_load)
+    monkeypatch.setattr(
+        "brown_octopus.index_store.torch.cuda.is_available",
+        lambda: False,
+    )
+
+    load_embeddings(tmp_path)
+
+    assert captured["weights_only"] is True
+    assert captured["map_location"] == torch.device("cpu")
+
+
 def test_load_tools_from_index(tmp_path):
     tools = [
         {

@@ -101,10 +101,7 @@ def load_embeddings(
 ):
     embeddings_path = _active_index_path(index_path) / "embeddings.pt"
 
-    return torch.load(
-        embeddings_path,
-        weights_only=True,
-    )
+    return _load_torch_embeddings(embeddings_path)
 
 
 def save_metadata(
@@ -207,7 +204,15 @@ def _serialize_embeddings(embeddings) -> bytes:
 
 
 def _deserialize_embeddings(payload: bytes):
-    return torch.load(io.BytesIO(payload), weights_only=True)
+    return _load_torch_embeddings(io.BytesIO(payload))
+
+
+def _load_torch_embeddings(source):
+    """Load CUDA-created snapshots safely in CPU-only processes."""
+    options = {"weights_only": True}
+    if not torch.cuda.is_available():
+        options["map_location"] = torch.device("cpu")
+    return torch.load(source, **options)
 
 
 def _embedding_values(embedding) -> list[float]:
