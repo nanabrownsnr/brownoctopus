@@ -47,6 +47,34 @@ def test_mcp_server_source_uses_source_id(monkeypatch):
 
 
 @pytest.mark.anyio
+async def test_mcp_server_source_passes_optional_mcp_headers(monkeypatch):
+    captured = {}
+
+    async def fake_discover(url, server_id=None, mcp_headers=None):
+        captured.update(
+            url=url,
+            server_id=server_id,
+            mcp_headers=mcp_headers,
+        )
+        return []
+
+    monkeypatch.setattr("brown_octopus.sources.discover_tools", fake_discover)
+
+    result = await McpServerSource(
+        "https://example.com/mcp",
+        source_id="private-server",
+        mcp_headers={"Authorization": "Bearer secret"},
+    ).discover()
+
+    assert result.failed_sources == {}
+    assert captured == {
+        "url": "https://example.com/mcp",
+        "server_id": "private-server",
+        "mcp_headers": {"Authorization": "Bearer secret"},
+    }
+
+
+@pytest.mark.anyio
 async def test_local_catalog_preserves_server_id(monkeypatch, tmp_path):
     path = tmp_path / "mcps.json"
     path.write_text(
@@ -201,6 +229,38 @@ async def test_mcp_registry_source_paginates_and_discovers_tools():
 
 
 @pytest.mark.anyio
+async def test_mcp_registry_source_passes_mcp_headers_to_discovery():
+    captured = {}
+
+    async def discover_tools_for_server(url, server_id=None, mcp_headers=None):
+        captured.update(
+            url=url,
+            server_id=server_id,
+            mcp_headers=mcp_headers,
+        )
+        return []
+
+    source = McpRegistrySource(
+        "https://registry.example/servers",
+        mcp_headers={"Authorization": "Bearer secret"},
+        tool_discoverer=discover_tools_for_server,
+    )
+    source._request_page = lambda page, headers, cursor=None: (
+        {"items": [{"id": "private", "url": "https://private"}]},
+        200,
+    )
+
+    result = await source.discover()
+
+    assert result.failed_sources == {}
+    assert captured == {
+        "url": "https://private",
+        "server_id": "private",
+        "mcp_headers": {"Authorization": "Bearer secret"},
+    }
+
+
+@pytest.mark.anyio
 async def test_mcp_registry_source_follows_cursor_pagination():
     requests = []
     responses = {
@@ -333,6 +393,30 @@ def test_index_facade_exposes_registry_constructor():
     assert isinstance(index.sources[0], McpRegistrySource)
     assert index.sources[0].headers["Authorization"] == "Bearer secret"
     assert index.sources[0].cursor_param == "next"
+
+
+def test_index_facade_exposes_mcp_server_headers():
+    index = OctopusIndex.from_mcp_server(
+        "https://example.com/private/mcp",
+        mcp_headers={"Authorization": "Bearer secret"},
+    )
+
+    assert index.sources[0].mcp_headers == {
+        "Authorization": "Bearer secret"
+    }
+
+
+def test_index_facade_exposes_registry_mcp_headers():
+    index = OctopusIndex.from_mcp_registry(
+        "https://registry.example/servers",
+        headers={"Authorization": "Bearer registry"},
+        mcp_headers={"Authorization": "Bearer mcp"},
+    )
+
+    assert index.sources[0].headers == {
+        "Authorization": "Bearer registry"
+    }
+    assert index.sources[0].mcp_headers == {"Authorization": "Bearer mcp"}
 
 
 @pytest.mark.anyio

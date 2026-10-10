@@ -66,10 +66,17 @@ class OctopusIndex:
         url: str,
         *,
         source_id: str | None = None,
+        mcp_headers: dict[str, str] | None = None,
         **kwargs,
     ) -> "OctopusIndex":
         return cls(
-            [McpServerSource(url, source_id=source_id)],
+            [
+                McpServerSource(
+                    url,
+                    source_id=source_id,
+                    mcp_headers=mcp_headers,
+                )
+            ],
             **kwargs,
         )
 
@@ -95,6 +102,7 @@ class OctopusIndex:
                 "page_size",
                 "max_pages",
                 "headers",
+                "mcp_headers",
                 "refresh_headers",
                 "timeout",
                 "source_id",

@@ -44,18 +44,35 @@ class LocalMcpCatalogSource:
 
 
 class McpServerSource:
-    """Discover capabilities from one HTTP MCP server."""
+    """Discover capabilities from one HTTP MCP server.
 
-    def __init__(self, url: str, source_id: str | None = None) -> None:
+    ``mcp_headers`` are used only for the discovery connection. They are not
+    included in capability records, persisted snapshots, or logs.
+    """
+
+    def __init__(
+        self,
+        url: str,
+        source_id: str | None = None,
+        *,
+        mcp_headers: Mapping[str, str] | None = None,
+    ) -> None:
         self.url = url
         self.source_id = source_id or url
+        self.mcp_headers = dict(mcp_headers or {})
 
     async def discover(self) -> CapabilityDiscoveryResult:
         result = CapabilityDiscoveryResult()
         try:
-            result.tools.extend(
-                await discover_tools(self.url, server_id=self.source_id)
-            )
+            if self.mcp_headers:
+                tools = await discover_tools(
+                    self.url,
+                    server_id=self.source_id,
+                    mcp_headers=self.mcp_headers,
+                )
+            else:
+                tools = await discover_tools(self.url, server_id=self.source_id)
+            result.tools.extend(tools)
             result.successful_sources.append(self.source_id)
         except Exception as exc:
             result.failed_sources[self.source_id] = str(exc)
@@ -207,6 +224,7 @@ class McpRegistrySource:
         page_size: int = 100,
         max_pages: int = 1000,
         headers: Mapping[str, str] | None = None,
+        mcp_headers: Mapping[str, str] | None = None,
         refresh_headers: Callable[
             [], Mapping[str, str] | Awaitable[Mapping[str, str]]
         ]
@@ -228,6 +246,7 @@ class McpRegistrySource:
         self.page_size = page_size
         self.max_pages = max_pages
         self.headers = dict(headers or {})
+        self.mcp_headers = dict(mcp_headers or {})
         self.refresh_headers = refresh_headers
         self.timeout = timeout
         self.source_id = source_id or url
@@ -304,7 +323,14 @@ class McpRegistrySource:
             return
         server_id = str(record.get(self.server_id_field) or mcp_url)
         try:
-            tools = await self.tool_discoverer(mcp_url, server_id=server_id)
+            if self.mcp_headers:
+                tools = await self.tool_discoverer(
+                    mcp_url,
+                    server_id=server_id,
+                    mcp_headers=self.mcp_headers,
+                )
+            else:
+                tools = await self.tool_discoverer(mcp_url, server_id=server_id)
             for tool in tools:
                 tool.setdefault("source_id", server_id)
                 tool.setdefault("mcp_url", mcp_url)

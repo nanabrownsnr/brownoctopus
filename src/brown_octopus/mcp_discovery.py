@@ -1,5 +1,6 @@
 import hashlib
 import logging
+from typing import Mapping
 
 
 logger = logging.getLogger("brown_octopus.discovery")
@@ -44,6 +45,7 @@ def discovered_capability_id(tool: dict) -> str:
 async def discover_tools(
     mcp_url: str,
     server_id: str | None = None,
+    mcp_headers: Mapping[str, str] | None = None,
 ) -> list[dict]:
     """
     Connect to an MCP server and discover its available tools.
@@ -60,7 +62,8 @@ async def discover_tools(
             "different CapabilitySource."
         ) from exc
 
-    async with Client(mcp_url) as client:
+    client_kwargs = {"headers": dict(mcp_headers)} if mcp_headers else {}
+    async with Client(mcp_url, **client_kwargs) as client:
         server_info = client.server_info
         tools = await client.list_tools()
 

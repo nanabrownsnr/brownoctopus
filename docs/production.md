@@ -333,13 +333,16 @@ await index.create()
 index = OctopusIndex.from_mcp_server(
     "https://example.com/outlook/mcp",
     source_id="outlook",
+    mcp_headers={"Authorization": "Bearer <short-lived-token>"},
     index_path="data/indexes/outlook",
 )
 await index.create()
 ```
 
-The adapter does not own authentication. Use a custom source or registry
-source when the host must attach authentication during discovery.
+``mcp_headers`` is optional and is used only while the host discovers tools
+from that MCP. Header values are not included in capability records, persisted
+snapshots, or logs. The host remains responsible for obtaining and refreshing
+short-lived credentials.
 
 ### Normalized JSON
 
@@ -397,6 +400,7 @@ index = OctopusIndex.from_mcp_registry(
     "https://registry.example.com/mcp-servers",
     items_path="items",
     headers={"Authorization": "Bearer <host-token>"},
+    mcp_headers={"Authorization": "Bearer <mcp-token>"},
     page_size=50,
     cursor_param="cursor",
     index_path="data/indexes/registry-index",
@@ -419,6 +423,12 @@ index = OctopusIndex.from_mcp_registry(
     refresh_headers=refresh_headers,
 )
 ```
+
+``headers`` authenticate requests to the registry API. ``mcp_headers`` are
+sent to each discovered MCP during tool discovery. They may be the same
+mapping when the registry and MCP servers accept the same token, or different
+mappings when they use separate credentials. MCP headers are not persisted or
+returned as capability metadata.
 
 If one MCP server fails, prior capabilities are preserved when the result is
 non-authoritative. An authoritative absence is treated as removal.

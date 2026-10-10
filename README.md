@@ -320,6 +320,7 @@ Convenience constructor:
 index = OctopusIndex.from_mcp_server(
     "https://example.com/outlook/mcp",
     source_id="outlook",
+    mcp_headers={"Authorization": "Bearer <short-lived-token>"},
     index_path="data/indexes/outlook",
 )
 ```
