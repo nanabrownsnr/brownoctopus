@@ -62,8 +62,18 @@ async def discover_tools(
             "different CapabilitySource."
         ) from exc
 
-    client_kwargs = {"headers": dict(mcp_headers)} if mcp_headers else {}
-    async with Client(mcp_url, **client_kwargs) as client:
+    if mcp_headers:
+        from fastmcp.client.transports import StreamableHttpTransport
+
+        transport = StreamableHttpTransport(
+            mcp_url,
+            headers=dict(mcp_headers),
+        )
+        client = Client(transport)
+    else:
+        client = Client(mcp_url)
+
+    async with client:
         server_info = client.server_info
         tools = await client.list_tools()
 

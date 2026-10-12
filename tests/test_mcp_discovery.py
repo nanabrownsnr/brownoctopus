@@ -1,3 +1,6 @@
+import sys
+import types
+
 import pytest
 
 from brown_octopus.mcp_discovery import (
@@ -13,6 +16,52 @@ WEB_SEARCH_MCP_URL = "https://twynity-dev.mcp.4th-ir.com/web-search/mcp"
 def test_normalize_name():
     assert normalize_name("Web Search Tools") == "web_search_tools"
     assert normalize_name("Office-Word MCP") == "office_word_mcp"
+
+
+@pytest.mark.anyio
+async def test_discover_tools_passes_headers_to_http_transport(monkeypatch):
+    captured = {}
+
+    class FakeTransport:
+        def __init__(self, url, headers=None):
+            captured["transport"] = (url, headers)
+
+    class FakeClient:
+        def __init__(self, transport):
+            captured["client_transport"] = transport
+            self.server_info = types.SimpleNamespace(name="Private MCP")
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *args):
+            return None
+
+        async def list_tools(self):
+            return []
+
+    monkeypatch.setitem(
+        sys.modules,
+        "fastmcp",
+        types.SimpleNamespace(Client=FakeClient),
+    )
+    monkeypatch.setitem(sys.modules, "fastmcp.client", types.ModuleType("client"))
+    monkeypatch.setitem(
+        sys.modules,
+        "fastmcp.client.transports",
+        types.SimpleNamespace(StreamableHttpTransport=FakeTransport),
+    )
+
+    result = await discover_tools(
+        "https://example.com/private/mcp",
+        mcp_headers={"Authorization": "Bearer secret"},
+    )
+
+    assert result == []
+    assert captured["transport"] == (
+        "https://example.com/private/mcp",
+        {"Authorization": "Bearer secret"},
+    )
 
 
 @pytest.mark.anyio
