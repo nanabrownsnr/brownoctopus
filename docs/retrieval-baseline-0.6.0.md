@@ -23,14 +23,17 @@ compound, hidden-dependency, and multi-turn tasks.
 | Required tools completely retrieved | 80.00% of turns |
 | Recall@1 | 45.00% |
 | Recall@4 | 74.17% |
+| Recall@5 | 77.50% |
 | Recall@8 | 80.00% |
 | Recall@16 | 80.83% |
 | nDCG@1 | 49.44% |
 | nDCG@4 | 59.68% |
+| nDCG@5 | 61.32% |
 | nDCG@8 | 62.27% |
 | nDCG@16 | 62.86% |
 | Precision@1 | 51.67% |
 | Precision@4 | 32.08% |
+| Precision@5 | 30.25% |
 | Precision@8 | 26.11% |
 | Precision@16 | 24.25% |
 | Average current-turn selection | 7.15 capabilities |

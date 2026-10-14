@@ -12,6 +12,8 @@ from brown_octopus import Octopus
 from evals.datasets.internal import load_tasks
 from evals.retrieval.metrics import ranked_metrics
 
+BENCHMARK_KS = (1, 4, 5, 8, 16)
+
 
 def _turns(tasks: list[dict], limit: int | None):
     count = 0
@@ -72,6 +74,7 @@ async def run(args) -> dict:
             result.retrieved_tools,
             required=turn.get("required_tools", []),
             supporting=turn.get("supporting_tools", []),
+            ks=BENCHMARK_KS,
         )
         active = ranked_metrics(
             result.tools,
@@ -96,6 +99,7 @@ async def run(args) -> dict:
                 candidate_ranked,
                 required=turn.get("required_tools", []),
                 supporting=turn.get("supporting_tools", []),
+                ks=BENCHMARK_KS,
             ),
             "candidate_ranked_tool_ids": candidate_ranked,
             "retrieval_diagnostics": diagnostics,
@@ -121,15 +125,15 @@ async def run(args) -> dict:
         "selection_strategy": rows[0].get("selection_strategy") if rows else None,
         "current_turn": {
             f"recall_at_{k}": average(("current_turn", f"recall_at_{k}"))
-            for k in (1, 4, 8, 16)
+            for k in BENCHMARK_KS
         },
         "current_turn_precision": {
             f"precision_at_{k}": average(("current_turn", f"precision_at_{k}"))
-            for k in (1, 4, 8, 16)
+            for k in BENCHMARK_KS
         },
         "current_turn_ndcg": {
             f"ndcg_at_{k}": average(("current_turn", f"ndcg_at_{k}"))
-            for k in (1, 4, 8, 16)
+            for k in BENCHMARK_KS
         },
         "current_turn_average_k": average(("current_turn", "retrieved_count")),
         "active_context_average_k": average(("active_context", "retrieved_count")),
@@ -138,15 +142,15 @@ async def run(args) -> dict:
         "candidate_recall": average(("coverage", "candidate_recall")),
         "candidate_ranked": {
             f"recall_at_{k}": average(("candidate_metrics", f"recall_at_{k}"))
-            for k in (1, 4, 8, 16)
+            for k in BENCHMARK_KS
         },
         "candidate_ranked_precision": {
             f"precision_at_{k}": average(("candidate_metrics", f"precision_at_{k}"))
-            for k in (1, 4, 8, 16)
+            for k in BENCHMARK_KS
         },
         "candidate_ranked_ndcg": {
             f"ndcg_at_{k}": average(("candidate_metrics", f"ndcg_at_{k}"))
-            for k in (1, 4, 8, 16)
+            for k in BENCHMARK_KS
         },
         "turns_with_candidate_coverage_failure": sum(
             bool(row["coverage"]["missing_from_candidates"])
