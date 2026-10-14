@@ -1,5 +1,8 @@
 # Brown Octopus
 
+Brown Octopus `0.6.0` adds measurable indexing and retrieval diagnostics while
+keeping the production retrieval strategy backward-compatible.
+
 Brown Octopus manages the capability context exposed to an AI agent.
 
 Given a user request, it identifies relevant capabilities, retrieves a bounded
@@ -307,6 +310,14 @@ result.turn             current session turn
 result.metadata         timing and pipeline metadata
 ```
 
+`result.metadata["timing_ms"]` reports analysis, candidate retrieval,
+selection, active-context update, and total time. The
+`result.metadata["retrieval_metrics"]` object reports query characters,
+retrieval-text characters, candidate count, selected-tool count, and the
+serialized character size of the retrieved and active contexts. These are
+diagnostic measurements; Brown Octopus does not claim to measure the host
+LLM's task outcome.
+
 The simpler method is also available:
 
 ```python
@@ -462,6 +473,59 @@ The same values can be configured through environment variables:
 OCTOPUS_CAPABILITY_TTL=3
 OCTOPUS_ACTIVE_CAP=20
 ```
+
+## Indexing reports and background jobs
+
+Index mutations return a `CapabilityUpdateReport`. Use it when an API needs to
+show whether work completed, whether sources failed, and how much embedding
+work was performed:
+
+```python
+report = await index.add(McpServerSource("https://example.com/maps/mcp"))
+payload = report.to_dict(include_metrics=True)
+```
+
+The metrics include discovery time, embedding time, total operation time, and
+`embedded_count`. Unchanged capabilities are not re-embedded during an
+incremental add or update. A failed update preserves the last successfully
+published snapshot.
+
+For a web service that should not hold a request open during discovery or
+embedding, use the per-index queue:
+
+```python
+job = index.submit_add(McpServerSource("https://example.com/maps/mcp"))
+await job.wait()
+if job.status != "completed":
+    raise RuntimeError(job.snapshot()["error"])
+report = job.result()
+```
+
+Only one job runs per index. Pending additions are coalesced by default. The
+queue is process-local; multi-worker coordination remains the host's
+responsibility. The direct `await index.add(...)`, `await index.update()`, and
+`await index.create()` APIs remain backward-compatible.
+
+## Measuring retrieval
+
+The repository includes separate synthetic and real-runtime benchmarks:
+
+```bash
+uv run python scripts/benchmark_retrieval.py --sizes 10 100 1000 10000 --json
+uv run python -m scripts.benchmark_real_retrieval --limit 20
+```
+
+The synthetic benchmark isolates pipeline scaling. The real-runtime benchmark
+loads the configured analyzer, embedding provider, and persisted index. It
+reports stage timings, payload characters, active tool count, provider/device,
+backend, and Python peak memory. Run model setup separately; the benchmark
+does not download models or contact MCP servers.
+
+The complete benchmark guide is in
+[`docs/benchmarking.md`](docs/benchmarking.md). Dynamic score-gap clustering
+is currently an evaluation policy only. The production Min-4 + Bounded Max
+Gap selector remains unchanged until a reviewed relevance evaluation shows a
+clear improvement.
 
 ## Architecture boundary
 

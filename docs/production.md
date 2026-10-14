@@ -1,6 +1,6 @@
 # Brown Octopus production guide
 
-This document is the detailed integration reference for Brown Octopus 0.5. It
+This document is the detailed integration reference for Brown Octopus 0.6. It
 covers index lifecycle, capability sources, runtime retrieval, sessions,
 embedding providers, local and database-backed index storage, diagnostics, and
 the host/application boundary.
@@ -221,6 +221,30 @@ the new safe timing and embedding counters can use
 `report.to_dict(include_metrics=True)`. Prompts and authentication headers are
 not included.
 
+### Retrieval diagnostics
+
+`retrieve_result()` returns diagnostics in `result.metadata`:
+
+```python
+result = octopus.retrieve_result(
+    "Find the latest sprint work items",
+    session_id="diagnostics-example",
+)
+
+print(result.metadata["timing_ms"])
+print(result.metadata["retrieval_metrics"])
+```
+
+The timing object contains `analysis`, `retrieval`, `selection`,
+`context_update`, and `total` milliseconds. Retrieval metrics contain query
+and retrieval-text character counts, intent count, candidate count, current
+turn selection count, active-context count, and serialized character counts.
+Character counts are deliberately model-independent. If the host needs exact
+model-token accounting, it should apply its own tokenizer to `result.tools`.
+
+These metrics measure Brown Octopus' context-delivery work, not downstream
+agent success. The host owns the LLM call, tool execution, and task outcome.
+
 For a local indexing baseline that does not load models or contact MCP servers,
 run:
 
@@ -245,6 +269,12 @@ when available. It fails clearly if the requested model is not already cached.
 It contains no MCP headers, credentials, or full tool definitions. A host API
 should return this object instead of a generic “success” message so callers
 can distinguish a successful no-op from a mutation or partial discovery.
+
+For retrieval-quality and context-cost evaluation, use the reviewed task set
+and benchmark commands described in
+[`docs/benchmarking.md`](benchmarking.md). The repository keeps the current
+production selector as the baseline while experimental policies are compared
+offline.
 
 ### Background indexing jobs
 
