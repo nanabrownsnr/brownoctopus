@@ -174,3 +174,30 @@ async def test_close_cancels_pending_jobs_and_drains_active_result(tmp_path):
     assert pending.status == "cancelled"
     await active.wait()
     assert active.status == "completed"
+
+
+@pytest.mark.anyio
+async def test_background_job_does_not_block_host_event_loop(tmp_path):
+    index = OctopusIndex(index_path=tmp_path / "index")
+    started = threading.Event()
+    release = threading.Event()
+    ticks = 0
+
+    async def fake_update():
+        started.set()
+        await asyncio.to_thread(release.wait)
+        return "updated"
+
+    index.update = fake_update
+    job = index.submit_update()
+    assert await asyncio.to_thread(started.wait, 2)
+
+    for _ in range(5):
+        ticks += 1
+        await asyncio.sleep(0)
+
+    release.set()
+    await job.wait()
+    assert ticks == 5
+    assert job.status == "completed"
+    await index.close()

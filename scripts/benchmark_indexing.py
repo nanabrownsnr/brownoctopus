@@ -79,6 +79,21 @@ def _cuda_memory() -> dict[str, int] | None:
     }
 
 
+def _snapshot_bytes(path: Path) -> int:
+    return sum(item.stat().st_size for item in path.rglob("*") if item.is_file())
+
+
+async def _timed(operation, index_path: Path):
+    tracemalloc.start()
+    tracemalloc.reset_peak()
+    started = time.perf_counter()
+    report = await operation()
+    wall_ms = (time.perf_counter() - started) * 1000
+    _, peak_python_bytes = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+    return report, wall_ms, peak_python_bytes, _snapshot_bytes(index_path)
+
+
 def _run_real_embedding(size: int, model: str, device: str, batch_size: int) -> dict:
     """Measure real local embedding only; never downloads a model implicitly."""
     from brown_octopus.embedding import LocalEmbeddingProvider
@@ -118,26 +133,52 @@ def _run_real_embedding(size: int, model: str, device: str, batch_size: int) -> 
 
 async def _run_size(size: int) -> dict:
     with tempfile.TemporaryDirectory(prefix="brown-octopus-benchmark-") as directory:
+        index_path = Path(directory) / "index"
         base_source = SyntheticSource("base", _tools("base", size))
         index = OctopusIndex(
             sources=[base_source],
-            index_path=Path(directory) / "index",
+            index_path=index_path,
             embedding_provider=SyntheticEmbeddingProvider(),
         )
         index._octopus._build_pipeline = lambda: None
 
-        create_started = time.perf_counter()
-        create_report = await index.create(replace=True)
-        create_wall_ms = (time.perf_counter() - create_started) * 1000
-
-        update_started = time.perf_counter()
-        unchanged_report = await index.update()
-        unchanged_wall_ms = (time.perf_counter() - update_started) * 1000
+        create_report, create_wall_ms, create_memory, create_snapshot = await _timed(
+            lambda: index.create(replace=True), index_path
+        )
+        unchanged_report, unchanged_wall_ms, unchanged_memory, unchanged_snapshot = (
+            await _timed(index.update, index_path)
+        )
 
         added_source = SyntheticSource("added", _tools("added", 1))
-        add_started = time.perf_counter()
-        add_report = await index.add(added_source)
-        add_wall_ms = (time.perf_counter() - add_started) * 1000
+        add_report, add_wall_ms, add_memory, add_snapshot = await _timed(
+            lambda: index.add(added_source), index_path
+        )
+
+        changes = {}
+        for percentage in (1, 10, 100):
+            changed_count = max(1, (size * percentage) // 100)
+            changed_tools = _tools("changed", changed_count)
+            # Keep the original capability IDs so this measures changed rows,
+            # rather than an append-only add.
+            for index_number, tool in enumerate(changed_tools):
+                tool["capability_id"] = f"base-tool-{index_number}"
+                tool["source_id"] = "base"
+                tool["name"] = f"tool_{index_number}"
+            base_source.tools = list(base_source.tools)
+            for tool in changed_tools:
+                base_source.tools[int(tool["capability_id"].rsplit("-", 1)[1])][
+                    "description"
+                ] += f" changed-{percentage}"
+            report, wall_ms, memory, snapshot = await _timed(index.update, index_path)
+            changes[f"{percentage}%"] = {
+                "wall_ms": round(wall_ms, 3),
+                "report_ms": round(report.duration_ms or 0, 3),
+                "embedded_count": report.embedded_count,
+                "changed_count": report.changed_count,
+                "tool_count": report.tool_count,
+                "python_peak_bytes": memory,
+                "snapshot_bytes": snapshot,
+            }
 
         await index.close()
         return {
@@ -147,12 +188,16 @@ async def _run_size(size: int) -> dict:
                 "report_ms": round(create_report.duration_ms or 0, 3),
                 "embedded_count": create_report.embedded_count,
                 "tool_count": create_report.tool_count,
+                "python_peak_bytes": create_memory,
+                "snapshot_bytes": create_snapshot,
             },
             "unchanged_update": {
                 "wall_ms": round(unchanged_wall_ms, 3),
                 "report_ms": round(unchanged_report.duration_ms or 0, 3),
                 "embedded_count": unchanged_report.embedded_count,
                 "tool_count": unchanged_report.tool_count,
+                "python_peak_bytes": unchanged_memory,
+                "snapshot_bytes": unchanged_snapshot,
             },
             "incremental_add": {
                 "wall_ms": round(add_wall_ms, 3),
@@ -160,7 +205,10 @@ async def _run_size(size: int) -> dict:
                 "embedded_count": add_report.embedded_count,
                 "added_count": add_report.added_count,
                 "tool_count": add_report.tool_count,
+                "python_peak_bytes": add_memory,
+                "snapshot_bytes": add_snapshot,
             },
+            "changes": changes,
         }
 
 

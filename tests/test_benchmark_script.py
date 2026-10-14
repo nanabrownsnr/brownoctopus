@@ -25,3 +25,8 @@ def test_indexing_benchmark_script_reports_incremental_work():
     assert result["unchanged_update"]["embedded_count"] == 0
     assert result["incremental_add"]["embedded_count"] == 1
     assert result["incremental_add"]["added_count"] == 1
+    assert result["changes"]["1%"]["embedded_count"] == 1
+    assert result["changes"]["10%"]["embedded_count"] == 1
+    assert result["changes"]["100%"]["embedded_count"] == 3
+    assert result["create"]["snapshot_bytes"] > 0
+    assert result["create"]["python_peak_bytes"] > 0
