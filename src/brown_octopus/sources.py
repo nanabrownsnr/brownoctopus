@@ -20,6 +20,48 @@ class CapabilityUpdateReport:
     failed_sources: dict[str, str]
     tool_count: int
     authoritative: bool = True
+    operation: str = "update"
+    completed: bool = True
+
+    @property
+    def added_count(self) -> int:
+        return len(self.added)
+
+    @property
+    def changed_count(self) -> int:
+        return len(self.changed)
+
+    @property
+    def removed_count(self) -> int:
+        return len(self.removed)
+
+    @property
+    def failed_source_count(self) -> int:
+        return len(self.failed_sources)
+
+    def to_dict(self) -> dict[str, Any]:
+        """Return a safe, JSON-compatible representation of the outcome.
+
+        Reports contain capability IDs and source error messages only. Source
+        authentication headers and discovered tool payloads are never part of
+        this representation.
+        """
+        return {
+            "operation": self.operation,
+            "completed": self.completed,
+            "authoritative": self.authoritative,
+            "added": list(self.added),
+            "changed": list(self.changed),
+            "removed": list(self.removed),
+            "failed_sources": dict(self.failed_sources),
+            "tool_count": self.tool_count,
+            "counts": {
+                "added": self.added_count,
+                "changed": self.changed_count,
+                "removed": self.removed_count,
+                "failed_sources": self.failed_source_count,
+            },
+        }
 
 
 class LocalMcpCatalogSource:
@@ -402,7 +444,6 @@ class CompositeCapabilitySource:
 
     def __init__(self, sources: Sequence[CapabilitySource] = ()) -> None:
         self.sources = list(sources)
-        self.suppressed_capabilities: set[str] = set()
 
     async def discover(self) -> CapabilityDiscoveryResult:
         combined = CapabilityDiscoveryResult()
@@ -417,12 +458,6 @@ class CompositeCapabilitySource:
                 combined.authoritative and discovered.authoritative
             )
 
-        combined.tools = [
-            tool
-            for tool in combined.tools
-            if str(tool.get("capability_id") or tool.get("id") or tool.get("name"))
-            not in self.suppressed_capabilities
-        ]
         if combined.failed_sources:
             combined.authoritative = False
         return combined

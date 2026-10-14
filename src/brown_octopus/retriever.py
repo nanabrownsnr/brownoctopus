@@ -1,4 +1,5 @@
 from collections.abc import Iterable
+import os
 from typing import Any, TYPE_CHECKING
 
 from brown_octopus.analyzer import analyze_intents
@@ -152,7 +153,10 @@ def initialize_retriever(provider: EmbeddingProvider | None = None) -> None:
     if model is None:
         provider = LocalEmbeddingProvider(
             model_name=MODEL_NAME,
-            device=detect_compute_device(),
+            device=(
+                os.getenv("OCTOPUS_EMBEDDING_DEVICE")
+                or detect_compute_device()
+            ),
         )
         provider.initialize()
         embedding_provider = provider

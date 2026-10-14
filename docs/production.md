@@ -119,6 +119,7 @@ async def main() -> None:
     )
     report = await index.create()
     print(f"Indexed {report.tool_count} capabilities")
+    print(report.to_dict())
 
 
 if __name__ == "__main__":
@@ -186,6 +187,36 @@ await index.add(
 )
 ```
 
+### Indexing reports
+
+`create()`, `update()`, `add()`, and `remove_source()` return a
+`CapabilityUpdateReport`. These operations are synchronous from the library
+caller’s perspective: when the method returns, `completed` is `True` and the
+snapshot has either been published or an exception has been raised. The report
+does not represent a background job.
+
+The report exposes both typed fields and a JSON-safe representation:
+
+```python
+report = await index.add(McpServerSource("https://example.com/maps/mcp"))
+
+print(report.operation)          # "add"
+print(report.completed)          # True
+print(report.added)              # capability IDs newly indexed
+print(report.changed)            # capability IDs replaced
+print(report.removed)            # capability IDs removed
+print(report.failed_sources)     # source -> discovery error
+print(report.tool_count)         # resulting snapshot size
+print(report.authoritative)      # complete source view for update(), when true
+
+http_response_body = report.to_dict()
+```
+
+`to_dict()` includes `counts` for added, changed, removed, and failed sources.
+It contains no MCP headers, credentials, or full tool definitions. A host API
+should return this object instead of a generic “success” message so callers
+can distinguish a successful no-op from a mutation or partial discovery.
+
 For a new index, establish the snapshot first:
 
 ```python
@@ -241,15 +272,24 @@ await index.create(replace=True)      deliberately replace snapshot
 await index.update()                  synchronize configured sources
 await index.add(source)               incrementally add to an existing index
 await index.add(source_a, source_b)  batch incremental additions
-await index.remove_source(source_id) remove a configured source
+await index.remove_source(source_id) incrementally remove a source by ID or URL
 index.runtime()                       return the Octopus runtime
 index.octopus                         compatibility alias for runtime()
 index.reset()                         delete persisted index state
 ```
 
-`remove_capability(capability_id)` remains temporarily for compatibility but
-is deprecated. Prefer changing the authoritative source or removing the
-source; local suppression can be undone by a later authoritative update.
+For a normal ``McpServerSource``, ``source_id`` defaults to the MCP URL, so the
+following removes all capabilities belonging to that MCP without rediscovering
+the remaining sources:
+
+```python
+report = await index.remove_source("https://example.com/word/mcp")
+print(report.removed)
+```
+
+Removal also works when the index was reopened with no source objects. Registry
+records that use explicit server IDs should be removed using that persisted
+source ID.
 
 ### Add and remove sources
 
@@ -266,11 +306,10 @@ await index.add(
 await index.remove_source("word")
 ```
 
-`remove_source()` removes a source configured on the current `OctopusIndex`
-instance. After a process restart, recreate source objects if the host needs
-to run a full `update()` or remove a source by source ID. Credentials and
-source configuration are not stored in the index snapshot. Runtime loading and
-incremental `add()` still use the existing persisted snapshot safely.
+`remove_source()` changes only the persisted snapshot and the current runtime
+state. It does not call MCP discovery or require source objects to be
+recreated. Credentials and source configuration are not stored in the index
+snapshot. Use `update()` when you want to reconcile all configured sources.
 
 ## 5. Capability source contract
 
@@ -636,6 +675,30 @@ await octopus.initialize()
 The provider uses the best device visible to the installed PyTorch build:
 CUDA, Apple MPS, Intel XPU, or CPU. CPU-only PyTorch cannot use a GPU.
 
+Indexing uses a conservative default batch size of 8 and truncates model input
+to 512 tokens. This keeps one unusually long capability description from
+consuming the whole GPU. `add()` embeds only new or changed capabilities, and
+`update()` reuses unchanged embedding rows when the existing snapshot was
+built with the same provider. Use `create(replace=True)` when a deliberate
+full rebuild is required.
+
+For a small GPU, reduce the batch size or force CPU mode:
+
+```text
+OCTOPUS_EMBEDDING_DEVICE=cuda:1
+OCTOPUS_EMBEDDING_BATCH_SIZE=2
+OCTOPUS_EMBEDDING_MAX_SEQ_LENGTH=384
+OCTOPUS_EMBEDDING_FALLBACK_CPU=1
+```
+
+`OCTOPUS_EMBEDDING_DEVICE` may be `cpu`, `cuda`, `cuda:N`, `mps`, or `xpu`.
+If several GPUs are visible, prefer `CUDA_VISIBLE_DEVICES=N` to isolate one
+physical GPU; inside the container that GPU is then addressed as `cuda:0`.
+With fallback enabled, a CUDA out-of-memory failure moves the local embedding
+model to CPU and retries with batch size 1. This preserves the previous
+snapshot if indexing still fails, but can be slower than selecting a smaller
+batch size up front.
+
 Use another local model:
 
 ```python
@@ -700,6 +763,10 @@ OCTOPUS_INDEX_PATH             default runtime index path
 OCTOPUS_CATALOG_PATH          default MCP catalog path
 OCTOPUS_CAPABILITY_TTL        active capability TTL; default 8
 OCTOPUS_ACTIVE_CAP             active capability cap; default 30
+OCTOPUS_EMBEDDING_DEVICE       embedding device; auto-detected by default
+OCTOPUS_EMBEDDING_BATCH_SIZE   local embedding batch size; default 8
+OCTOPUS_EMBEDDING_MAX_SEQ_LENGTH local input limit; default 512 tokens
+OCTOPUS_EMBEDDING_FALLBACK_CPU retry CUDA OOM on CPU; default 1
 OCTOPUS_LOG_LEVEL              Python logging level
 ```
 

@@ -2,7 +2,7 @@
 
 from pathlib import Path
 from collections.abc import Sequence
-import warnings
+from dataclasses import replace as dataclass_replace
 
 from brown_octopus.contracts import CapabilitySource
 from brown_octopus.embedding import EmbeddingProvider
@@ -166,12 +166,16 @@ class OctopusIndex:
                 failed_sources={},
                 tool_count=len(tools),
                 authoritative=True,
+                operation="create",
             )
-        return await self.update()
+        return dataclass_replace(await self.update(), operation="create")
 
     async def update(self):
         """Synchronize all configured sources with the persisted index."""
-        return await self._octopus.update()
+        return dataclass_replace(
+            await self._octopus.update(),
+            operation="update",
+        )
 
     async def add(
         self,
@@ -203,50 +207,38 @@ class OctopusIndex:
                 existing_ids.add(source_id)
         self._sync_sources()
         try:
-            return await self._octopus.add_sources(sources)
+            return dataclass_replace(
+                await self._octopus.add_sources(sources),
+                operation="add",
+            )
         except Exception:
             self.sources[:] = original
             self._sync_sources()
             raise
 
     async def remove_source(self, source_id: str):
-        """Remove a configured source and synchronize the remaining sources."""
+        """Incrementally remove one source from the persisted snapshot.
+
+        The source may be identified by its explicit source ID or MCP URL.
+        This works even when the index was reopened without source objects.
+        """
         original = list(self.sources)
         remaining = [
             source
             for source in self.sources
             if getattr(source, "source_id", None) != source_id
+            and getattr(source, "url", None) != source_id
         ]
-        if len(remaining) == len(original):
-            raise ValueError(f"No configured source has ID '{source_id}'.")
         self.sources[:] = remaining
         self._sync_sources()
         try:
-            return await self.update()
+            return dataclass_replace(
+                await self._octopus.remove_source(source_id),
+                operation="remove_source",
+            )
         except Exception:
             self.sources[:] = original
             self._sync_sources()
-            raise
-
-    async def remove_capability(self, capability_id: str):
-        """Suppress one capability from future snapshots from these sources.
-
-        .. deprecated::
-           Prefer :meth:`remove_source` or update the authoritative source.
-           This method remains temporarily for compatibility with existing
-           applications.
-        """
-        warnings.warn(
-            "OctopusIndex.remove_capability() is deprecated; use "
-            "remove_source() or update the authoritative CapabilitySource.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        self.source.suppressed_capabilities.add(capability_id)
-        try:
-            return await self.update()
-        except Exception:
-            self.source.suppressed_capabilities.discard(capability_id)
             raise
 
     def runtime(
@@ -278,4 +270,3 @@ class OctopusIndex:
         retrieval can be initialized again.
         """
         self._octopus.reset_index()
-        self.source.suppressed_capabilities.clear()

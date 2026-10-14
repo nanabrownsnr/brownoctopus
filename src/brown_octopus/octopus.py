@@ -581,7 +581,82 @@ class Octopus:
                 initialize_retriever(self.embedding_provider)
             discovered = await self._discover_snapshot()
             tools, report = self._merge_snapshot_tools(discovered)
-            if tools:
+            active_provider = (
+                self.embedding_provider
+                or get_embedding_provider()
+                or LocalEmbeddingProvider(model_name=MODEL_NAME)
+            )
+
+            # A normal update is a synchronization operation, not necessarily
+            # a request to re-embed the complete universe. Reuse rows whose
+            # capability signature is unchanged when the prior snapshot was
+            # built with the same provider. Explicit replacement remains the
+            # way to force a complete rebuild.
+            previous_tools: list[dict] = []
+            previous_embeddings = None
+            previous_metadata: dict = {}
+            try:
+                if self.index_store.exists():
+                    previous_tools = self.index_store.load_tools()
+                    previous_embeddings = self.index_store.load_embeddings()
+                    previous_metadata = self.index_store.load_metadata()
+            except Exception:
+                # A missing or incomplete prior snapshot must not prevent a
+                # normal update; the full-build path below will surface any
+                # actual incompatibility.
+                previous_tools = []
+                previous_embeddings = None
+                previous_metadata = {}
+
+            provider_metadata = {
+                "type": type(active_provider).__name__,
+                "model_id": active_provider.model_id,
+                "dimension": getattr(active_provider, "dimension", None),
+            }
+            indexed_provider = previous_metadata.get("embedding_provider", {})
+            provider_matches = all(
+                indexed_provider.get(key) == value
+                for key, value in (provider_metadata.items())
+                if value is not None and indexed_provider.get(key) is not None
+            ) and bool(indexed_provider)
+
+            can_reuse = (
+                bool(previous_tools)
+                and previous_embeddings is not None
+                and provider_matches
+                and len(self._rows(previous_embeddings)) == len(previous_tools)
+            )
+            if tools and can_reuse:
+                previous_by_id = {
+                    capability_id(tool): tool for tool in previous_tools
+                }
+                changed_ids = set(report.added) | set(report.changed)
+                to_embed = [
+                    tool
+                    for tool in tools
+                    if capability_id(tool) in changed_ids
+                ]
+                if to_embed:
+                    if self.embedding_provider is None:
+                        encoded = build_embeddings(to_embed)
+                    else:
+                        encoded = build_embeddings(
+                            to_embed,
+                            embedding_provider=self.embedding_provider,
+                        )
+                    replacement_embeddings = {
+                        capability_id(tool): row
+                        for tool, row in zip(to_embed, self._rows(encoded))
+                    }
+                else:
+                    replacement_embeddings = {}
+                embeddings = self._merge_incremental_embeddings(
+                    previous_tools,
+                    previous_embeddings,
+                    tools,
+                    replacement_embeddings,
+                )
+            elif tools:
                 if self.embedding_provider is None:
                     embeddings = build_embeddings(tools)
                 else:
@@ -591,11 +666,7 @@ class Octopus:
                     )
             else:
                 embeddings = None
-            active_provider = (
-                self.embedding_provider
-                or get_embedding_provider()
-                or LocalEmbeddingProvider(model_name=MODEL_NAME)
-            )
+
             metadata = {
                 "version": 1,
                 "index_format_version": 1,
@@ -605,9 +676,7 @@ class Octopus:
                 "created_at": datetime.now(timezone.utc).isoformat(),
                 "tool_universe_fingerprint": self._tool_universe_fingerprint(tools),
                 "embedding_provider": {
-                    "type": type(active_provider).__name__,
-                    "model_id": active_provider.model_id,
-                    "dimension": getattr(active_provider, "dimension", None),
+                    **provider_metadata,
                 },
             }
             # Preserve the historical module-level seam used by integrations
@@ -712,6 +781,7 @@ class Octopus:
                 failed_sources={},
                 tool_count=len(tools),
                 authoritative=True,
+                operation="add",
             )
 
         try:
@@ -835,6 +905,103 @@ class Octopus:
             )
             self._build_pipeline()
         return report
+
+    async def remove_source(self, source_id: str) -> CapabilityUpdateReport:
+        """Incrementally remove capabilities belonging to one source.
+
+        ``source_id`` may be the source's explicit ID or its MCP URL. The
+        operation filters the current persisted snapshot and does not
+        rediscover any other source.
+        """
+        if not self.index_store.exists():
+            raise MissingIndexError(
+                "Cannot remove capabilities before an index exists."
+            )
+
+        try:
+            previous_tools = self.index_store.load_tools()
+            previous_embeddings = self.index_store.load_embeddings()
+            source_key = str(source_id)
+            kept_tools = [
+                tool
+                for tool in previous_tools
+                if source_key
+                not in {
+                    str(tool.get("source_id")) if tool.get("source_id") else None,
+                    str(tool.get("mcp_url")) if tool.get("mcp_url") else None,
+                }
+            ]
+            kept_ids = {capability_id(tool) for tool in kept_tools}
+            removed = [
+                capability_id(tool)
+                for tool in previous_tools
+                if capability_id(tool) not in kept_ids
+            ]
+
+            if not removed:
+                return CapabilityUpdateReport(
+                    added=[],
+                    changed=[],
+                    removed=[],
+                    failed_sources={},
+                    tool_count=len(previous_tools),
+                    authoritative=True,
+                    operation="remove_source",
+                )
+
+            embeddings = self._merge_incremental_embeddings(
+                previous_tools,
+                previous_embeddings,
+                kept_tools,
+                {},
+            )
+            metadata = dict(self.index_store.load_metadata())
+            metadata["tool_count"] = len(kept_tools)
+            metadata["created_at"] = datetime.now(timezone.utc).isoformat()
+            metadata["tool_universe_fingerprint"] = (
+                self._tool_universe_fingerprint(kept_tools)
+            )
+            if isinstance(self.index_store, LocalIndexStore):
+                save_snapshot_atomic(
+                    self.index_path,
+                    kept_tools,
+                    embeddings,
+                    metadata,
+                )
+            else:
+                self.index_store.save_snapshot_atomic(
+                    kept_tools,
+                    embeddings,
+                    metadata,
+                )
+        except (MissingIndexError, CapabilityUpdateError):
+            raise
+        except Exception as exc:
+            raise CapabilityUpdateError(
+                "Brown Octopus could not remove capabilities. "
+                "The existing in-memory and persisted snapshot was preserved."
+            ) from exc
+
+        with self._snapshot_lock.write():
+            set_tools(kept_tools)
+            load_index(
+                tools=kept_tools,
+                embeddings=(
+                    None
+                    if getattr(self.index_store, "supports_native_vector_search", False)
+                    else embeddings
+                ),
+            )
+            self._build_pipeline()
+        return CapabilityUpdateReport(
+            added=[],
+            changed=[],
+            removed=sorted(removed),
+            failed_sources={},
+            tool_count=len(kept_tools),
+            authoritative=True,
+            operation="remove_source",
+        )
 
     def reset_index(self) -> None:
         """Remove this engine's persisted capability index.

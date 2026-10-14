@@ -39,9 +39,52 @@ def test_local_provider_preserves_default_qwen_model_and_encoding_contract(monke
     assert calls["init_kwargs"]["local_files_only"] is True
     assert calls["init_kwargs"]["device"] == "cpu"
     assert calls["kwargs"] == {
+        "batch_size": 8,
+        "show_progress_bar": False,
         "convert_to_tensor": True,
         "normalize_embeddings": True,
     }
+
+
+def test_local_provider_reads_embedding_resource_controls_from_environment(
+    monkeypatch,
+):
+    monkeypatch.setenv("OCTOPUS_EMBEDDING_BATCH_SIZE", "3")
+    monkeypatch.setenv("OCTOPUS_EMBEDDING_MAX_SEQ_LENGTH", "256")
+    monkeypatch.setenv("OCTOPUS_EMBEDDING_DEVICE", "cuda:1")
+
+    provider = LocalEmbeddingProvider()
+
+    assert provider.batch_size == 3
+    assert provider.max_seq_length == 256
+    assert provider.device is None
+
+
+def test_local_provider_retries_on_cuda_oom_on_cpu(monkeypatch):
+    calls = []
+
+    class FakeModel:
+        max_seq_length = None
+
+        def encode(self, texts, **kwargs):
+            calls.append((texts, kwargs.copy()))
+            if len(calls) == 1:
+                raise RuntimeError("CUDA out of memory")
+            return "cpu-embeddings"
+
+        def to(self, device):
+            calls.append(("to", device))
+
+    provider = LocalEmbeddingProvider(device="cuda", batch_size=4)
+    provider.model = FakeModel()
+
+    # The fallback only needs to identify the error and move the model. The
+    # real torch CUDA cache is not involved in this unit test.
+    monkeypatch.setattr(provider, "_move_to_cpu_after_oom", lambda: setattr(provider, "device", "cpu"))
+
+    assert provider.embed(["long tool description"]) == "cpu-embeddings"
+    assert calls[1][1]["batch_size"] == 1
+    assert provider.device == "cpu"
 
 
 def test_local_provider_reuses_loaded_model(monkeypatch):

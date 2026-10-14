@@ -94,6 +94,7 @@ async def main() -> None:
     )
     report = await index.create()
     print(f"Indexed {report.tool_count} capabilities")
+    print(report.to_dict())
 
 
 if __name__ == "__main__":
@@ -110,6 +111,13 @@ python setup_index.py
 exist. It discovers capabilities, builds embeddings, and validates the
 snapshot atomically. To deliberately rebuild an existing index, use
 `create(replace=True)`. It does not execute MCP tools.
+
+Every index mutation returns a completed `CapabilityUpdateReport`. The report
+is safe to return from an HTTP handler with `report.to_dict()` and includes the
+operation (`create`, `update`, `add`, or `remove_source`), capability IDs that
+were added/changed/removed, failed sources, the resulting tool count, and
+summary counts. `authoritative=False` means a failed source prevented the
+operation from being a complete view of the configured source universe.
 
 ### 3. Start the runtime
 
@@ -151,7 +159,7 @@ host decides how to bind and execute the definitions.
 - `update()` synchronizes configured sources;
 - `add(source)` incrementally adds a source to an existing index;
 - `add(source_a, source_b)` batches several incremental additions;
-- `remove_source(source_id)` removes a configured source and synchronizes;
+- `remove_source(source_id)` incrementally removes a source from the snapshot;
 - `reset()` removes the persisted index;
 - `runtime()` returns the runtime facade.
 
@@ -186,10 +194,18 @@ After changing a configured source:
 
 ```python
 report = await index.update()
+print(report.operation, report.completed, report.tool_count)
 print(report.added)
 print(report.changed)
 print(report.removed)
 print(report.failed_sources)
+```
+
+For a JSON response from a host API, return the explicit serialization:
+
+```python
+report = await index.add(source)
+return report.to_dict()
 ```
 
 `update()` is a synchronization operation, not an append-only operation. It
@@ -238,8 +254,10 @@ await index.create()
 await index.add(McpServerSource("https://example.com/word/mcp"))
 ```
 
-`remove_capability()` remains temporarily for older applications but is
-deprecated. Prefer changing the authoritative source or removing the source.
+`remove_source()` accepts an explicit source ID or the MCP URL. For a normal
+`McpServerSource`, the MCP URL is the default source ID. Removal works after
+reopening an index without reconstructing the source object and does not
+rediscover the remaining sources.
 
 ## Retrieval results and filtering
 
@@ -418,6 +436,12 @@ OCTOPUS_ACTIVE_CAP=20
 ```
 
 ## Architecture boundary
+
+The product roadmap is documented in
+[`docs/roadmap.md`](docs/roadmap.md). Phase 1 focuses on measurable
+capability-context selection in the library. The longer-term managed gateway
+would provide policy enforcement, audit, and sensitive-data mediation at
+execution time.
 
 Brown Octopus owns capability discovery adapters, indexing, intent analysis,
 retrieval, selection, active capability context, and capability session state.

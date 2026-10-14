@@ -244,7 +244,6 @@ Test:
 await index.add(source)
 await index.add(source_a, source_b)
 await index.remove_source(source_id)
-await index.remove_capability(capability_id)
 index.reset()
 ```
 

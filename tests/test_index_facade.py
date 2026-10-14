@@ -11,7 +11,7 @@ from brown_octopus import (
     OctopusIndex,
 )
 from brown_octopus.mcp_discovery import make_capability_id
-from brown_octopus.sources import LocalMcpCatalogSource
+from brown_octopus.sources import CapabilityUpdateReport, LocalMcpCatalogSource
 
 
 def test_capability_id_uses_stable_server_id_without_url_hash():
@@ -430,23 +430,41 @@ async def test_index_facade_adds_and_removes_sources(monkeypatch, tmp_path):
         calls.append(
             [getattr(source, "source_id", None) for source in sources]
         )
-        return CapabilityDiscoveryResult()
+        return CapabilityUpdateReport([], [], [], {}, len(calls[-1]))
 
-    async def fake_update():
-        calls.append(
-            [getattr(source, "source_id", None) for source in index.source.sources]
-        )
-        return CapabilityDiscoveryResult()
+    async def fake_remove_source(source_id):
+        calls.append(["remove", source_id])
+        return CapabilityUpdateReport([], [], [], {}, 0)
 
     monkeypatch.setattr(index._octopus, "add_sources", fake_add_sources)
-    monkeypatch.setattr(index._octopus, "update", fake_update)
+    monkeypatch.setattr(index._octopus, "remove_source", fake_remove_source)
     source = McpServerSource("https://example.com/mcp", source_id="crm")
 
     await index.add(source)
     assert calls == [["crm"]]
 
     await index.remove_source("crm")
-    assert calls == [["crm"], []]
+    assert calls == [["crm"], ["remove", "crm"]]
+
+
+@pytest.mark.anyio
+async def test_remove_source_works_after_reopening_without_sources(
+    monkeypatch,
+    tmp_path,
+):
+    index = OctopusIndex(index_path=tmp_path / "index")
+    index._octopus.index_store.exists = lambda: True
+    calls = []
+
+    async def fake_remove_source(source_id):
+        calls.append(source_id)
+        return CapabilityUpdateReport([], [], [], {}, 0)
+
+    monkeypatch.setattr(index._octopus, "remove_source", fake_remove_source)
+
+    await index.remove_source("https://example.com/mcp")
+
+    assert calls == ["https://example.com/mcp"]
 
 
 @pytest.mark.anyio
@@ -460,7 +478,7 @@ async def test_index_facade_add_accepts_multiple_sources_in_one_update(
 
     async def fake_add_sources(sources):
         calls.append([source.source_id for source in sources])
-        return CapabilityDiscoveryResult()
+        return CapabilityUpdateReport([], [], [], {}, len(calls[-1]))
 
     monkeypatch.setattr(index._octopus, "add_sources", fake_add_sources)
 
@@ -471,6 +489,39 @@ async def test_index_facade_add_accepts_multiple_sources_in_one_update(
 
     assert calls == [["a", "b"]]
     assert [source.source_id for source in index.sources] == ["a", "b"]
+
+
+def test_capability_update_report_is_serializable_and_has_counts():
+    report = CapabilityUpdateReport(
+        added=["new"],
+        changed=["changed"],
+        removed=["old"],
+        failed_sources={"crm": "unauthorized"},
+        tool_count=3,
+        authoritative=False,
+        operation="add",
+    )
+
+    assert report.added_count == 1
+    assert report.changed_count == 1
+    assert report.removed_count == 1
+    assert report.failed_source_count == 1
+    assert report.to_dict() == {
+        "operation": "add",
+        "completed": True,
+        "authoritative": False,
+        "added": ["new"],
+        "changed": ["changed"],
+        "removed": ["old"],
+        "failed_sources": {"crm": "unauthorized"},
+        "tool_count": 3,
+        "counts": {
+            "added": 1,
+            "changed": 1,
+            "removed": 1,
+            "failed_sources": 1,
+        },
+    }
 
 
 @pytest.mark.anyio
@@ -499,6 +550,7 @@ async def test_create_does_not_replace_existing_snapshot_by_default(monkeypatch,
     report = await index.create()
 
     assert report.tool_count == 1
+    assert report.operation == "create"
     assert update_calls == []
 
 
@@ -511,11 +563,13 @@ async def test_create_replace_rebuilds_existing_snapshot(monkeypatch, tmp_path):
 
     async def fake_update():
         update_calls.append(True)
-        return "updated"
+        return CapabilityUpdateReport([], [], [], {}, 0)
 
     monkeypatch.setattr(index, "update", fake_update)
 
-    assert await index.create(replace=True) == "updated"
+    report = await index.create(replace=True)
+
+    assert report.operation == "create"
     assert update_calls == [True]
 
 

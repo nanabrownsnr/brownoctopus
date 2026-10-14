@@ -2,6 +2,7 @@
 
 import json
 import os
+import threading
 import urllib.request
 from pathlib import Path
 from typing import Any, Protocol
@@ -39,14 +40,32 @@ class LocalEmbeddingProvider:
         model_path: str | Path | None = None,
         model_id: str | None = None,
         device: str | None = None,
+        batch_size: int | None = None,
+        max_seq_length: int | None = None,
+        fallback_to_cpu: bool | None = None,
     ) -> None:
         if model_path is not None and model_name != MODEL_NAME:
             raise ValueError("Specify either model_name or model_path, not both.")
         self.model_name = str(model_path) if model_path is not None else model_name
         self.model_id = model_id or self.model_name
         self.device = device
+        self.batch_size = batch_size or _env_int("OCTOPUS_EMBEDDING_BATCH_SIZE", 8)
+        self.max_seq_length = max_seq_length or _env_int(
+            "OCTOPUS_EMBEDDING_MAX_SEQ_LENGTH", 512
+        )
+        self.fallback_to_cpu = (
+            fallback_to_cpu
+            if fallback_to_cpu is not None
+            else os.getenv("OCTOPUS_EMBEDDING_FALLBACK_CPU", "1")
+            not in {"0", "false", "no"}
+        )
+        if self.batch_size < 1:
+            raise ValueError("batch_size must be at least 1")
+        if self.max_seq_length < 1:
+            raise ValueError("max_seq_length must be at least 1")
         self.model: Any = None
         self.dimension: int | None = None
+        self._encode_lock = threading.RLock()
 
     def initialize(self) -> None:
         if self.model is not None:
@@ -56,13 +75,22 @@ class LocalEmbeddingProvider:
         try:
             from sentence_transformers import SentenceTransformer
 
-            self.device = self.device or detect_compute_device()
+            self.device = (
+                self.device
+                or os.getenv("OCTOPUS_EMBEDDING_DEVICE")
+                or detect_compute_device()
+            )
             self.model = SentenceTransformer(
                 self.model_name,
                 trust_remote_code=True,
                 local_files_only=not allow_download,
                 device=self.device,
             )
+            # SentenceTransformers truncates inputs to this length during
+            # tokenization. Keeping it bounded prevents one unusually long
+            # tool description from dominating indexing memory.
+            if hasattr(self.model, "max_seq_length"):
+                self.model.max_seq_length = self.max_seq_length
             get_dimension = getattr(self.model, "get_embedding_dimension", None)
             if get_dimension is None:
                 get_dimension = getattr(
@@ -85,15 +113,57 @@ class LocalEmbeddingProvider:
 
     def embed(self, texts: str | list[str]):
         self.initialize()
-        return self.model.encode(
-            texts,
-            convert_to_tensor=True,
-            normalize_embeddings=True,
-        )
+        kwargs = {
+            "batch_size": self.batch_size,
+            "show_progress_bar": False,
+            "convert_to_tensor": True,
+            "normalize_embeddings": True,
+        }
+        with self._encode_lock:
+            try:
+                return self.model.encode(texts, **kwargs)
+            except Exception as exc:
+                if not self._is_cuda_oom(exc) or not self.fallback_to_cpu:
+                    raise
+                self._move_to_cpu_after_oom()
+                retry_kwargs = {**kwargs, "batch_size": 1}
+                return self.model.encode(texts, **retry_kwargs)
+
+    @staticmethod
+    def _is_cuda_oom(exc: Exception) -> bool:
+        try:
+            import torch
+
+            if isinstance(exc, torch.cuda.OutOfMemoryError):
+                return True
+        except Exception:
+            pass
+        return "out of memory" in str(exc).lower() and "cuda" in str(exc).lower()
+
+    def _move_to_cpu_after_oom(self) -> None:
+        try:
+            import torch
+
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except Exception:
+            pass
+        self.model.to("cpu")
+        self.device = "cpu"
 
     def healthcheck(self) -> None:
         self.initialize()
 
+
+def _env_int(name: str, default: int) -> int:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise ValueError(f"{name} must be an integer") from exc
+    return parsed
 
 class HttpEmbeddingProvider:
     """Embedding provider for an OpenAI-compatible HTTP embeddings endpoint."""
