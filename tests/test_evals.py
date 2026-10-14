@@ -17,6 +17,8 @@ from evals.methods.ablation import EvaluationOctopusMethod
 from evals.methods.selection import ranked_score_knee, relative_threshold
 from evals.diagnostic.run import hybrid_cutoff, rank_bucket
 from evals.validation.run import hybrid_selector
+from evals.retrieval.evaluate import aggregate, compare_policies, evaluate_ranking
+from evals.retrieval.policies import fixed_k, gap_cluster_k
 
 
 def test_metrics_keep_required_and_supporting_capabilities_separate():
@@ -184,3 +186,35 @@ def test_validation_hybrid_selector_preserves_max_gap_and_floor(monkeypatch):
     selected, metadata = hybrid_selector(ranked)
     assert len(selected) == 4
     assert metadata["max_gap_cutoff"] == 2
+
+
+def test_gap_cluster_policy_is_bounded_and_exposes_reason():
+    ranking = [
+        {"name": "a", "score": 1.0},
+        {"name": "b", "score": 0.99},
+        {"name": "c", "score": 0.98},
+        {"name": "d", "score": 0.60},
+        {"name": "e", "score": 0.59},
+    ]
+    result = gap_cluster_k(ranking, min_k=2, max_k=4)
+    assert result["k"] == 3
+    assert result["reason"] == "first-gap-cluster-boundary"
+
+
+def test_retrieval_evaluation_reports_recall_and_context_cost():
+    tasks = [{
+        "id": "task-1",
+        "query": "find a",
+        "required_tools": ["a"],
+        "supporting_tools": ["b"],
+        "turns": [{"query": "find a", "required_tools": ["a"], "supporting_tools": ["b"]}],
+    }]
+    rankings = {"find a": [{"name": "a", "score": 1.0}, {"name": "b", "score": 0.9}, {"name": "noise", "score": 0.1}]}
+    rows = evaluate_ranking(tasks, rankings, selector=lambda ranking: fixed_k(ranking, 2), universe_count=3)
+    assert rows[0]["required_recall"] == 1.0
+    assert rows[0]["supporting_recall"] == 1.0
+    assert rows[0]["tool_count"] == 2
+    summary = aggregate(rows)
+    assert summary["complete_required_rate"] == 1.0
+    compared = compare_policies(tasks, rankings, {"fixed": lambda r: fixed_k(r, 1), "cluster": gap_cluster_k}, universe_count=3)
+    assert set(compared) == {"fixed", "cluster"}

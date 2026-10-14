@@ -19,3 +19,6 @@ wheels/
 data/external/tool-retrieval-benchmark/
 data/external/toolret-release/
 data/indexes/toolret_smoke/
+
+# Local benchmark outputs
+artifacts/
