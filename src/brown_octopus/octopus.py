@@ -421,6 +421,7 @@ class Octopus:
                 "retrieved_tools": retrieved_tools,
                 "active_tools": tools,
                 "retrieval_metrics": result.get("retrieval_metrics", {}),
+                "retrieval_diagnostics": result.get("retrieval_diagnostics", {}),
                 "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
                 "tool_representation": "name + description",
             },

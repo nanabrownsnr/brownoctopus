@@ -38,14 +38,30 @@ compound, hidden-dependency, and multi-turn tasks.
 | Average active payload | 7,160.6 characters |
 | Average total retrieval latency | 541.7 ms |
 
+The diagnostic pass also recorded the candidate pool before final selection:
+
+| Candidate-stage metric | Result |
+|---|---:|
+| Required tools present somewhere in candidate pools | 100.00% |
+| Candidate-ranked Recall@8 | 87.50% |
+| Candidate-ranked Recall@16 | 91.67% |
+| Turns with a required tool present but not selected | 12 of 60 |
+
 ## Interpretation
 
 The baseline shows the central trade-off clearly: recall improves as the
-allowed result set grows, while precision falls. Recall gains from K=8 to K=16
-are very small in this run, which makes the 8–16 region the first place to
-investigate a score-gap or clustering-based cutoff. This is a hypothesis, not a
-conclusion: the task set is reviewed but still limited, and the baseline uses
-the current index and model configuration.
+allowed result set grows, while precision falls. The candidate-stage diagnostic
+is more important than the first selected-result table: all required tools
+entered a candidate pool, but 12 turns lost at least one required tool during
+final selection. This makes dynamic K and score-gap analysis a justified next
+experiment. It also means that changing the embedding model is not the first
+intervention to test.
+
+Candidate-ranked Recall@16 reaches 91.67%, while the current selected-result
+Recall@16 is 80.83%. The difference is selection loss, not candidate coverage.
+This does not prove that simply increasing K is correct; it gives us a precise
+target for testing whether a larger or score-aware cutoff recovers those tools
+without making payload size and precision unacceptable.
 
 The next selector experiment should use exactly these same 60 turns and the
 same retrieved rankings. It should report required recall, complete-required

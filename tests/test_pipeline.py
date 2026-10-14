@@ -184,6 +184,9 @@ def test_capability_pipeline_reports_retrieval_metrics():
     assert metrics["retrieved_tool_count"] == 2
     assert metrics["active_tool_count"] == 2
     assert metrics["active_tool_characters"] > 0
+    diagnostics = result["retrieval_diagnostics"]["per_intent"][0]
+    assert diagnostics["candidate_tool_ids"] == [tool["name"] for tool in TEST_TOOLS]
+    assert diagnostics["selected_tool_ids"] == [tool["name"] for tool in TEST_TOOLS[:2]]
     assert {"analysis", "retrieval", "selection", "context_update", "total"} <= set(
         result["timing_ms"]
     )

@@ -78,6 +78,10 @@ class CapabilityPipeline:
                 "intent": intent,
                 "candidate_count": len(candidates),
                 "selected_count": len(chosen),
+                # Keep diagnostic identifiers small and stable.  Full tool
+                # payloads remain available through the normal result fields.
+                "candidate_tool_ids": [tool.get("name") for tool in candidates],
+                "selected_tool_ids": [tool.get("name") for tool in chosen],
                 "retrieval_ms": retrieval_ms,
                 "selection_ms": selection_ms,
             })
@@ -105,6 +109,18 @@ class CapabilityPipeline:
                 "candidate_count": sum(item["candidate_count"] for item in per_intent),
                 "retrieved_tool_count": len(selected),
                 "retrieved_tool_characters": _payload_characters(selected),
+            },
+            "retrieval_diagnostics": {
+                "per_intent": [
+                    {
+                        "intent": item["intent"],
+                        "candidate_tool_ids": item["candidate_tool_ids"],
+                        "selected_tool_ids": item["selected_tool_ids"],
+                        "candidate_count": item["candidate_count"],
+                        "selected_count": item["selected_count"],
+                    }
+                    for item in per_intent
+                ],
             },
         }
 

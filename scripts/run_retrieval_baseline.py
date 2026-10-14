@@ -23,6 +23,41 @@ def _turns(tasks: list[dict], limit: int | None):
             yield task, turn_number, turn
 
 
+def _coverage(required: list[str], diagnostics: dict) -> dict[str, object]:
+    candidate_ids = set(_candidate_ranked(diagnostics))
+    selected_ids = {
+        tool_id
+        for item in diagnostics.get("per_intent", [])
+        for tool_id in item.get("selected_tool_ids", [])
+        if tool_id
+    }
+    required_set = set(required)
+    missing_from_candidates = sorted(required_set - candidate_ids)
+    present_but_not_selected = sorted((required_set & candidate_ids) - selected_ids)
+    return {
+        "required_count": len(required_set),
+        "candidate_count": len(candidate_ids),
+        "candidate_recall": (
+            len(required_set & candidate_ids) / len(required_set)
+            if required_set else 1.0
+        ),
+        "missing_from_candidates": missing_from_candidates,
+        "present_but_not_selected": present_but_not_selected,
+    }
+
+
+def _candidate_ranked(diagnostics: dict) -> list[str]:
+    """Flatten per-intent candidate rankings without duplicate tool IDs."""
+    ranked = []
+    seen = set()
+    for item in diagnostics.get("per_intent", []):
+        for tool_id in item.get("candidate_tool_ids", []):
+            if tool_id and tool_id not in seen:
+                seen.add(tool_id)
+                ranked.append(tool_id)
+    return ranked
+
+
 async def run(args) -> dict:
     octopus = Octopus(index_path=args.index_path)
     await octopus.initialize()
@@ -45,6 +80,8 @@ async def run(args) -> dict:
         )
         metrics = result.metadata.get("retrieval_metrics", {})
         timing = result.metadata.get("timing_ms", {})
+        diagnostics = result.metadata.get("retrieval_diagnostics", {})
+        candidate_ranked = _candidate_ranked(diagnostics)
         rows.append({
             "task_id": task["id"],
             "category": task["category"],
@@ -54,6 +91,14 @@ async def run(args) -> dict:
             "active_context": active,
             "active_tool_characters": metrics.get("active_tool_characters"),
             "timing_ms": timing,
+            "coverage": _coverage(turn.get("required_tools", []), diagnostics),
+            "candidate_metrics": ranked_metrics(
+                candidate_ranked,
+                required=turn.get("required_tools", []),
+                supporting=turn.get("supporting_tools", []),
+            ),
+            "candidate_ranked_tool_ids": candidate_ranked,
+            "retrieval_diagnostics": diagnostics,
             "selection_strategy": (
                 result.metadata.get("selection_strategy")
                 or getattr(octopus.selection_strategy, "name", None)
@@ -90,6 +135,27 @@ async def run(args) -> dict:
         "active_context_average_k": average(("active_context", "retrieved_count")),
         "active_context_average_characters": average(("active_tool_characters",)),
         "total_latency_ms": average(("timing_ms", "total")),
+        "candidate_recall": average(("coverage", "candidate_recall")),
+        "candidate_ranked": {
+            f"recall_at_{k}": average(("candidate_metrics", f"recall_at_{k}"))
+            for k in (1, 4, 8, 16)
+        },
+        "candidate_ranked_precision": {
+            f"precision_at_{k}": average(("candidate_metrics", f"precision_at_{k}"))
+            for k in (1, 4, 8, 16)
+        },
+        "candidate_ranked_ndcg": {
+            f"ndcg_at_{k}": average(("candidate_metrics", f"ndcg_at_{k}"))
+            for k in (1, 4, 8, 16)
+        },
+        "turns_with_candidate_coverage_failure": sum(
+            bool(row["coverage"]["missing_from_candidates"])
+            for row in rows
+        ),
+        "turns_with_selection_failure_after_candidate_coverage": sum(
+            bool(row["coverage"]["present_but_not_selected"])
+            for row in rows
+        ),
     }
     return {"summary": summary, "rows": rows}
 
