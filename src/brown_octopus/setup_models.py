@@ -153,7 +153,13 @@ def _extract_wheel(url: str, destination) -> None:
                 continue
             target = destination / child.name
             if child.is_dir():
-                shutil.copytree(child, target, dirs_exist_ok=True)
+                # Replace managed package directories instead of merging them.
+                # Merging is unsafe for compiled wheels: a previous CPython ABI
+                # (for example cp312) can remain beside the newly selected
+                # wheel (for example cp313) and shadow or break imports.
+                if target.exists():
+                    shutil.rmtree(target)
+                shutil.copytree(child, target)
             else:
                 shutil.copy2(child, target)
     finally:

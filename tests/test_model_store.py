@@ -1,6 +1,7 @@
 from brown_octopus import model_store
 from brown_octopus import setup_models
 import subprocess
+import zipfile
 
 
 def test_model_directory_honors_environment_override(monkeypatch, tmp_path):
@@ -146,3 +147,21 @@ def test_runtime_resolution_does_not_require_model_package_import(monkeypatch, t
     monkeypatch.setattr(model_store, "prepare_spacy_runtime", lambda: managed)
 
     assert model_store.resolve_spacy_model() == str(managed)
+
+
+def test_wheel_extraction_replaces_stale_managed_package(tmp_path):
+    destination = tmp_path / "models"
+    destination.mkdir()
+    stale = destination / "curated_tokenizers"
+    stale.mkdir()
+    (stale / "old-abi.pyd").write_bytes(b"old")
+
+    wheel = tmp_path / "plugin.whl"
+    with zipfile.ZipFile(wheel, "w") as archive:
+        archive.writestr("curated_tokenizers/__init__.py", b"new")
+        archive.writestr("curated_tokenizers/new-abi.pyd", b"new")
+
+    setup_models._extract_wheel(wheel.as_uri(), destination)
+
+    assert not (stale / "old-abi.pyd").exists()
+    assert (stale / "new-abi.pyd").read_bytes() == b"new"
