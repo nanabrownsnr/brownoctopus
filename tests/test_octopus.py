@@ -76,6 +76,10 @@ async def test_octopus_add_sources_merges_only_new_capability_embeddings(
     assert encoded == [["new"]]
     assert report.added == ["new"]
     assert report.removed == []
+    assert report.embedded_count == 1
+    assert report.duration_ms is not None
+    assert report.discovery_duration_ms is not None
+    assert report.embedding_duration_ms is not None
     assert octopus.index_store.load_tools() == [
         existing_tools[0],
         {
@@ -155,6 +159,10 @@ async def test_octopus_update_reuses_unchanged_embedding_rows(
     assert encoded == [["new"]]
     assert report.added == ["new"]
     assert report.changed == []
+    assert report.embedded_count == 1
+    assert report.duration_ms is not None
+    assert report.discovery_duration_ms is not None
+    assert report.embedding_duration_ms is not None
     assert torch.equal(
         octopus.index_store.load_embeddings(),
         torch.tensor([[1.0, 0.0], [0.0, 1.0]]),

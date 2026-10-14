@@ -6,6 +6,7 @@ from threading import Condition, RLock
 import logging
 import json
 import hashlib
+import time
 import torch
 from datetime import datetime, timezone
 from importlib.metadata import PackageNotFoundError, version as package_version
@@ -573,6 +574,8 @@ class Octopus:
 
     async def update(self) -> CapabilityUpdateReport:
         """Prepare and atomically install a host-requested capability snapshot."""
+        started_at = time.perf_counter()
+        discovery_started_at = started_at
         try:
             initialize_analyzer()
             if self.embedding_provider is None:
@@ -580,6 +583,7 @@ class Octopus:
             else:
                 initialize_retriever(self.embedding_provider)
             discovered = await self._discover_snapshot()
+            discovery_duration_ms = (time.perf_counter() - discovery_started_at) * 1000
             tools, report = self._merge_snapshot_tools(discovered)
             active_provider = (
                 self.embedding_provider
@@ -626,6 +630,8 @@ class Octopus:
                 and provider_matches
                 and len(self._rows(previous_embeddings)) == len(previous_tools)
             )
+            embedding_started_at = time.perf_counter()
+            embedded_count = 0
             if tools and can_reuse:
                 previous_by_id = {
                     capability_id(tool): tool for tool in previous_tools
@@ -636,6 +642,7 @@ class Octopus:
                     for tool in tools
                     if capability_id(tool) in changed_ids
                 ]
+                embedded_count = len(to_embed)
                 if to_embed:
                     if self.embedding_provider is None:
                         encoded = build_embeddings(to_embed)
@@ -657,6 +664,7 @@ class Octopus:
                     replacement_embeddings,
                 )
             elif tools:
+                embedded_count = len(tools)
                 if self.embedding_provider is None:
                     embeddings = build_embeddings(tools)
                 else:
@@ -666,6 +674,7 @@ class Octopus:
                     )
             else:
                 embeddings = None
+            embedding_duration_ms = (time.perf_counter() - embedding_started_at) * 1000
 
             metadata = {
                 "version": 1,
@@ -709,7 +718,13 @@ class Octopus:
                 ),
             )
             self._build_pipeline()
-        return report
+        return replace(
+            report,
+            embedded_count=embedded_count,
+            duration_ms=(time.perf_counter() - started_at) * 1000,
+            discovery_duration_ms=discovery_duration_ms,
+            embedding_duration_ms=embedding_duration_ms,
+        )
 
     @staticmethod
     def _rows(embeddings):
@@ -784,6 +799,8 @@ class Octopus:
                 operation="add",
             )
 
+        started_at = time.perf_counter()
+        discovery_started_at = started_at
         try:
             initialize_analyzer()
             if self.embedding_provider is None:
@@ -792,6 +809,7 @@ class Octopus:
                 initialize_retriever(self.embedding_provider)
 
             discovered = await CompositeCapabilitySource(sources).discover()
+            discovery_duration_ms = (time.perf_counter() - discovery_started_at) * 1000
             previous_tools = self.index_store.load_tools()
             # Native-vector stores do not need the matrix for runtime search,
             # but incremental publication still needs the existing rows so it
@@ -819,6 +837,7 @@ class Octopus:
                 discovered_by_id[identity]
                 for identity in [*added, *changed]
             ]
+            embedding_started_at = time.perf_counter()
             if to_embed:
                 if self.embedding_provider is None:
                     encoded = build_embeddings(to_embed)
@@ -836,6 +855,7 @@ class Octopus:
                 }
             else:
                 replacement_embeddings = {}
+            embedding_duration_ms = (time.perf_counter() - embedding_started_at) * 1000
 
             embeddings = self._merge_incremental_embeddings(
                 previous_tools,
@@ -892,6 +912,10 @@ class Octopus:
             failed_sources=dict(discovered.failed_sources),
             tool_count=len(merged_tools),
             authoritative=False if discovered.failed_sources else True,
+            embedded_count=len(to_embed),
+            duration_ms=(time.perf_counter() - started_at) * 1000,
+            discovery_duration_ms=discovery_duration_ms,
+            embedding_duration_ms=embedding_duration_ms,
         )
         with self._snapshot_lock.write():
             set_tools(merged_tools)

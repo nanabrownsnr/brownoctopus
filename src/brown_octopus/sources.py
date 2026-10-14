@@ -22,6 +22,10 @@ class CapabilityUpdateReport:
     authoritative: bool = True
     operation: str = "update"
     completed: bool = True
+    embedded_count: int = 0
+    duration_ms: float | None = None
+    discovery_duration_ms: float | None = None
+    embedding_duration_ms: float | None = None
 
     @property
     def added_count(self) -> int:
@@ -39,14 +43,14 @@ class CapabilityUpdateReport:
     def failed_source_count(self) -> int:
         return len(self.failed_sources)
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self, *, include_metrics: bool = False) -> dict[str, Any]:
         """Return a safe, JSON-compatible representation of the outcome.
 
         Reports contain capability IDs and source error messages only. Source
         authentication headers and discovered tool payloads are never part of
         this representation.
         """
-        return {
+        result = {
             "operation": self.operation,
             "completed": self.completed,
             "authoritative": self.authoritative,
@@ -62,6 +66,16 @@ class CapabilityUpdateReport:
                 "failed_sources": self.failed_source_count,
             },
         }
+        if include_metrics:
+            result.update(
+                {
+                    "embedded_count": self.embedded_count,
+                    "duration_ms": self.duration_ms,
+                    "discovery_duration_ms": self.discovery_duration_ms,
+                    "embedding_duration_ms": self.embedding_duration_ms,
+                }
+            )
+        return result
 
 
 class LocalMcpCatalogSource:

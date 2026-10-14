@@ -523,6 +523,10 @@ def test_capability_update_report_is_serializable_and_has_counts():
         },
     }
 
+    metrics = report.to_dict(include_metrics=True)
+    assert metrics["embedded_count"] == 0
+    assert metrics["duration_ms"] is None
+
 
 @pytest.mark.anyio
 async def test_index_facade_add_requires_an_existing_index(tmp_path):

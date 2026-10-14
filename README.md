@@ -116,7 +116,8 @@ Every index mutation returns a completed `CapabilityUpdateReport`. The report
 is safe to return from an HTTP handler with `report.to_dict()` and includes the
 operation (`create`, `update`, `add`, or `remove_source`), capability IDs that
 were added/changed/removed, failed sources, the resulting tool count, and
-summary counts. `authoritative=False` means a failed source prevented the
+summary counts. It also includes `embedded_count` and timing fields for
+discovery, embedding, and the complete operation. `authoritative=False` means a failed source prevented the
 operation from being a complete view of the configured source universe.
 
 ### 3. Start the runtime
@@ -199,6 +200,7 @@ print(report.added)
 print(report.changed)
 print(report.removed)
 print(report.failed_sources)
+print(report.embedded_count, report.embedding_duration_ms)
 ```
 
 For a JSON response from a host API, return the explicit serialization:
@@ -207,6 +209,10 @@ For a JSON response from a host API, return the explicit serialization:
 report = await index.add(source)
 return report.to_dict()
 ```
+
+The default serialized report keeps the established response shape. Hosts that
+want the new local performance fields can opt in with
+`report.to_dict(include_metrics=True)`.
 
 `update()` is a synchronization operation, not an append-only operation. It
 rediscovers the configured universe and publishes a complete replacement
