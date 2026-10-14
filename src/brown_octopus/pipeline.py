@@ -7,12 +7,18 @@ from brown_octopus.context_manager import ActiveCapabilityContext
 from brown_octopus.retriever import retrieve_tools
 from brown_octopus.tool_registry import get_tools
 from brown_octopus.tool_registry import capability_id
+import json
 import logging
 import time
 from collections.abc import Iterable
 
 
 logger = logging.getLogger("brown_octopus.pipeline")
+
+
+def _payload_characters(value) -> int:
+    """Return deterministic serialized size for context-size comparisons."""
+    return len(json.dumps(value, sort_keys=True, ensure_ascii=False, default=str))
 
 
 class CapabilityPipeline:
@@ -42,8 +48,18 @@ class CapabilityPipeline:
         selected = []
         seen = set()
         per_intent = []
-        retrieval_started = time.perf_counter()
+        retrieval_total_started = time.perf_counter()
+        retrieval_total_ms = 0.0
+        selection_total_ms = 0.0
+        retrieval_text_characters = 0
         for intent in intents:
+            retrieval_query = (
+                intent.get("retrieval_text")
+                or intent.get("text")
+                or query
+            )
+            retrieval_text_characters += len(retrieval_query)
+            retrieval_started = time.perf_counter()
             if scoped_urls is None:
                 candidates = self.candidate_retriever.retrieve(query, intent)
             else:
@@ -53,9 +69,11 @@ class CapabilityPipeline:
                     allowed_mcp_urls=scoped_urls,
                 )
             retrieval_ms = (time.perf_counter() - retrieval_started) * 1000
+            retrieval_total_ms += retrieval_ms
             selection_started = time.perf_counter()
             chosen = self.selector.select(query, intent, candidates)
             selection_ms = (time.perf_counter() - selection_started) * 1000
+            selection_total_ms += selection_ms
             per_intent.append({
                 "intent": intent,
                 "candidate_count": len(candidates),
@@ -75,8 +93,18 @@ class CapabilityPipeline:
             "strategy": getattr(self.selector, "name", type(self.selector).__name__),
             "timing_ms": {
                 "analysis": analysis_ms,
-                "retrieval_and_selection": (time.perf_counter() - retrieval_started) * 1000,
+                "retrieval": retrieval_total_ms,
+                "selection": selection_total_ms,
+                "retrieval_and_selection": (time.perf_counter() - retrieval_total_started) * 1000,
                 "total": (time.perf_counter() - started) * 1000,
+            },
+            "retrieval_metrics": {
+                "query_characters": len(query),
+                "retrieval_text_characters": retrieval_text_characters,
+                "intent_count": len(intents),
+                "candidate_count": sum(item["candidate_count"] for item in per_intent),
+                "retrieved_tool_count": len(selected),
+                "retrieved_tool_characters": _payload_characters(selected),
             },
         }
 
@@ -124,6 +152,7 @@ class CapabilityPipeline:
         register_tools = getattr(context_manager, "register_tools", None)
         if register_tools is not None:
             register_tools(retrieval["retrieved_tools"])
+        context_started = time.perf_counter()
         context = context_manager.update(
             retrieval["retrieved_tools"],
             turn,
@@ -142,7 +171,7 @@ class CapabilityPipeline:
                 }
             },
         )
-        return {
+        result = {
             **retrieval,
             "active_state": context.metadata["active_state"],
             "active_tools": context.tools,
@@ -150,6 +179,20 @@ class CapabilityPipeline:
             "tool_ids": context.tool_ids,
             "timing_ms": retrieval.get("timing_ms", {}),
         }
+        result["timing_ms"] = {
+            **result["timing_ms"],
+            "context_update": (time.perf_counter() - context_started) * 1000,
+        }
+        result["timing_ms"]["total"] = (
+            retrieval.get("timing_ms", {}).get("total", 0.0)
+            + result["timing_ms"]["context_update"]
+        )
+        result["retrieval_metrics"] = {
+            **retrieval.get("retrieval_metrics", {}),
+            "active_tool_count": len(context.tools),
+            "active_tool_characters": _payload_characters(context.tools),
+        }
+        return result
 
     def process(
         self,

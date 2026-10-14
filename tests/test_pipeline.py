@@ -2,6 +2,8 @@ import pytest
 
 from brown_octopus.analyzer import initialize_analyzer
 from brown_octopus.pipeline import process_turn
+from brown_octopus.pipeline import CapabilityPipeline
+from brown_octopus.context_manager import ActiveCapabilityContext
 from brown_octopus.retriever import (
     initialize_retriever,
     refresh_index,
@@ -144,6 +146,47 @@ def test_process_turn_can_add_multiple_new_capabilities():
 
     assert "tool_search_web" in context_names
     assert "tool_send_email" in context_names
+
+
+def test_capability_pipeline_reports_retrieval_metrics():
+    class Analyzer:
+        def analyze(self, query):
+            return [{"retrieval_text": query}]
+
+    class Retriever:
+        def retrieve(self, query, intent, allowed_mcp_urls=None):
+            return [
+                {**tool, "score": 1.0 - (index / 10)}
+                for index, tool in enumerate(TEST_TOOLS)
+            ]
+
+    class Selector:
+        name = "test-selector"
+
+        def select(self, query, intent, candidates):
+            return candidates[:2]
+
+    tools = TEST_TOOLS[:]
+    lookup = {tool["name"]: tool for tool in tools}
+    pipeline = CapabilityPipeline(Analyzer(), Retriever(), Selector())
+    result = pipeline.retrieve(
+        "check my leave balance",
+        turn=1,
+        context_manager=ActiveCapabilityContext(
+            lambda ids: [lookup[item] for item in ids if item in lookup],
+            ttl=8,
+            active_cap=30,
+        ),
+    )
+
+    metrics = result["retrieval_metrics"]
+    assert metrics["query_characters"] == len("check my leave balance")
+    assert metrics["retrieved_tool_count"] == 2
+    assert metrics["active_tool_count"] == 2
+    assert metrics["active_tool_characters"] > 0
+    assert {"analysis", "retrieval", "selection", "context_update", "total"} <= set(
+        result["timing_ms"]
+    )
 
 
 def test_pipeline_rotates_old_tools_when_active_context_is_full(monkeypatch):

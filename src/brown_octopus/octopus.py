@@ -420,6 +420,7 @@ class Octopus:
                 **result["session"],
                 "retrieved_tools": retrieved_tools,
                 "active_tools": tools,
+                "retrieval_metrics": result.get("retrieval_metrics", {}),
                 "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
                 "tool_representation": "name + description",
             },
