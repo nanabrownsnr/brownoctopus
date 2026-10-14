@@ -222,6 +222,28 @@ temporarily failed source           -> previous capabilities preserved
 
 The host decides when updates happen. Brown Octopus has no refresh scheduler.
 
+### Background indexing
+
+For large catalogs, submit indexing work to the optional in-process queue so
+the host event loop remains responsive:
+
+```python
+job = index.submit_add(source)
+await job.wait()
+
+if job.status == "completed":
+    report = job.result()
+else:
+    raise RuntimeError(job.snapshot()["error"])
+```
+
+The queue runs one indexing job at a time. Pending additions are coalesced by
+default, so several source requests become one incremental update. Configure
+the queue with `max_pending_jobs` and `busy_policy` (`coalesce`, `reject`, or
+`wait`). `await index.add(...)` remains the backward-compatible lifecycle API.
+Call `await index.close()` during application shutdown; queued jobs are
+cancelled and an active job is allowed to finish safely.
+
 Add a source to an existing index:
 
 ```python

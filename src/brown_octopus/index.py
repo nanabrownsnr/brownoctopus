@@ -3,12 +3,14 @@
 from pathlib import Path
 from collections.abc import Sequence
 from dataclasses import replace as dataclass_replace
+import threading
 
 from brown_octopus.contracts import CapabilitySource
 from brown_octopus.embedding import EmbeddingProvider
 from brown_octopus.index_store import IndexStore
 from brown_octopus.octopus import Octopus
 from brown_octopus.errors import MissingIndexError
+from brown_octopus.index_jobs import IndexJob, IndexJobQueue
 from brown_octopus.sources import (
     ApiCapabilitySource,
     CompositeCapabilitySource,
@@ -35,6 +37,8 @@ class OctopusIndex:
         config=None,
         embedding_provider: EmbeddingProvider | None = None,
         index_store: IndexStore | None = None,
+        max_pending_jobs: int = 1,
+        busy_policy: str = "coalesce",
     ) -> None:
         self.index_path = Path(index_path)
         self.sources = list(sources or [])
@@ -46,6 +50,12 @@ class OctopusIndex:
             config=config,
             embedding_provider=embedding_provider,
             index_store=index_store,
+        )
+        self._indexing_thread_lock = threading.RLock()
+        self._jobs = IndexJobQueue(
+            self,
+            max_pending_jobs=max_pending_jobs,
+            busy_policy=busy_policy,
         )
 
     def _sync_sources(self) -> None:
@@ -157,25 +167,27 @@ class OctopusIndex:
         ``replace=True`` to deliberately rediscover the configured sources
         and publish a new snapshot.
         """
-        if not replace and self._octopus.index_store.exists():
-            tools = self._octopus.index_store.load_tools()
-            return CapabilityUpdateReport(
-                added=[],
-                changed=[],
-                removed=[],
-                failed_sources={},
-                tool_count=len(tools),
-                authoritative=True,
-                operation="create",
-            )
-        return dataclass_replace(await self.update(), operation="create")
+        with self._indexing_thread_lock:
+            if not replace and self._octopus.index_store.exists():
+                tools = self._octopus.index_store.load_tools()
+                return CapabilityUpdateReport(
+                    added=[],
+                    changed=[],
+                    removed=[],
+                    failed_sources={},
+                    tool_count=len(tools),
+                    authoritative=True,
+                    operation="create",
+                )
+            return dataclass_replace(await self.update(), operation="create")
 
     async def update(self):
         """Synchronize all configured sources with the persisted index."""
-        return dataclass_replace(
-            await self._octopus.update(),
-            operation="update",
-        )
+        with self._indexing_thread_lock:
+            return dataclass_replace(
+                await self._octopus.update(),
+                operation="update",
+            )
 
     async def add(
         self,
@@ -188,33 +200,58 @@ class OctopusIndex:
         configured source universe. It discovers only the supplied source(s)
         and merges their capabilities into the persisted snapshot.
         """
-        if not self._octopus.index_store.exists():
-            raise MissingIndexError(
-                "Cannot add capabilities before an index exists. "
-                "Call await index.create() first."
-            )
+        with self._indexing_thread_lock:
+            if not self._octopus.index_store.exists():
+                raise MissingIndexError(
+                    "Cannot add capabilities before an index exists. "
+                    "Call await index.create() first."
+                )
 
-        sources = (source, *additional_sources)
-        original = list(self.sources)
-        existing_ids = {
-            getattr(item, "source_id", None)
-            for item in self.sources
-        }
-        for item in sources:
-            source_id = getattr(item, "source_id", None)
-            if source_id not in existing_ids:
-                self.sources.append(item)
-                existing_ids.add(source_id)
-        self._sync_sources()
-        try:
-            return dataclass_replace(
-                await self._octopus.add_sources(sources),
-                operation="add",
-            )
-        except Exception:
-            self.sources[:] = original
+            sources = (source, *additional_sources)
+            original = list(self.sources)
+            existing_ids = {
+                getattr(item, "source_id", None)
+                for item in self.sources
+            }
+            for item in sources:
+                source_id = getattr(item, "source_id", None)
+                if source_id not in existing_ids:
+                    self.sources.append(item)
+                    existing_ids.add(source_id)
             self._sync_sources()
-            raise
+            try:
+                return dataclass_replace(
+                    await self._octopus.add_sources(sources),
+                    operation="add",
+                )
+            except Exception:
+                self.sources[:] = original
+                self._sync_sources()
+                raise
+
+    def submit_add(
+        self,
+        source: CapabilitySource,
+        *additional_sources: CapabilitySource,
+    ) -> IndexJob:
+        """Queue an incremental add without blocking the host event loop."""
+        return self._jobs.submit_add([source, *additional_sources])
+
+    def submit_update(self) -> IndexJob:
+        """Queue a source synchronization without blocking the host event loop."""
+        return self._jobs.submit_update()
+
+    def submit_create(self, *, replace: bool = False) -> IndexJob:
+        """Queue index creation or deliberate replacement."""
+        return self._jobs.submit_create(replace=replace)
+
+    def get_index_job(self, job_id: str) -> IndexJob | None:
+        """Return a queued, running, or completed in-process job."""
+        return self._jobs.get(job_id)
+
+    async def close(self) -> None:
+        """Stop the local background indexing worker and cancel queued jobs."""
+        await self._jobs.close()
 
     async def remove_source(self, source_id: str):
         """Incrementally remove one source from the persisted snapshot.

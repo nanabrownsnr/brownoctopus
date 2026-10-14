@@ -36,3 +36,7 @@ class IncompatibleIndexError(InitializationError):
 
 class CapabilityUpdateError(OctopusError):
     """A capability snapshot could not be prepared or installed safely."""
+
+
+class IndexBusyError(OctopusError):
+    """The background indexing queue cannot accept another operation."""

@@ -217,6 +217,38 @@ It contains no MCP headers, credentials, or full tool definitions. A host API
 should return this object instead of a generic “success” message so callers
 can distinguish a successful no-op from a mutation or partial discovery.
 
+### Background indexing jobs
+
+`await index.add(...)`, `await index.update()`, and `await index.create()` are
+still the direct lifecycle APIs. For a web service or agent host that cannot
+hold an HTTP request open during discovery and embedding, use the optional
+per-index job queue:
+
+```python
+index = OctopusIndex(
+    index_path="data/indexes/default",
+    max_pending_jobs=1,
+    busy_policy="coalesce",
+)
+
+job = index.submit_add(source)
+print(job.snapshot())
+await job.wait()
+report = job.result()
+```
+
+The queue has one active worker. `coalesce` merges pending `submit_add()` calls
+into one job; `reject` raises `IndexBusyError` when pending capacity is full;
+`wait` accepts work into the queue. An active job is never replaced by a newer
+request. `submit_update()` and `submit_create(replace=True)` are also
+available. `await index.close()` drains the active operation and cancels jobs
+that have not started.
+
+The queue is process-local. Multi-worker FastAPI deployments must route all
+jobs for one index to one owner process or add a host-level distributed queue
+and lock. Brown Octopus does not claim to coordinate separate worker
+processes.
+
 For a new index, establish the snapshot first:
 
 ```python
