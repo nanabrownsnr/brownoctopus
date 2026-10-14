@@ -231,6 +231,17 @@ uv run python scripts/benchmark_indexing.py --sizes 10 100 1000 --json
 This synthetic benchmark measures lifecycle and incremental-work behavior; it
 does not represent real embedding throughput. Use a configured local provider
 separately to measure CPU/GPU inference.
+
+To measure a cached local embedding model without permitting an implicit model
+download:
+
+```text
+uv run python scripts/benchmark_indexing.py --real-embedding --device cpu --sizes 10 100
+```
+
+Use `--device cuda` to test a CUDA host. The command reports model, device,
+batch size, dimensionality, throughput, Python peak memory, and CUDA memory
+when available. It fails clearly if the requested model is not already cached.
 It contains no MCP headers, credentials, or full tool definitions. A host API
 should return this object instead of a generic “success” message so callers
 can distinguish a successful no-op from a mutation or partial discovery.
