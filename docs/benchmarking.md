@@ -4,6 +4,11 @@ Brown Octopus keeps benchmark tooling outside the runtime package. The
 commands below measure the stages that matter for context delivery without
 changing the production selector or requiring an LLM judge.
 
+For a plain-English description of the retrieval design, see
+[`retrieval-architecture.md`](retrieval-architecture.md). The first measured
+production baseline is recorded in
+[`retrieval-baseline-0.6.0.md`](retrieval-baseline-0.6.0.md).
+
 ## Synthetic retrieval scaling
 
 This isolates pipeline and context costs while varying the capability-universe
@@ -39,6 +44,17 @@ selector remains the default until a complete relevance run demonstrates an
 improvement without unacceptable context growth.
 
 ## Real runtime retrieval
+
+The reviewed-turn baseline uses the production selector and reports standard
+quality metrics at K=1, 4, 8, and 16:
+
+```powershell
+uv run python -m scripts.run_retrieval_baseline `
+  --output artifacts\retrieval\current-baseline.json
+```
+
+This is the reference run for future dynamic-K experiments. Keep the task set,
+index, model, and relevance labels fixed when comparing policies.
 
 This loads the actual analyzer, embedding provider, persisted index, and local
 or PostgreSQL-backed store:

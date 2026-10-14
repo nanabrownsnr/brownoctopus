@@ -18,6 +18,7 @@ from evals.methods.selection import ranked_score_knee, relative_threshold
 from evals.diagnostic.run import hybrid_cutoff, rank_bucket
 from evals.validation.run import hybrid_selector
 from evals.retrieval.evaluate import aggregate, compare_policies, evaluate_ranking
+from evals.retrieval.metrics import ndcg_at_k, precision_at_k, ranked_metrics, recall_at_k
 from evals.retrieval.policies import fixed_k, gap_cluster_k
 
 
@@ -218,3 +219,18 @@ def test_retrieval_evaluation_reports_recall_and_context_cost():
     assert summary["complete_required_rate"] == 1.0
     compared = compare_policies(tasks, rankings, {"fixed": lambda r: fixed_k(r, 1), "cluster": gap_cluster_k}, universe_count=3)
     assert set(compared) == {"fixed", "cluster"}
+
+
+def test_standard_ranked_metrics_use_required_and_supporting_grades():
+    ranked = ["noise", "supporting", "required"]
+    assert recall_at_k(ranked, ["required"], 2) == 0.0
+    assert recall_at_k(ranked, ["required"], 3) == 1.0
+    assert precision_at_k(ranked, ["supporting", "required"], 2) == 0.5
+    assert ndcg_at_k(ranked, {"required": 3, "supporting": 1}, 3) < 1.0
+    result = ranked_metrics(
+        ranked,
+        required=["required"],
+        supporting=["supporting"],
+    )
+    assert result["complete_required"] is True
+    assert result["recall_at_1"] == 0.0
