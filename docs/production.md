@@ -220,6 +220,17 @@ while preserving the established response shape by default. Hosts that need
 the new safe timing and embedding counters can use
 `report.to_dict(include_metrics=True)`. Prompts and authentication headers are
 not included.
+
+For a local indexing baseline that does not load models or contact MCP servers,
+run:
+
+```text
+uv run python scripts/benchmark_indexing.py --sizes 10 100 1000 --json
+```
+
+This synthetic benchmark measures lifecycle and incremental-work behavior; it
+does not represent real embedding throughput. Use a configured local provider
+separately to measure CPU/GPU inference.
 It contains no MCP headers, credentials, or full tool definitions. A host API
 should return this object instead of a generic “success” message so callers
 can distinguish a successful no-op from a mutation or partial discovery.
