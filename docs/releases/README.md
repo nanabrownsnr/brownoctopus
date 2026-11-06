@@ -12,6 +12,8 @@ own file and is not rewritten after publication.
 - [0.5.7](0.5.7.md)
 - [0.5.8](0.5.8.md)
 - [0.5.9](0.5.9.md)
+- [0.6.0](0.6.0.md)
+- [0.6.1](0.6.1.md)
 
 For the next release, add a new versioned file and link it
 from this page.

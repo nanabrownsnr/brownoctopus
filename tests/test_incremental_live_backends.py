@@ -5,17 +5,47 @@ These tests are not part of the normal offline suite.
 """
 
 import uuid
+import os
 
 import pytest
 import torch
 
 from brown_octopus import CapabilityDiscoveryResult, Octopus
+from brown_octopus import OctopusIndex
 from brown_octopus.index_store import MongoIndexStore, PostgresIndexStore
 
 
 class Provider:
     model_id = "incremental-test-provider"
     dimension = 2
+
+
+@pytest.mark.external
+@pytest.mark.anyio
+@pytest.mark.parametrize("backend", ["postgres", "mongo"])
+async def test_empty_database_create_add_readd_reopen(monkeypatch, backend):
+    name = f"empty-lifecycle-{uuid.uuid4().hex}"
+    if backend == "postgres":
+        store = PostgresIndexStore("postgresql://postgres:brown-octopus-test@127.0.0.1:55432/brown_octopus", index_name=name)
+    else:
+        pytest.importorskip("pymongo")
+        store = MongoIndexStore(os.getenv("OCTOPUS_TEST_MONGO_URL", "mongodb://127.0.0.1:32768"), index_name=name)
+    encoded = _patch_runtime(monkeypatch)
+    index = OctopusIndex(index_store=store, embedding_provider=Provider())
+    index.octopus._build_pipeline = lambda: None
+    try:
+        await index.create()
+        assert store.load_embeddings() is None
+        await index.add(Source())
+        await index.add(Source())
+        assert encoded == [["new-capability"]]
+        reopened = Octopus(index_store=store, embedding_provider=Provider())
+        reopened._build_pipeline = lambda: None
+        await reopened.initialize()
+        assert len(store.load_tools()) == 1
+        assert store.load_embeddings().shape == (1, 2)
+    finally:
+        store.reset()
 
 
 class Source:
@@ -108,7 +138,7 @@ async def test_incremental_add_mongo_preserves_existing_capabilities(
 ):
     pytest.importorskip("pymongo")
     store = MongoIndexStore(
-        "mongodb://127.0.0.1:32768",
+        os.getenv("OCTOPUS_TEST_MONGO_URL", "mongodb://127.0.0.1:32768"),
         index_name=f"incremental-{uuid.uuid4().hex}",
     )
     _seed(store)

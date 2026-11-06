@@ -1,5 +1,11 @@
 # Brown Octopus production guide
 
+For independent per-intent, session, and response limits, see the
+[0.6.1 configuration guide](releases/0.6.1.md). `max_tools` caps adaptive
+selection separately for each intent, `active_cap` caps retained session tools,
+and `max_returned_tools` optionally caps each response without evicting retained
+tools.
+
 This document is the detailed integration reference for Brown Octopus 0.6. It
 covers index lifecycle, capability sources, runtime retrieval, sessions,
 embedding providers, local and database-backed index storage, diagnostics, and

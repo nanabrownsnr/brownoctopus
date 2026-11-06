@@ -15,8 +15,15 @@ class BoundedMaxGapSelectionStrategy:
 
     name = "brown_octopus_v3"
 
+    def __init__(self, *, min_tools=4, max_tools=16, min_gap_percent=2.0):
+        self.min_tools = min_tools
+        self.max_tools = max_tools
+        self.min_gap_percent = min_gap_percent
+
     def select(self, query: str, intent: dict, candidates: list[dict]) -> list[dict]:
-        return select_min4_bounded_max_gap(candidates)
+        return select_min4_bounded_max_gap(candidates, min_tools=self.min_tools,
+                                           max_tools=self.max_tools,
+                                           min_gap_percent=self.min_gap_percent)
 
 
 class JevSelectionStrategy:

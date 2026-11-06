@@ -118,6 +118,7 @@ class Octopus:
         active_cap: int | None = None,
     ):
         self.config = config or OctopusConfig.from_env()
+        self.config.validate()
         if capability_ttl is not None or active_cap is not None:
             self._configure_context_limits(
                 capability_ttl=capability_ttl,
@@ -471,12 +472,16 @@ class Octopus:
                 embedding_provider=self.embedding_provider,
             )
         self.candidate_retriever = candidate_retriever
-        selector = BoundedMaxGapSelectionStrategy()
+        selector = BoundedMaxGapSelectionStrategy(
+            min_tools=self.config.min_tools, max_tools=self.config.max_tools,
+            min_gap_percent=self.config.min_gap_percent,
+        )
         self.selection_strategy = selector
         self.pipeline = CapabilityPipeline(
             self.analyzer,
             candidate_retriever,
             selector,
+            max_returned_tools=self.config.max_returned_tools,
         )
 
     @staticmethod

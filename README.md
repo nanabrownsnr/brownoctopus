@@ -1,5 +1,11 @@
 # Brown Octopus
 
+Retrieval limits: configure `OctopusConfig(max_tools=32, active_cap=60,
+max_returned_tools=20)` to independently control adaptive per-intent selection,
+session retention, and tools returned per request. See
+[0.6.1 release notes](docs/releases/0.6.1.md) for defaults, environment variables,
+and response allocation behavior.
+
 Brown Octopus `0.6.0` adds measurable indexing and retrieval diagnostics while
 keeping the production retrieval strategy backward-compatible.
 

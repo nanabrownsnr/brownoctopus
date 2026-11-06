@@ -204,6 +204,8 @@ def _serialize_embeddings(embeddings) -> bytes:
 
 
 def _deserialize_embeddings(payload: bytes):
+    if payload is None:
+        return None
     return _load_torch_embeddings(io.BytesIO(payload))
 
 
@@ -350,7 +352,10 @@ class PostgresIndexStore:
         return self._load("tools")
 
     def load_embeddings(self):
-        return _deserialize_embeddings(self._load("embeddings"))
+        payload = self._load("embeddings")
+        if payload is None and self.load_tools():
+            raise ValueError("Populated PostgreSQL snapshot has no embedding matrix")
+        return _deserialize_embeddings(payload)
 
     def load_metadata(self) -> dict:
         return self._load("metadata")
@@ -532,7 +537,10 @@ class MongoIndexStore:
         return self._load()["tools"]
 
     def load_embeddings(self):
-        return _deserialize_embeddings(self._load()["embeddings"])
+        snapshot = self._load()
+        if snapshot["embeddings"] is None and snapshot["tools"]:
+            raise ValueError("Populated MongoDB snapshot has no embedding matrix")
+        return _deserialize_embeddings(snapshot["embeddings"])
 
     def load_metadata(self) -> dict:
         return self._load()["metadata"]

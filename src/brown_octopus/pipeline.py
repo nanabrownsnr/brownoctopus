@@ -11,6 +11,7 @@ import json
 import logging
 import time
 from collections.abc import Iterable
+from dataclasses import replace
 
 
 logger = logging.getLogger("brown_octopus.pipeline")
@@ -24,11 +25,12 @@ def _payload_characters(value) -> int:
 class CapabilityPipeline:
     """Harness-agnostic coordinator for analysis, retrieval, selection and state."""
 
-    def __init__(self, analyzer, candidate_retriever, selector, context_manager=None) -> None:
+    def __init__(self, analyzer, candidate_retriever, selector, context_manager=None, *, max_returned_tools=None) -> None:
         self.analyzer = analyzer
         self.candidate_retriever = candidate_retriever
         self.selector = selector
         self.context_manager = context_manager
+        self.max_returned_tools = max_returned_tools
 
     def _retrieve_current(
         self,
@@ -82,6 +84,7 @@ class CapabilityPipeline:
                 # payloads remain available through the normal result fields.
                 "candidate_tool_ids": [tool.get("name") for tool in candidates],
                 "selected_tool_ids": [tool.get("name") for tool in chosen],
+                "response_tool_ids": [capability_id(tool) for tool in chosen],
                 "retrieval_ms": retrieval_ms,
                 "selection_ms": selection_ms,
             })
@@ -174,6 +177,25 @@ class CapabilityPipeline:
             turn,
             allowed_mcp_urls=allowed_mcp_urls,
         )
+        if self.max_returned_tools is not None:
+            available = {capability_id(tool): tool for tool in context.tools}
+            groups = [list(item["response_tool_ids"]) for item in retrieval.get("per_intent", [])]
+            ordered = []
+            seen = set()
+            for rank in range(max((len(group) for group in groups), default=0)):
+                for group in groups:
+                    identity = group[rank] if rank < len(group) else None
+                    if identity in available and identity not in seen:
+                        seen.add(identity)
+                        ordered.append(identity)
+            for tool in sorted(context.tools, key=lambda tool: -context.metadata["active_state"].get(capability_id(tool), 0)):
+                identity = capability_id(tool)
+                if identity not in seen:
+                    seen.add(identity)
+                    ordered.append(identity)
+            returned = ordered[:self.max_returned_tools]
+            retrieval["retrieval_diagnostics"]["response_truncated"] = len(ordered) > len(returned)
+            context = replace(context, tools=[available[identity] for identity in returned], tool_ids=returned)
         logger.info(
             "capability_context_updated",
             extra={
@@ -206,6 +228,8 @@ class CapabilityPipeline:
         result["retrieval_metrics"] = {
             **retrieval.get("retrieval_metrics", {}),
             "active_tool_count": len(context.tools),
+            "retained_tool_count": len(context.metadata["active_state"]),
+            "returned_tool_count": len(context.tools),
             "active_tool_characters": _payload_characters(context.tools),
         }
         return result
